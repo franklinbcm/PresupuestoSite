@@ -1,20 +1,103 @@
 ﻿/* Set padding to keep content from hitting the edges */
-.body-content {
-    margin-top: 15px;
-    padding-left: 15px;
-    padding-right: 15px;
+html {
+    font-size: 14px;
 }
 
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-.dl-horizontal dt {
-    white-space: normal;
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+.img-logo {
+    width: 70px;
+    height: 40px;
+}
+
+.img-main {
+    width: 650px;
+    height: 450px;
+}
+table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background-color: #3459e6 !important;
+    color: white;
+    margin: 10px;
+    border-radius: 2px;
+}
+div#tblCuotaCargas_filter {
+    margin: 7px 0px;
+}
+div#tblPresupuestoCargas_filter {
+    margin: 7px 0px;
+}
+.dt-custom-column-text {
+    text-transform: uppercase;
+    font-size: 11px;
+}
+.font-size-16 {
+    font-size: 16px;
+}
+.font-size-15 {
+    font-size: 15px;
+}
+.font-size-14 {
+    font-size: 14px;
+}
+.font-size-13 {
+    font-size: 13px;
+}
+.font-size-12 {
+    font-size: 12px;
+}
+.font-size-11 {
+    font-size: 11px;
+}
+.font-size-10 {
+    font-size: 10px;
+}
+.font-size-09 {
+    font-size: 9px;
+}
+
+input[readonly] {
+    background-color: #f9f6f6;
+}
+input[readonly]:hover{
+    cursor: not-allowed !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 2px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #2f53df;
+    border-radius: 5px;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #258cfb;
+    }

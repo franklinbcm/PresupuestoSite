@@ -1,0 +1,48 @@
+﻿@model PresupuestoSite.Models.DTO.Cargas
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<main>
+    <div class="container mt-5">
+        @*<h3>CARGAS</h3>*@
+        <div class="row  col-12" style="width:98%">
+            <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic radio toggle button group">
+                <input type="radio" class="btn-check" name="btnradioCarga" id="btnRdoCargas" autocomplete="off" checked="checked">
+                <label class="btn btn-outline-primary" for="btnRdoCargas"><i class="fa fa-duotone fa-upload"></i> CARGAS</label>
+                <input type="radio" class="btn-check" name="btnradioCarga" id="btnRdoPresupuesto" autocomplete="off">
+                <label class="btn btn-outline-primary" for="btnRdoPresupuesto"><i class="fa fa-regular fa-coins"></i> PRESUPUESTOS</label>
+                <input type="radio" class="btn-check" name="btnradioCarga" id="btnRdoCuota" autocomplete="off">
+                <label class="btn btn-outline-primary" for="btnRdoCuota"><i class="fa fa-regular fa-file-invoice-dollar"></i> CUOTAS</label>
+            </div>
+        </div>
+        <br /> 
+        <div class="col-md-2 col-sm-4" style="max-width:150px">
+            <label for="inpPresupAn" class="form-label fw-bold text-capitalize">Presupuesto - Año</label>
+            <input type="number" min="2023" max="2027" value="2023" id="inpPresupAn" class="form-control" />
+        </div>
+
+        <div class="row" style="min-width:350px !important">
+            <div id="divCargas" style="display:block" class="row divOpciones">
+                @Html.Partial("_CargaPartial", new PresupuestoSite.Models.DTO.Cargas())
+            </div>
+
+            <div id="divPresupuestos" style="display:none" class="row divOpciones">
+                @Html.Partial("_TablaPresupuestoCargas", new PresupuestoSite.Models.DTO.Cargas())
+            </div>
+            <div id="divCuotas" style="display:none" class="row divOpciones">
+                @Html.Partial("_TablaCuotaCargas", new PresupuestoSite.Models.DTO.Cargas())
+            </div>
+        </div>
+
+
+    </div>
+
+</main>
+@section Scripts {
+    <script src="~/Scripts/Js/cargas/carga.js"></script>
+
+}
+
+

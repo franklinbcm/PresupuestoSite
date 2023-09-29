@@ -1,0 +1,61 @@
+﻿@model PresupuestoSite.Models.DTO.Cargas
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="row">
+            <p id="data"></p>
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <fieldset class="card card-body">
+                    <form id="frmUpload" method="post" asp-action="Create" encType="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-12 mb-2 mt-0">
+                                <label class="form-label fw-bold text-capitalize" for="exampleFormControlSelect1">Documento</label>
+                                <div class="mb-2">
+                                    @Html.DropDownListFor(m => m.presupuestoCarga.DETALLES, Model.TiposDocumentos,
+                                    new { @class = "form-control", @id = "intSelectOpt" })
+                                </div>
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label for="postedFiles" class="form-label fw-bold text-capitalize">Seleccione Archivo Excel:</label>
+                                <input type="file" id="postedFiles" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" name="postedFiles" multiple />
+                            </div>
+                            <div class="col-8 mt-2">
+                                <button id="btnUpload" class="btn btn-primary" onclick="getData();" disabled=true><i class="fas fa-plus"></i> Cargar</button>&nbsp;&nbsp;
+                                <input type="reset" class="btn btn-warning text-white" onclick="resetData();" value="Limpiar" />
+                            </div>
+
+                        </div>
+                    </form>
+                </fieldset>
+                @Html.Hidden("inpApiUri", "https://localhost:44364/api/v1/presupuesto/agregar")
+                @Html.Hidden("inpUsr", "Admin")
+            </div>
+
+        </div>
+    </div>
+    <div class="mt-5">
+        <br />
+        <br />
+    </div>
+    <div class="mt-5">
+        <br />
+        <br />
+    </div>
+    <div class="mt-5">
+        <br />
+    </div>
+
+}
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
