@@ -1,9 +1,9 @@
 ﻿/// <reference path="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js" />
-var divLoading = '<div class="loading2" > </div> ';
+var divLoading = '<div class="loading2" >Cargando...</div> ';
 var divImageLoaging = '<div id="loading2Image" class="Loading" style="display:none; z-index:9999999" <iframe src="about:blank"  style="border:none; top:0; left:0; height:100%; width:100%; z-index:-1; position:absolute;" /></div>  ';
 var BeginRequestHandler = function (sender, args) {
-    $("body").append(divLoading);
-    $("body").append(divImageLoaging);
+    $("body footer").prepend(divLoading);
+    $("body footer").prepend(divImageLoaging);
     $("#loading2Image").css("display", "block");
 };
 var EndRequestHandler = function (sender, args) {
@@ -113,3 +113,36 @@ function ConvertDateJsonToDate(stringDate) {
     }
         
 }
+function isNumberKey(evt) {
+
+    console.log(evt.value);
+    if ((evt.which != 46 || evt.value.indexOf('.') != -1) && (evt.which < 48 || evt.which > 57)) {
+        //event it's fine
+
+    }
+    var input = evt.value;
+    if ((input.indexOf('.') != -1) && (input.substring(input.indexOf('.')).length > 2)) {
+        return false;
+    }
+}
+
+jQuery.fn.ForceNumericOnly =
+    function () {
+        return this.each(function () {
+            $(this).keydown(function (e) {
+                var key = e.charCode || e.keyCode || 0;
+                // allow backspace, tab, delete, enter, arrows, numbers and keypad numbers ONLY
+                // home, end, period, and numpad decimal
+                return (
+                    key == 8 ||
+                    key == 9 ||
+                    key == 13 ||
+                    key == 46 ||
+                    key == 110 ||
+                    key == 190 ||
+                    (key >= 35 && key <= 40) ||
+                    (key >= 48 && key <= 57) ||
+                    (key >= 96 && key <= 105));
+            });
+        });
+    };

@@ -6,6 +6,7 @@ using PresupuestoSite.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -32,17 +33,34 @@ namespace PresupuestoSite.Servicios.Cargas
             //var resuldData = result.Content.ReadFromJsonAsync<PresupuestoCarga[]>().Result;
 
             var jSon = "";
-
+            PresupuestoCarga[] errorMessage = new PresupuestoCarga[0];
             using (WebClient wc = new WebClient())
             {
-                jSon = wc.DownloadString(Utilidades.GetApiRutaUnida($"/presupuesto/TodoPresupuestoCargadoPorPres/{presupuestoAnualDe}"));
+                try
+                {
+                    jSon = wc.DownloadString(Utilidades.GetApiRutaUnida($"/presupuesto/TodoPresupuestoCargadoPorPres/{presupuestoAnualDe}"));
+                }
+                catch (Exception ex)
+                {
+                    Utilidades.GetEstadoRequest(ex, errorMessage);
+                    wc.Dispose();
+                    
+
+                }
+                
             }
+             
+
             var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
-            resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+            if(resultData != null)
+            {
+                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
 
-             var dataResult = JsonConvert.DeserializeObject<PresupuestoCargaVM[]>(resultData);
+                var dataResult = JsonConvert.DeserializeObject<PresupuestoCargaVM[]>(resultData);
 
-            return dataResult;
+                return dataResult;
+            }
+            return resultData;
 
 
         }

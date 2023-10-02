@@ -13,19 +13,38 @@
                 <fieldset class="card card-body">
                     <form id="frmUpload" method="post" asp-action="Create" encType="multipart/form-data">
                         <div class="row">
-                            <div class="col-md-12 mb-2 mt-0">
-                                <label class="form-label fw-bold text-capitalize" for="exampleFormControlSelect1">Documento</label>
-                                <div class="mb-2">
-                                    @Html.DropDownListFor(m => m.presupuestoCarga.DETALLES, Model.TiposDocumentos,
-                                    new { @class = "form-control", @id = "intSelectOpt" })
+                            <div class="row">
+                                <div class="form-check col-auto">
+                                    <input class="form-check-input" type="radio" name="docTypeRadio" id="ckPresupuesto" value="Presupuesto" checked>
+                                    <label class="form-check-label fw-bold" for="ckPresupuesto">
+                                        Presupuesto
+                                    </label>
+                                </div>
+                                <div class="form-check col-auto">
+                                    <input class="form-check-input" type="radio" name="docTypeRadio" id="ckCuota" value="Cuota">
+                                    <label class="form-check-label fw-bold" for="ckCuota">
+                                        Cuota
+                                    </label>
                                 </div>
                             </div>
-                            <div class="col-md-12 mb-3">
+                            @*<div class="col-md-12 mb-2 mt-0">
+            <label class="form-label fw-bold text-capitalize" for="exampleFormControlSelect1">Documento</label>
+            <div class="mb-2">
+                @Html.DropDownListFor(m => m.presupuestoCarga.DETALLES, Model.TiposDocumentos,
+                new { @class = "form-control", @id = "intSelectOpt" })
+            </div>
+        </div>*@
+                            <div class="form-group col-md-12 mb-3 mt-4">
                                 <label for="postedFiles" class="form-label fw-bold text-capitalize">Seleccione Archivo Excel:</label>
-                                <input type="file" id="postedFiles" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" name="postedFiles" multiple />
+                                <div class="form-group">
+                                    <div class="input-group mb-3">
+                                        <input type="file" id="postedFiles" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" class="form-control" name="postedFiles" multiple />
+                                        <span id="spLoadFile" class="input-group-text custon-btn-link" title="Cargar documento de Excel"><i class="fa fa-sharp fa-regular fa-file-excel text-success fa-lg"></i></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-8 mt-2">
-                                <button id="btnUpload" class="btn btn-primary" onclick="getData();" disabled=true><i class="fas fa-plus"></i> Cargar</button>&nbsp;&nbsp;
+                                <button id="btnUpload" class="btn btn-primary" onclick="getData();" disabled=disabled><i class="fas fa-plus"></i> Cargar</button>&nbsp;&nbsp;
                                 <input type="reset" class="btn btn-warning text-white" onclick="resetData();" value="Limpiar" />
                             </div>
 

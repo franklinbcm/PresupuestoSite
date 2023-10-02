@@ -5,7 +5,14 @@
 
 
 <main>
-    <div class="container mt-5">
+
+    <div class="container mt-3">
+        <div class="row d-flex justify-content-start p-2" style="width:98%">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item active">Cargas</li>
+            </ol>
+        </div>
         @*<h3>CARGAS</h3>*@
         <div class="row  col-12" style="width:98%">
             <div class="btn-group d-flex justify-content-center" role="group" aria-label="Basic radio toggle button group">
@@ -17,7 +24,7 @@
                 <label class="btn btn-outline-primary" for="btnRdoCuota"><i class="fa fa-regular fa-file-invoice-dollar"></i> CUOTAS</label>
             </div>
         </div>
-        <br /> 
+        <br />
         <div class="col-md-2 col-sm-4" style="max-width:150px">
             <label for="inpPresupAn" class="form-label fw-bold text-capitalize">Presupuesto - Año</label>
             <input type="number" min="2023" max="2027" value="2023" id="inpPresupAn" class="form-control" />
@@ -38,6 +45,104 @@
 
 
     </div>
+    <section>
+        <div class="offcanvas offcanvas-middle-fullScreen offcanvas-start" tabindex="-1" id="offcanvasCargas" aria-labelledby="offcanvasExampleLabel" aria-modal="true" role="dialog">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title text-dark" id="offcanvasExampleLabel"><i id="iCargaTitle" class="fa fa-regular fa-coins"></i> <span id="spCargaTitulo">PRESUPUESTO</span> # <span id="spRegID" class="text-success"></span></h5>
+                @*<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>*@
+                <button type="button" class="btn btn-danger" data-bs-dismiss="offcanvas" aria-label="Close">X</button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="container d-flex justify-content-start text-start  alert alert-dismissible alert-info">
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <label for="inpClasif" class="form-label">Cód. Clasificación</label>
+                            <input type="text" class="form-control" id="inpClasif" readonly>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpFuente" class="form-label">Fuente</label>
+                            <input type="text" class="form-control" id="inpFuente" readonly>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="inpPartida" class="form-label">Partida</label>
+                            <input type="text" class="form-control" id="inpPartida" readonly>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpGrupo" class="form-label">Grupo</label>
+                            <input type="text" class="form-control" id="inpGrupo" readonly>
+                        </div>
+                        <div class="col-md-9 mb-2">
+                            <label for="inpGrupoDesc" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="inpGrupoDesc" readonly>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpSubpartida" class="form-label">Subpartida</label>
+                            <input type="text" class="form-control" id="inpSubpartida" readonly>
+                        </div>
+                        <div class="col-md-9 mb-2">
+                            <label for="inpSubpartidaDesc" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="inpSubpartidaDesc" readonly>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpUnidadFisc" class="form-label">Unidad Fiscalizadora</label>
+                            <input type="text" class="form-control" id="inpUnidadFisc" readonly>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpMoneda" class="form-label">Moneda</label>
+                            <input type="text" class="form-control" id="inpMoneda" readonly>
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="inpPresupuesto" id="lbinpPresupuesto" class="form-label">Presupuesto</label>
+                            <div class="input-group mb-2">
+                                <span  class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <input type="text" class="form-control" id="inpPresupuesto">
+                            </div>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="inpPresupuestoAn" class="form-label">Período</label>
+                            <input type="text" class="form-control" id="inpPresupuestoAn" readonly>
+                        </div>
+                        <div class="col-md-12 mb-2">
+                            <label for="taDetalles" class="form-label">Detalles</label>
+                            <textarea type="text" rows="2" class="form-control" id="taDetalles" readonly></textarea>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="inpRegCrePor" class="form-label">Registrado Por</label>
+                            <input type="text" class="form-control" id="inpRegCrePor" readonly>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="inpRegCreacionFecha" class="form-label">Registrado En</label>
+                            <input type="text" class="form-control" id="inpRegCreacionFecha" readonly>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="inpRegModPor" class="form-label">Modificado Por</label>
+                            <input type="text" class="form-control" id="inpRegModPor" readonly>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <label for="inpRegModifFecha" class="form-label">Modificado En</label>
+                            <input type="text" class="form-control" id="inpRegModifFecha" readonly>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="ckEstado" checked>
+                                <label class="form-check-label" for="ckEstado">¿Registro Activo?</label>
+                            </div>
+                        </div>
+                        <div class="col-12 mt-2 d-flex justify-content-end">
+                            <button id="btnEditPresupuesto" class="btn btn-info"><i class="far fa-edit"></i> Editar</button>&nbsp;&nbsp;
+                        </div>
+                        <div class="col-md-12 mt-5">
+
+                        </div>
+                    </div>
+
+                    <br />
+                    <br />
+
+                </div>
+            </div>
+        </div>
+    </section>
 
 </main>
 @section Scripts {

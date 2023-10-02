@@ -78,6 +78,14 @@ input[readonly] {
 input[readonly]:hover{
     cursor: not-allowed !important;
 }
+textarea[readonly] {
+    background-color: #f9f6f6;
+}
+
+textarea[readonly]:hover {
+    cursor: not-allowed !important;
+}
+
 
 /* width */
 ::-webkit-scrollbar {
@@ -97,7 +105,23 @@ input[readonly]:hover{
     border-radius: 5px;
 }
 
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #258cfb;
-    }
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #258cfb;
+}
+span[readonly]:hover {
+    cursor: not-allowed !important;
+}
+.custon-btn-link:hover {
+    cursor: pointer !important;
+}
+
+.offcanvas-fullScreen {
+    --bs-offcanvas-width: 100% !important;
+}
+.offcanvas-middle-fullScreen {
+    --bs-offcanvas-width: 50% !important;
+}
+.swal-wide {
+    width: 700px !important;
+}

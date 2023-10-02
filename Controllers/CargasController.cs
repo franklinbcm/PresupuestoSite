@@ -36,7 +36,7 @@ namespace PresupuestoSite.Controllers
             {
                 Result = "Ok",
                 Record = cargas,
-                Total = cargas.ToList().Count()
+                Total = cargas != null? cargas.ToList().Count() : 0,
             }, JsonRequestBehavior.AllowGet);
 
 
