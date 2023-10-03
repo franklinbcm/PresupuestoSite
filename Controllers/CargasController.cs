@@ -27,10 +27,11 @@ namespace PresupuestoSite.Controllers
             
             return View(cargas);
         }
-        public JsonResult GetPresupuestos()
+        [HttpGet]
+        public JsonResult GetPresupuestos(int presupuestoAnualDe)
         {
 
-            var cargas = _cargasServicio.GetPresupuestoPorAno(2023);
+            var cargas = _cargasServicio.GetPresupuestoPorAno(presupuestoAnualDe);
 
             return Json(new
             {
@@ -42,16 +43,17 @@ namespace PresupuestoSite.Controllers
 
         }
 
-        public JsonResult GetCuotas()
+        [HttpGet]
+        public JsonResult GetCuotas(int presupuestoAnualDe)
         {
 
-            var cargas = _cargasServicio.GetCuotaPorAno(2023);
+            var cargas = _cargasServicio.GetCuotaPorAno(presupuestoAnualDe);
 
             return Json(new
             {
                 Result = "Ok",
                 Record = cargas,
-                Total = cargas.ToList().Count()
+                Total = cargas != null ? cargas.ToList().Count() : 0,
             }, JsonRequestBehavior.AllowGet);
 
 

@@ -22,15 +22,11 @@ namespace PresupuestoSite.Common
             jsonString = Encoding.UTF8.GetString(bytes);
             return jsonString;
         }
-        public static IEnumerable<dynamic> GetEstadoRequest(dynamic objectMensaje, dynamic[] objectRetorno)
+        public static RequestMensajes GetEstadoRequest(dynamic objectMensaje)
         {
-            RequestMensajes result = GetEstatusRequestStr(objectMensaje.Message);
-            
-            objectRetorno[0].ESTATUS_REQUEST = (dynamic)result.ESTATUS_REQUEST;
-            objectRetorno[0].MENSAJE_REQUEST = (dynamic)result.MENSAJE_REQUEST;
+            var result = GetEstatusRequestStr(objectMensaje.Message);
 
-
-            return objectRetorno;
+            return result;
         }
         public static RequestMensajes GetEstatusRequestStr(string mensaje)
         {

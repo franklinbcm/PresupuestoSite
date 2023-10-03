@@ -125,3 +125,37 @@ span[readonly]:hover {
 .swal-wide {
     width: 700px !important;
 }
+a:link {
+    text-decoration: none;
+}
+
+
+a:visited {
+    text-decoration: none;
+}
+
+
+a:hover {
+    text-decoration: none;
+}
+
+
+a:active {
+    text-decoration: none;
+}
+.blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0;
+    }
+}
+
+.rotate {
+    writing-mode: vertical-rl;
+    padding-left: 50px;
+    font-weight: bold;
+    font-size: 20px;
+}

@@ -42,7 +42,10 @@ namespace PresupuestoSite.Servicios.Cargas
                 }
                 catch (Exception ex)
                 {
-                    Utilidades.GetEstadoRequest(ex, errorMessage);
+                  var result =  Utilidades.GetEstadoRequest(ex);
+                    PresupuestoCargaVM presupuestoCarga = new PresupuestoCargaVM() { MENSAJE_REQUEST = result.MENSAJE_REQUEST,
+                                                                                     ESTATUS_REQUEST = result.ESTATUS_REQUEST };
+                    jSon = JsonConvert.SerializeObject(presupuestoCarga);
                     wc.Dispose();
                     
 
@@ -79,14 +82,35 @@ namespace PresupuestoSite.Servicios.Cargas
 
             using (WebClient wc = new WebClient())
             {
-                jSon = wc.DownloadString(Utilidades.GetApiRutaUnida($"/presupuestoCuota/TodoPresupuestoCuotaCargadoPorPres/{presupuestoAnualDe}"));
+               
+                try
+                {
+                    jSon = wc.DownloadString(Utilidades.GetApiRutaUnida($"/presupuestoCuota/TodoPresupuestoCuotaCargadoPorPres/{presupuestoAnualDe}"));
+                }
+                catch (Exception ex)
+                {
+                    var result = Utilidades.GetEstadoRequest(ex);
+                    PresupuestoCargaVM presupuestoCarga = new PresupuestoCargaVM()
+                    {
+                        MENSAJE_REQUEST = result.MENSAJE_REQUEST,
+                        ESTATUS_REQUEST = result.ESTATUS_REQUEST
+                    };
+                    jSon = JsonConvert.SerializeObject(presupuestoCarga);
+                    wc.Dispose();
+
+
+                }
             }
             var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
-            resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+            if (resultData != null)
+            {
+                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
 
-            var dataResult = JsonConvert.DeserializeObject<PresupuestoCuotaCargaVM[]>(resultData);
+                var dataResult = JsonConvert.DeserializeObject<PresupuestoCuotaCargaVM[]>(resultData);
 
-            return dataResult;
+                return dataResult;
+            }
+            return resultData;
 
 
         }

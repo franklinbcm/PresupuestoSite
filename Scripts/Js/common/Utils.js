@@ -1,5 +1,5 @@
 ﻿/// <reference path="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js" />
-var divLoading = '<div class="loading2" >Cargando...</div> ';
+var divLoading = '<div class="loading2 blink" >Cargando...</div> ';
 var divImageLoaging = '<div id="loading2Image" class="Loading" style="display:none; z-index:9999999" <iframe src="about:blank"  style="border:none; top:0; left:0; height:100%; width:100%; z-index:-1; position:absolute;" /></div>  ';
 var BeginRequestHandler = function (sender, args) {
     $("body footer").prepend(divLoading);
@@ -40,6 +40,7 @@ var LangSpanish = {
     }
 };
 var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAsync) {
+    debugger
     $.ajax({
         type: RequestType,
         url: vUrl,
@@ -52,6 +53,7 @@ var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAs
             ShowLoading();
         },
         error: function (data) {
+            debugger
             if (data.status === 0) {
                 toastr.error("Se ha perdido la conexión con el servidor");
                 return false;
@@ -68,6 +70,14 @@ var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAs
     }).always(function () {
         HideLoading();
     });
+};
+
+var GetPartialView = function (vUrl, vParameter, vSucess, isAsync) {
+    CallAjax(vUrl, vParameter, "html", vSucess, "POST", (isAsync === undefined ? true : isAsync));
+};
+var CallRedirectUrlTo = function (url, param) {
+    var vUrl = (param !== undefined ? url + param : url);
+    window.location.href = vUrl;
 };
 
 function commaSeparateNumber(val) {

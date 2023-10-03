@@ -5,6 +5,9 @@ $(document).ready(function () {
 
 function onInitPagina() {
 	//getData();
+	$('#inpPresupAn').val(new Date().getFullYear()).attr({
+		"min": new Date().getFullYear()
+	});
 	$('#spLoadFile').click(() => {
 		$("#postedFiles").click();
 	})
@@ -16,6 +19,22 @@ function onInitPagina() {
 		}
 
 	});
+	$('#inpPresupAn').change((e) => {
+		var curYear = new Date().getFullYear();
+		if ($(e.currentTarget).val() < curYear) {
+			$(e.currentTarget).val(curYear)
+		}
+		/*Presupuesto*/
+		if ($($("input[name='btnradioCarga']")[1]).prop("checked")) 
+			cargarPresupuestoDatatable();
+
+		/*Cuota*/
+		if ($($("input[name='btnradioCarga']")[2]).prop("checked"))
+			cargarCuotaDatatable();
+
+	})
+	
+	/*Numeric Format with two decimals*/
 	$('#inpPresupuesto').keypress(function (event) {
 		if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
 			$(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57 || event.which ==188)) {
@@ -41,6 +60,7 @@ function onInitPagina() {
 		$(this).change((e) => {
 			btnRdoCuota(e);
 		})
+
 
 	});
 
@@ -143,10 +163,11 @@ function btnRdoCuota(e) {
 			$("#divCuotas").fadeIn("slow");
 			cargarCuotaDatatable();
 		}
-
+		 
 	}
 
 }
+
 function EditarItem(e) {
 	var data = JSON.parse(atob($(e).attr('data-item')));
 	fillDataEdit(data);
@@ -290,14 +311,25 @@ function RemoverItem(e) {
 		});
 	});
 }
+//function ShowReg(data) {
+//	if (data.length > 0) {
+//		$("#isRecord").fadeOut();
+//		$("#divTbl").fadeIn("slow");
+//	} else {
+//		$("#divTbl").fadeOut();
+//		$("#isRecord").fadeIn();
+//	}
 
+//}
 function cargarPresupuestoDatatable() {
 	var presupuestoAnualDe = parseInt($("#inpPresupAn").val()); 
-	CallAjax("/Cargas/GetPresupuestos/" + presupuestoAnualDe, undefined, "json", function (data) {
+	debugger
+	CallAjax("/Cargas/GetPresupuestos?presupuestoAnualDe=" + presupuestoAnualDe, undefined, "json", function (data) {
 		debugger
 		if (data && data.Record) {
+			$("#tblPresupuestoCargas").show();
 			dataTable = $("#tblPresupuestoCargas").DataTable({
-			   scrollX: true,
+				scrollX: true,
 				data: data.Record,
 				destroy: true,
 				searching: true,
@@ -309,7 +341,7 @@ function cargarPresupuestoDatatable() {
 						"data": "ID",
 						"render": (item) => {
 							/*console.log(data)*/
-			/*				debugger*/
+							/*				debugger*/
 							return `<div class="text-center">
                                 <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar" href="#offcanvasCargas" class="btn btn-sm btn-info text-white font-size-09" data-bs-toggle="offcanvas" onclick='EditarItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
                                 <i class="far fa-edit"></i>
@@ -357,7 +389,8 @@ function cargarPresupuestoDatatable() {
 					{ "data": "FUENTE_FINANCIAMIENTO_FONDO", "width": "7%", className: "dt-custom-column-text text-center" },
 					{ "data": "PRESUPUESTO_ANUAL_DE", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CREADO_POR", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "CREADO_EN", 
+					{
+						"data": "CREADO_EN",
 						"render": (item) => {
 							return (
 								ConvertDateJsonToDate(item)
@@ -372,11 +405,12 @@ function cargarPresupuestoDatatable() {
 							);
 						}, "width": "38%", className: "dt-custom-column-text text-center"
 					},
-					{ "data": "ESTATUS_REGISTRO",
+					{
+						"data": "ESTATUS_REGISTRO",
 						"render": (item) => {
 							/*console.log(item)*/
 							return (
-								(item == 1? 'ACTIVO' : 'INACTIVO')
+								(item == 1 ? 'ACTIVO' : 'INACTIVO')
 							);
 						},
 						"width": "40%", className: "dt-custom-column-text text-center"
@@ -386,15 +420,26 @@ function cargarPresupuestoDatatable() {
 				"width": "100%"
 			});
 
+		} else {
+			$("#tblPresupuestoCargas").hide();
+			$("#tblPresupuestoCargas").DataTable({
+				destroy: true,
+				searching: false,
+				language: LangSpanish,
+				data:null,
+				"bLengthChange": false,
+				"bPaginate": false
+			});
 		}
 	}, "GET", true);
 }
 
 function cargarCuotaDatatable() {
 	var presupuestoAnualDe = parseInt($("#inpPresupAn").val());
-	CallAjax("/Cargas/GetCuotas/" + presupuestoAnualDe, undefined, "json", function (data) {
+	CallAjax("/Cargas/GetCuotas?presupuestoAnualDe=" + presupuestoAnualDe, undefined, "json", function (data) {
 		debugger
 		if (data && data.Record) {
+			$("#tblCuotaCargas").show();
 			dataTable = $("#tblCuotaCargas").DataTable({
 				scrollX: true,
 				data: data.Record,
@@ -483,6 +528,17 @@ function cargarCuotaDatatable() {
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" },
 				],
 				"width": "100%"
+			});
+		}
+		else {
+			$("#tblCuotaCargas").hide();
+			$("#tblCuotaCargas").DataTable({
+				destroy: true,
+				searching: false,
+				language: LangSpanish,
+				data: null,
+				"bLengthChange": false,
+				"bPaginate": false
 			});
 		}
 	}, "GET", true);
