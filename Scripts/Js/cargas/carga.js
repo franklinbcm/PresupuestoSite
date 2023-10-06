@@ -4,7 +4,7 @@ $(document).ready(function () {
 });
 
 function onInitPagina() {
-	//getData();
+	$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
 	$('#inpPresupAn').val(new Date().getFullYear()).attr({
 		"min": new Date().getFullYear()
 	});
@@ -50,9 +50,9 @@ function onInitPagina() {
 
 	//$("#intSelectOpt").change(() => {
 	//	if ($("#intSelectOpt option:selected").val() === 'PRESUPUESTO') {
-	//		$('#inpApiUri').val('https://localhost:44364/api/v1/presupuesto/agregar');
+	//		$('#inpApiUri').val('https://localhost:9302/api/v1/presupuesto/agregar');
 	//	} else {
-	//		$('#inpApiUri').val('https://localhost:44364/api/v1/presupuestoCuota/agregar');
+	//		$('#inpApiUri').val(https://localhost:9302/api/v1/presupuestoCuota/agregar');
 	//	}
 
 	//});
@@ -63,21 +63,51 @@ function onInitPagina() {
 
 
 	});
-
+	$('#inpApiBase').val()
 	$("input[name='docTypeRadio']").each(function () {
 		$(this).change((e) => {
 			if (e.currentTarget.id.includes('Presupuesto')) {
-				$('#inpApiUri').val('https://localhost:44364/api/v1/presupuesto/agregar');
+				$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
 
 			} else {
-				$('#inpApiUri').val('https://localhost:44364/api/v1/presupuestoCuota/agregar');
+				$('#inpApiUri').val($('#inpApiBase').val() + '/presupuestoCuota/agregar');
 
+			}
+		})
+
+	});
+	$("input[name='btnradioCarga']").each(function () {
+		$(this).change((e) => {
+			if (e.currentTarget.id.includes('Presupuesto')) {
+				$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
+
+			} else if (e.currentTarget.id.includes('Cuota')) {
+				$('#inpApiUri').val($('#inpApiBase').val() + '/presupuestoCuota/agregar');
+
+			} else {
+				if ($('#ckPresupuesto').prop("checked")) {
+					$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
+				} else {
+					$('#inpApiUri').val($('#inpApiBase').val() + '/presupuestoCuota/agregar');
+				}
 			}
 		})
 
 	});
 	$('#btnEditPresupuesto').click(() => {
 		UpdateEditar();
+	});
+	//$("#ckPresupuesto").change(() => {
+	//	if ($("#intSelectOpt option:selected").val() === 'PRESUPUESTO') {
+	//		$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
+	//	} else {
+	//		$('#inpApiUri').val($('#inpApiBase').val() + '/presupuestoCuota/agregar');
+	//	}
+
+	//});
+	$("#btnUpload").on("click", function (event) {
+		event.preventDefault();
+		CargarDocumento();
 	});
 	
 
@@ -86,57 +116,75 @@ function onInitPagina() {
 
 function resetData() {
 	$("#btnUpload").attr("disabled", true);
+	$('#postedFiles').val('');
+
+	 
 };
 
 
-function getData() {
+function CargarDocumento() {
 	var dataUpload = $('#postedFiles')[0];
 	var currentUser = $('#inpUsr').val();
 	var currentYearBudget = $('#inpPresupAn').val();
 	var UriApi = $('#inpApiUri').val();
-
+	
 	var formData = new FormData();
 	formData.append('postedFiles', dataUpload.files[0]);
 	formData.append('user', currentUser);
 	formData.append('yearBudget', currentYearBudget);
 
-	CallAjax(UriApi, formData, "json", function (data) {
+	//debugger
+	CallAjaxFiles(UriApi, formData, "json", function (data) {
 
 		if (data) {
 
 			if (data.mensajeResultado === "Ok") {
 				/*$('#taResult').val(JSON.stringify(data.data));*/
-				debugger
+				
+				swal({
+					html: true,
+					title: 'Resultado!',
+					text: `<div class="container d-flex justify-content-start text-center">
+							<div class="row">
+								<div class="col-md-12 mt-2">
+									<span class="fw-bold">Enviados: </span>${data.recondEnviados}
+								</div>
+								<div class="col-md-12 mt-2">
+									<span class="fw-bold">Almacenados: </span>${data.recordAlmacenados}
+								</div>
+								<div class="col-md-12 mt-4">
+									${data.recondEnviados > data.recordAlmacenados || data.recordAlmacenados == 0 ?
+										"Puede que algunos de estos registros ya esten cargados previamente!" : "Todos los registros fueron almacenados!"}
+								</div>
+								<div class="col-md-12 mt-5">
+					
+								</div>
+							</div>
 
-				Swal.fire('Resultado!',
-					JSON.stringify({
-						Enviados: data.recondEnviados, Almacenados: data.recordAlmacenados, Resultado: data.recondEnviados > data.recordAlmacenados || data.recordAlmacenados == 0 ?
-							"Puede que ya existan algunos de estos registros cargados previamente" : "Todos los registros fueron almacenados"
-					}),
-					'success'
-				)
+							<br />
+							<br />
+
+						   </div>`,
+
+					type: "success"
+				});
+
 			} else {
 
-				//if (data.mensajeResultado.includes("Dentro de esta carga,")) {
-				//	$('#taResult').val(JSON.stringify(data.presupuestosCargadossFaltantes));
-				//} else {
-				//	$('#taResult').val(JSON.stringify(data.subpartidasFaltantes));
-				//}
-
-
-				Swal.fire(data.mensajeResultado,
-					JSON.stringify(data.subpartidasFaltantes),
-					'info'
-				)
+				swal({
+					html: true,
+					title: data.mensajeResultado,
+					text: JSON.stringify(data.subpartidasFaltantes),
+					type: "info"
+				});
 
 			}
 
-
+			resetData();
 
 		}
 
-
-	}, "POST", true);
+	}, "POST", false);
 
 
 
@@ -323,9 +371,8 @@ function RemoverItem(e) {
 //}
 function cargarPresupuestoDatatable() {
 	var presupuestoAnualDe = parseInt($("#inpPresupAn").val()); 
-	debugger
 	CallAjax("/Cargas/GetPresupuestos?presupuestoAnualDe=" + presupuestoAnualDe, undefined, "json", function (data) {
-		debugger
+
 		if (data && data.Record) {
 			$("#tblPresupuestoCargas").show();
 			dataTable = $("#tblPresupuestoCargas").DataTable({
@@ -437,7 +484,7 @@ function cargarPresupuestoDatatable() {
 function cargarCuotaDatatable() {
 	var presupuestoAnualDe = parseInt($("#inpPresupAn").val());
 	CallAjax("/Cargas/GetCuotas?presupuestoAnualDe=" + presupuestoAnualDe, undefined, "json", function (data) {
-		debugger
+	
 		if (data && data.Record) {
 			$("#tblCuotaCargas").show();
 			dataTable = $("#tblCuotaCargas").DataTable({

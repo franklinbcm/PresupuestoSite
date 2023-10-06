@@ -40,7 +40,7 @@ var LangSpanish = {
     }
 };
 var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAsync) {
-    debugger
+
     $.ajax({
         type: RequestType,
         url: vUrl,
@@ -53,7 +53,7 @@ var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAs
             ShowLoading();
         },
         error: function (data) {
-            debugger
+
             if (data.status === 0) {
                 toastr.error("Se ha perdido la conexión con el servidor");
                 return false;
@@ -70,6 +70,47 @@ var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAs
     }).always(function () {
         HideLoading();
     });
+};
+var CallAjaxFiles = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAsync) {
+
+    $.ajax({
+
+        type: RequestType,
+        url: vUrl,
+        data: vParameter !== undefined ? vParameter : {},
+        contentType: "application/json; charset=utf-8",
+        crossDomain: true,
+        dataType: vDataType,
+       /*< !--use this options for upload files-- >*/
+        cache: false,
+        contentType: false,
+        processData: false,
+		/*<!--end use this options for upload files-- >*/
+        success: vSucess,
+            async: isAsync !== undefined ? isAsync : true,
+                beforeSend: function () {
+                    ShowLoading();
+                },
+    error: function (data) {
+        if (data.status === 0) {
+            console.log(data);
+
+            toastr.error("Se ha perdido la conexión con el servidor");
+            return false;
+        }
+        if (data.status !== 200) {
+            console.log("Url:" + vUrl);
+            console.log((vParameter !== undefined ? "Param:" + vParameter : {}));
+            if (data !== undefined && data.responseXML !== undefined)
+                toastr.error("<span>" + vUrl + "</span>" + data.responseXML);
+            else
+                toastr.error("<span>" + vUrl + "</span>" + data.responseText);
+        }
+    }
+
+}).always(function () {
+    HideLoading();
+});
 };
 
 var GetPartialView = function (vUrl, vParameter, vSucess, isAsync) {

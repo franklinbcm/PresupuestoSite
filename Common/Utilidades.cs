@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -27,6 +28,11 @@ namespace PresupuestoSite.Common
             var result = GetEstatusRequestStr(objectMensaje.Message);
 
             return result;
+        }
+        public static byte[] ConvertToByteArray(string filePath)
+        {
+            byte[] fileByteArray = File.ReadAllBytes(filePath);
+            return fileByteArray;
         }
         public static RequestMensajes GetEstatusRequestStr(string mensaje)
         {

@@ -1,8 +1,10 @@
-﻿using PresupuestoSite.Models;
+﻿using Microsoft.SqlServer.Server;
+using PresupuestoSite.Models;
 using PresupuestoSite.Models.DTO;
 using PresupuestoSite.Servicios.Cargas;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Web;
@@ -16,7 +18,7 @@ namespace PresupuestoSite.Controllers
         private readonly CargasServicio _cargasServicio = new CargasServicio();
         public ActionResult Index()
         {
-
+            ViewBag.Api = ConfigurationManager.AppSettings["PresupuestoApi"];
             Cargas  cargas = new Cargas()
             {
                presupuestoCarga  = new Cargas().presupuestoCarga,
@@ -54,6 +56,21 @@ namespace PresupuestoSite.Controllers
                 Result = "Ok",
                 Record = cargas,
                 Total = cargas != null ? cargas.ToList().Count() : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+        [HttpPost]
+        public ActionResult CargarDocumento(HttpPostedFileBase postedFiles)
+        {
+            var EvidenceFiles = System.Web.HttpContext.Current.Request.Form["postedFiles"];
+      
+
+            _cargasServicio.SetCargarDocumento(postedFiles);
+
+            return Json(new
+            {
+                Result = "Ok",
             }, JsonRequestBehavior.AllowGet);
 
 

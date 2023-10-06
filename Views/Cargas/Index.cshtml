@@ -1,6 +1,6 @@
 ﻿@model PresupuestoSite.Models.DTO.Cargas
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Cargas";
 }
 
 
@@ -94,7 +94,7 @@
                         <div class="col-md-4 form-group">
                             <label for="inpPresupuesto" id="lbinpPresupuesto" class="form-label">Presupuesto</label>
                             <div class="input-group mb-2">
-                                <span  class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <span class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
                                 <input type="text" class="form-control" id="inpPresupuesto">
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                         </div>
                         <div class="col-md-12 mb-2">
                             <label for="taDetalles" class="form-label">Detalles</label>
-                            <textarea type="text" rows="2" class="form-control" id="taDetalles" readonly></textarea>
+                            <textarea type="text" rows="2" class="form-control" maxlength="200" id="taDetalles"></textarea>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="inpRegCrePor" class="form-label">Registrado Por</label>
@@ -143,7 +143,9 @@
             </div>
         </div>
     </section>
-
+    @Html.Hidden("inpApiBase", (object)ViewBag.Api)
+    @Html.Hidden("inpApiUri", "")
+    @Html.Hidden("inpUsr", "Admin")
 </main>
 @section Scripts {
     <script src="~/Scripts/Js/cargas/carga.js"></script>

@@ -12,9 +12,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace PresupuestoSite.Servicios.Cargas
 {
@@ -111,6 +113,45 @@ namespace PresupuestoSite.Servicios.Cargas
                 return dataResult;
             }
             return resultData;
+
+
+        }
+        public void SetCargarDocumento(HttpPostedFileBase files)
+        {
+
+            var jSon = "";
+
+            using (WebClient wc = new WebClient())
+            {
+
+                try
+                {
+                    jSon = wc.DownloadString(Utilidades.GetApiRutaUnida($"/Presupuesto/Presupuesto_ReadFile"));
+                }
+                catch (Exception ex)
+                {
+                    var result = Utilidades.GetEstadoRequest(ex);
+                    PresupuestoCargaVM presupuestoCarga = new PresupuestoCargaVM()
+                    {
+                        MENSAJE_REQUEST = result.MENSAJE_REQUEST,
+                        ESTATUS_REQUEST = result.ESTATUS_REQUEST
+                    };
+                    jSon = JsonConvert.SerializeObject(presupuestoCarga);
+                    wc.Dispose();
+
+
+                }
+            }
+            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+            if (resultData != null)
+            {
+                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+
+                var dataResult = JsonConvert.DeserializeObject<PresupuestoCuotaCargaVM[]>(resultData);
+
+                 
+            }
+             
 
 
         }
