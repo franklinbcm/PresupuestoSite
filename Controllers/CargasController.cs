@@ -1,12 +1,15 @@
 ﻿using Microsoft.SqlServer.Server;
+using Newtonsoft.Json;
 using PresupuestoSite.Models;
 using PresupuestoSite.Models.DTO;
+using PresupuestoSite.Models.ViewModel;
 using PresupuestoSite.Servicios.Cargas;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -60,17 +63,75 @@ namespace PresupuestoSite.Controllers
 
 
         }
-        [HttpPost]
-        public ActionResult CargarDocumento(HttpPostedFileBase postedFiles)
-        {
-            var EvidenceFiles = System.Web.HttpContext.Current.Request.Form["postedFiles"];
+        //[HttpPost]
+        //public ActionResult CargarDocumento(HttpPostedFileBase postedFiles)
+        //{
+        //    var EvidenceFiles = System.Web.HttpContext.Current.Request.Form["postedFiles"];
       
 
-            _cargasServicio.SetCargarDocumento(postedFiles);
+        //    _cargasServicio.SetCargarDocumento(postedFiles);
 
+        //    return Json(new
+        //    {
+        //        Result = "Ok",
+        //    }, JsonRequestBehavior.AllowGet);
+
+
+        //}
+        [HttpPost]
+        public async Task<JsonResult> EditPresupuestoPorId(PresupuestoCargaDTO presupuestoCarga)
+        {
+            
+            var resunt = await  _cargasServicio.SetPresupuestoPorId(presupuestoCarga);
             return Json(new
             {
                 Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemovePresupuestoPorId(PresupuestoYCuotaRemovDTO presupuestoCarga)
+        {
+
+            var resunt = await _cargasServicio.SetRemovePresupuestoPorId(presupuestoCarga);
+            return Json(new
+            {
+                Result = resunt == true? "Ok" : "Fail",
+                Record = resunt,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        //}
+        [HttpPost]
+        public async Task<JsonResult> EditPresupuestoCuotaPorId(PresupuestoCuotaCargaDTO presupuestoCarga)
+        {
+
+            var resunt = await _cargasServicio.SetPresupuestoCuotaPorId(presupuestoCarga);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RemovePresupuestoCuotaPorId(PresupuestoYCuotaRemovDTO presupuestoCarga)
+        {
+
+            var resunt = await _cargasServicio.SetRemovePresupuestoCuotaPorId(presupuestoCarga);
+            return Json(new
+            {
+                Result = resunt == true ? "Ok" : "Fail",
+                Record = resunt,
             }, JsonRequestBehavior.AllowGet);
 
 

@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PresupuestoSite.Common;
 using PresupuestoSite.Models;
+using PresupuestoSite.Models.DTO;
 using PresupuestoSite.Models.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Helpers;
 
 namespace PresupuestoSite.Servicios.Cargas
 {
@@ -155,6 +158,148 @@ namespace PresupuestoSite.Servicios.Cargas
 
 
         }
+
+        public async Task<List<PresupuestoCarga>> SetPresupuestoPorId(PresupuestoCargaDTO presupuestoCarga)
+        {
+            List<PresupuestoCarga> presupuestos = new List<PresupuestoCarga>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, Utilidades.GetApiRutaUnida($"/presupuesto/EdiPresupuestoAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(presupuestoCarga), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<PresupuestoCarga[]>(resultData));
+                            }
+
+                 
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+        public async Task<bool> SetRemovePresupuestoPorId(PresupuestoYCuotaRemovDTO presupuestoCargaRem)
+        {
+            List<PresupuestoCarga> presupuestos = new List<PresupuestoCarga>();
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, Utilidades.GetApiRutaUnida($"/presupuesto/RemPresupuestoAsync")))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(presupuestoCargaRem), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+
+                            return true;
+
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+             
+
+        }
+
+        public async Task<List<PresupuestoCuotaCarga>> SetPresupuestoCuotaPorId(PresupuestoCuotaCargaDTO presupuestoCuotaCarga)
+        {
+            List<PresupuestoCuotaCarga> presupuestosCuota = new List<PresupuestoCuotaCarga>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, Utilidades.GetApiRutaUnida($"/presupuestoCuota/EdiCuotaAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear(); 
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(presupuestoCuotaCarga), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestosCuota.AddRange(JsonConvert.DeserializeObject<PresupuestoCuotaCarga[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestosCuota;
+
+        }
+        public async Task<bool> SetRemovePresupuestoCuotaPorId(PresupuestoYCuotaRemovDTO presupuestoCargaRem)
+        {
+            List<PresupuestoCarga> presupuestos = new List<PresupuestoCarga>();
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Delete, Utilidades.GetApiRutaUnida($"/presupuestoCuota/RemCuotaAsync")))
+            {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(presupuestoCargaRem), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+
+                            return true;
+
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+
+
+        }
+
+
 
     }
 }

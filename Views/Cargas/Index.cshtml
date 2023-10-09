@@ -57,58 +57,59 @@
                     <div class="row">
                         <div class="col-md-3 mb-2">
                             <label for="inpClasif" class="form-label">Cód. Clasificación</label>
-                            <input type="text" class="form-control" id="inpClasif" readonly>
+                            <input type="text" class="form-control" id="inpClasif" readonly disabled="">
                         </div>
                         <div class="col-md-3 mb-2">
                             <label for="inpFuente" class="form-label">Fuente</label>
-                            <input type="text" class="form-control" id="inpFuente" readonly>
+                            <input type="text" class="form-control" id="inpFuente" readonly disabled="">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="inpPartida" class="form-label">Partida</label>
-                            <input type="text" class="form-control" id="inpPartida" readonly>
+                            <input type="text" class="form-control" id="inpPartida" readonly disabled="">
                         </div>
                         <div class="col-md-3 mb-2">
                             <label for="inpGrupo" class="form-label">Grupo</label>
-                            <input type="text" class="form-control" id="inpGrupo" readonly>
+                            <input type="text" class="form-control" id="inpGrupo" readonly disabled="">
                         </div>
                         <div class="col-md-9 mb-2">
                             <label for="inpGrupoDesc" class="form-label">Descripción</label>
-                            <input type="text" class="form-control" id="inpGrupoDesc" readonly>
+                            <input type="text" class="form-control" id="inpGrupoDesc" readonly disabled="">
                         </div>
                         <div class="col-md-3 mb-2">
                             <label for="inpSubpartida" class="form-label">Subpartida</label>
-                            <input type="text" class="form-control" id="inpSubpartida" readonly>
+                            <input type="text" class="form-control" id="inpSubpartida" readonly disabled="">
                         </div>
                         <div class="col-md-9 mb-2">
                             <label for="inpSubpartidaDesc" class="form-label">Descripción</label>
-                            <input type="text" class="form-control" id="inpSubpartidaDesc" readonly>
+                            <input type="text" class="form-control" id="inpSubpartidaDesc" readonly disabled="">
                         </div>
                         <div class="col-md-3 mb-2">
                             <label for="inpUnidadFisc" class="form-label">Unidad Fiscalizadora</label>
-                            <input type="text" class="form-control" id="inpUnidadFisc" readonly>
+                            <input type="text" class="form-control" id="inpUnidadFisc" readonly disabled="">
                         </div>
                         <div class="col-md-3 mb-2">
                             <label for="inpMoneda" class="form-label">Moneda</label>
-                            <input type="text" class="form-control" id="inpMoneda" readonly>
+                            <input type="text" class="form-control" id="inpMoneda" readonly disabled="">
                         </div>
                         <div class="col-md-4 form-group">
                             <label for="inpPresupuesto" id="lbinpPresupuesto" class="form-label">Presupuesto</label>
-                            <div class="input-group mb-2">
+                            <div id="divinpPresupuesto" class="input-group mb-2 has-success">
                                 <span class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
-                                <input type="text" class="form-control" id="inpPresupuesto">
+                                <input type="text" class="form-control is-valid" id="inpPresupuesto">
+                                @*<div class="invalid-feedback">Requerido!</div>*@
                             </div>
                         </div>
                         <div class="col-md-2 mb-2">
                             <label for="inpPresupuestoAn" class="form-label">Período</label>
-                            <input type="text" class="form-control" id="inpPresupuestoAn" readonly>
+                            <input type="text" class="form-control" id="inpPresupuestoAn" readonly disabled="">
                         </div>
-                        <div class="col-md-12 mb-2">
+                        <div class="col-md-12 mb-2 has-success">
                             <label for="taDetalles" class="form-label">Detalles</label>
-                            <textarea type="text" rows="2" class="form-control" maxlength="200" id="taDetalles"></textarea>
+                            <textarea type="text" rows="2" class="form-control is-valid" maxlength="200" id="taDetalles"></textarea>
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="inpRegCrePor" class="form-label">Registrado Por</label>
-                            <input type="text" class="form-control" id="inpRegCrePor" readonly>
+                            <input type="text" class="form-control" id="inpRegCrePor" readonly disabled="">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="inpRegCreacionFecha" class="form-label">Registrado En</label>
@@ -116,11 +117,11 @@
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="inpRegModPor" class="form-label">Modificado Por</label>
-                            <input type="text" class="form-control" id="inpRegModPor" readonly>
+                            <input type="text" class="form-control" id="inpRegModPor" readonly disabled="">
                         </div>
                         <div class="col-md-6 mb-2">
                             <label for="inpRegModifFecha" class="form-label">Modificado En</label>
-                            <input type="text" class="form-control" id="inpRegModifFecha" readonly>
+                            <input type="text" class="form-control" id="inpRegModifFecha" readonly disabled="">
                         </div>
                         <div class="col-md-6 mb-2">
                             <div class="form-check form-switch">

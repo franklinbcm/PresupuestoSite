@@ -192,7 +192,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\BaseEntidad.cs" />
+    <Compile Include="Models\DTO\BaseEntidadDTO.cs" />
     <Compile Include="Models\DTO\Cargas.cs" />
+    <Compile Include="Models\DTO\PresupuestoCuotaCargaDTO.cs" />
+    <Compile Include="Models\DTO\PresupuestoCargaDTO.cs" />
+    <Compile Include="Models\DTO\PresupuestoYCuotaRemovDTO.cs" />
+    <Compile Include="Models\DTO\Prueba.cs" />
     <Compile Include="Models\PresupuestoCarga.cs" />
     <Compile Include="Models\PresupuestoCuotaCarga.cs" />
     <Compile Include="Models\ViewModel\PresupuestoCargaVM.cs" />

@@ -5,57 +5,11 @@ $(document).ready(function () {
 
 function onInitPagina() {
 	$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
-	$('#inpPresupAn').val(new Date().getFullYear()).attr({
-		"min": new Date().getFullYear()
-	});
-	$('#spLoadFile').click(() => {
-		$("#postedFiles").click();
-	})
-	$("#postedFiles").change(() => {
-		if ($('#postedFiles')[0].files.length > 0) {
-			$("#btnUpload").attr("disabled", false);
-		} else {
-			$("#btnUpload").attr("disabled", true);
-		}
+	$('#aPresuFormato').attr("href", $('#inpApiBase').val().split('/api/')[0] + '/PresupuestoFormato/FormatoCargaPresupuestoDGME.xlsx');
+	$('#aCuotaFormato').attr("href", $('#inpApiBase').val().split('/api/')[0] + '/PresupuestoFormato/FormatoCuotaCargaPresupuestoDGME.xlsx');
+	CargasInit();
+	PresupuestoInit();
 
-	});
-	$('#inpPresupAn').change((e) => {
-		var curYear = new Date().getFullYear();
-		if ($(e.currentTarget).val() < curYear) {
-			$(e.currentTarget).val(curYear)
-		}
-		/*Presupuesto*/
-		if ($($("input[name='btnradioCarga']")[1]).prop("checked")) 
-			cargarPresupuestoDatatable();
-
-		/*Cuota*/
-		if ($($("input[name='btnradioCarga']")[2]).prop("checked"))
-			cargarCuotaDatatable();
-
-	})
-	
-	/*Numeric Format with two decimals*/
-	$('#inpPresupuesto').keypress(function (event) {
-		if (((event.which != 46 || (event.which == 46 && $(this).val() == '')) ||
-			$(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57 || event.which ==188)) {
-			event.preventDefault();
-		}
-	}).on('paste', function (event) {
-		event.preventDefault();
-
-	});
-	$('#inpPresupuesto').blur((e) => {
-		$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))	
-	})
-
-	//$("#intSelectOpt").change(() => {
-	//	if ($("#intSelectOpt option:selected").val() === 'PRESUPUESTO') {
-	//		$('#inpApiUri').val('https://localhost:9302/api/v1/presupuesto/agregar');
-	//	} else {
-	//		$('#inpApiUri').val(https://localhost:9302/api/v1/presupuestoCuota/agregar');
-	//	}
-
-	//});
 	$("input[name='btnradioCarga']").each(function () {
 		$(this).change((e) => {
 			btnRdoCuota(e);
@@ -63,7 +17,6 @@ function onInitPagina() {
 
 
 	});
-	$('#inpApiBase').val()
 	$("input[name='docTypeRadio']").each(function () {
 		$(this).change((e) => {
 			if (e.currentTarget.id.includes('Presupuesto')) {
@@ -97,21 +50,75 @@ function onInitPagina() {
 	$('#btnEditPresupuesto').click(() => {
 		UpdateEditar();
 	});
-	//$("#ckPresupuesto").change(() => {
-	//	if ($("#intSelectOpt option:selected").val() === 'PRESUPUESTO') {
-	//		$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
-	//	} else {
-	//		$('#inpApiUri').val($('#inpApiBase').val() + '/presupuestoCuota/agregar');
-	//	}
 
-	//});
 	$("#btnUpload").on("click", function (event) {
 		event.preventDefault();
 		CargarDocumento();
 	});
-	
+
 
 }
+function CargasInit() {
+	$('#spLoadFile').click(() => {
+		$("#postedFiles").click();
+	})
+	$("#postedFiles").change(() => {
+		if ($('#postedFiles')[0].files.length > 0) {
+			$("#btnUpload").attr("disabled", false);
+		} else {
+			$("#btnUpload").attr("disabled", true);
+		}
+
+	});
+}
+function PresupuestoInit() {
+	$('#inpPresupAn').val(new Date().getFullYear()).attr({
+		"min": new Date().getFullYear()
+	});
+
+	$('#inpPresupAn').change((e) => {
+		var curYear = new Date().getFullYear();
+		if ($(e.currentTarget).val() < curYear) {
+			$(e.currentTarget).val(curYear)
+		}
+		/*Presupuesto*/
+		if ($($("input[name='btnradioCarga']")[1]).prop("checked"))
+			cargarPresupuestoDatatable();
+
+		/*Cuota*/
+		if ($($("input[name='btnradioCarga']")[2]).prop("checked"))
+			cargarCuotaDatatable();
+
+	})
+
+	/*Numeric Format with two decimals*/
+	$('#inpPresupuesto').keypress(function (event) {
+		if (((event.which != 46 && event.which !== 45 ||(event.which == 46 && $(this).val() == '')) ||
+			($(this).val().indexOf('.') != -1) || ($(this).val().indexOf('-') != -1)) && (event.which < 48 || event.which > 57 || event.which == 188)) {
+ 
+			event.preventDefault();
+		}
+	}).on('paste', function (event) {
+		event.preventDefault();
+
+	});
+	$('#inpPresupuesto').blur((e) => {
+		var currentValue = $(e.currentTarget).val().replace(',', '').trim() ==''? 0 : parseFloat($(e.currentTarget).val());
+		$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
+		if ( currentValue === 0) {
+			$('#divinpPresupuesto').removeClass("has-success").addClass("has-danger");
+			$('#inpPresupuesto').removeClass("is-valid").addClass("is-invalid");
+			$('#btnEditPresupuesto').attr("disabled", true);
+
+		} else {
+			$('#divinpPresupuesto').removeClass("has-danger").addClass("has-success");
+			$('#inpPresupuesto').removeClass("is-invalid").addClass("is-valid");
+			$('#btnEditPresupuesto').attr("disabled", false);
+		}
+		
+	})
+}
+
 
 
 function resetData() {
@@ -222,6 +229,22 @@ function EditarItem(e) {
 }
 function UpdateEditar() {
 	var currentId = $('#spRegID').text();
+	var esPresupuesto = $('#btnRdoPresupuesto').is(":checked");
+	var presupuestoCarga = {
+		ID: parseInt(currentId),
+		MONTO_DE_LEY: $('#inpPresupuesto').val().replaceAll(',', ''),
+		DETALLES: $('#taDetalles').val().trim(),
+		PRESUPUESTO_ANUAL_DE: parseInt($('#inpPresupuestoAn').val()),
+		CREADO_POR: $('#inpUsr').val(),
+		ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true? "1" : "2"
+	}
+	if (!esPresupuesto) {
+		delete presupuestoCarga.MONTO_DE_LEY;
+		delete presupuestoCarga.DETALLES;
+		presupuestoCarga.CUOTA_PRESUPUESTARIA = $('#inpPresupuesto').val().replaceAll(',', '');
+		presupuestoCarga.DETALLES_CUOTA = $('#taDetalles').val().trim();
+	}
+
 	swal({
 		title: "¿Esta seguro de Continuar?",
 		html: true,
@@ -233,23 +256,41 @@ function UpdateEditar() {
 		confirmButtonText: "Si, continuar!",
 		closeOnconfirm: true
 	}, function () {
-		$.ajax({
-			type: 'POST',
-			url: url,
-			success: function (data) {
-				if (data.success) {
-					toastr.success(data.message);
-					cargarDatatable();
+
+		
+		CallAjax(esPresupuesto ? "/Cargas/EditPresupuestoPorId" : "/Cargas/EditPresupuestoCuotaPorId", JSON.stringify(presupuestoCarga), "json", function (data) {
+
+			if (data && data.Record) {
+				if (data.Record[0].ESTATUS_REQUEST == 200) {
+					toastr.options = {
+						positionClass: 'toast-top-center'
+					};
+					notifyToastr('Registro Actualizado', 'success');
+					$('#offcanvasCargas .btn-danger').click();
+					if (esPresupuesto) {
+						cargarPresupuestoDatatable();
+					} else {
+						cargarCuotaDatatable();
+					}
+						
+				} else {
+					toastr.error(data.Record[0].MENSAJE_REQUEST);
 				}
-				else {
-					toastr.error(data.message);
-				}
+
 			}
-		});
+			else {
+				toastr.error(data.message);
+			}
+
+			 
+		}, "POST", true);
+		
+
 	});
 }
 function fillDataEdit(data) {
 	var esPresupuesto = $('#btnRdoPresupuesto').is(":checked");
+
 	if (esPresupuesto) {
 		$('#spCargaTitulo').text('PRESUPUESTO');
 		$('#iCargaTitle').attr('class', 'fa fa-regular fa-coins');
@@ -265,7 +306,18 @@ function fillDataEdit(data) {
 		$('#lbinpPresupuesto').text('Cuota');
 		
 	}
+	var currentValue = $('#inpPresupuesto').val().replace(',', '').trim() == '' ? 0 : parseFloat($('#inpPresupuesto').val());
 
+	if (currentValue === 0) {
+		$('#divinpPresupuesto').removeClass("has-success").addClass("has-danger");
+		$('#inpPresupuesto').removeClass("is-valid").addClass("is-invalid");
+		$('#btnEditPresupuesto').attr("disabled", true);
+
+	} else {
+		$('#divinpPresupuesto').removeClass("has-danger").addClass("has-success");
+		$('#inpPresupuesto').removeClass("is-invalid").addClass("is-valid");
+		$('#btnEditPresupuesto').attr("disabled", false);
+	}
 	
 	$('#spRegID').text(data.ID);
 	$('#inpClasif').val(data.COD_DE_CLASIFICACION);
@@ -285,13 +337,19 @@ function fillDataEdit(data) {
 	$('#inpRegModifFecha').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
 	$('#ckEstado').prop("checked", data.ESTATUS_REGISTRO === '1'? true : false);
 	
-	debugger
+	
 }
 
 function RemoverItem(e) {
 	var data = JSON.parse(atob($(e).attr('data-item')));
 
 	var esPresupuesto = $('#btnRdoPresupuesto').is(":checked");
+	debugger
+	var presupuestoCarga = {
+		ID: parseInt(data.ID),
+		PRESUPUESTO_ANUAL_DE: parseInt(data.PRESUPUESTO_ANUAL_DE),
+		CREADO_POR: $('#inpUsr').val()
+	}
 
 	swal({
 		title: "¿Esta seguro de borrar?",
@@ -344,19 +402,33 @@ function RemoverItem(e) {
 		confirmButtonText: "Si, borrar!",
 		closeOnconfirm: true
 	}, function () {
-		$.ajax({
-			type: 'DELETE',
-			url: url,
-			success: function (data) {
-				if (data.success) {
-					toastr.success(data.message);
-					cargarDatatable();
+		CallAjax(esPresupuesto ? "/Cargas/RemovePresupuestoPorId" : "/Cargas/RemovePresupuestoCuotaPorId", JSON.stringify(presupuestoCarga), "json", function (data) {
+
+			if (data && data.Record) {
+				if (data.Record == true) {
+					toastr.options = {
+						positionClass: 'toast-top-center'
+					};
+					notifyToastr('Registro Eliminado!');
+					$('#offcanvasCargas .btn-danger').click();
+					if (esPresupuesto) {
+						cargarPresupuestoDatatable();
+					} else {
+						cargarCuotaDatatable();
+					}
+					
+				} else {
+					toastr.error(data.Record[0].MENSAJE_REQUEST);
 				}
-				else {
-					toastr.error(data.message);
-				}
+
 			}
-		});
+			else {
+				toastr.error(data.message);
+			}
+
+
+		}, "POST", true);
+
 	});
 }
 //function ShowReg(data) {
@@ -382,7 +454,23 @@ function cargarPresupuestoDatatable() {
 				searching: true,
 				language: LangSpanish,
 				"zeroRecords": " ",
-				"lengthMenu": [8, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
+				lengthMenu: [8, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
+				/*dom: 'Bfrtip',*/
+				dom: '<"top"B>, lfrtip',
+				buttons: [
+					{
+						extend: 'excelHtml5',
+						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
+						text: ' Excel',
+						title: 'Exportar_Presupuesto_' + presupuestoAnualDe,
+					},
+					{
+						extend: 'csv',
+						className: "btn btn-info fa fa-sharp fa-regular fa-file-csv text-white",
+						text: ' CSV',
+						title: 'csvExportar_Presupuesto_' + presupuestoAnualDe,
+					},
+				],
 				"columns": [
 					{
 						"data": "ID",

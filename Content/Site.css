@@ -146,6 +146,10 @@ a:active {
 .blink {
     animation: blinker 1s linear infinite;
 }
+.loading2 {
+    color: #3459e6;
+    font-size: 18px;
+}
 
 @keyframes blinker {
     50% {
@@ -159,3 +163,18 @@ a:active {
     font-weight: bold;
     font-size: 20px;
 }
+
+.toast-top-center {
+    top: 12px;
+    margin: 70px;
+    left: 50%;
+}
+div.dt-buttons {
+    position: relative;
+    float: right !important;
+    margin:8px;
+}
+/*.dataTables_wrapper .dataTables_paginate {
+    float: none !important;
+}
+*/

@@ -1,5 +1,5 @@
 ﻿/// <reference path="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js" />
-var divLoading = '<div class="loading2 blink" >Cargando...</div> ';
+var divLoading = '<div class="loading2 blink" ><span><i class="fas fa-spinner fa-pulse"></i>&nbsp;Cargando...</span></div> ';
 var divImageLoaging = '<div id="loading2Image" class="Loading" style="display:none; z-index:9999999" <iframe src="about:blank"  style="border:none; top:0; left:0; height:100%; width:100%; z-index:-1; position:absolute;" /></div>  ';
 var BeginRequestHandler = function (sender, args) {
     $("body footer").prepend(divLoading);
@@ -40,7 +40,7 @@ var LangSpanish = {
     }
 };
 var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAsync) {
-
+    
     $.ajax({
         type: RequestType,
         url: vUrl,
@@ -53,12 +53,13 @@ var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAs
             ShowLoading();
         },
         error: function (data) {
-
+            
             if (data.status === 0) {
                 toastr.error("Se ha perdido la conexión con el servidor");
                 return false;
             }
             if (data.status !== 200) {
+                
                 console.log("Url:" + vUrl);
                 console.log((vParameter !== undefined ? "Param:" + vParameter : {}));
                 if (data !== undefined && data.responseXML !== undefined)
@@ -197,3 +198,16 @@ jQuery.fn.ForceNumericOnly =
             });
         });
     };
+
+function notifyToastr(msg, type) {
+    toastr.clear();
+    var notify = type == 'success' ? toastr.success(msg) : toastr.info(msg);
+
+    var $notifyContainer = jQuery(notify).closest('.toast-top-center');
+    if ($notifyContainer) {
+        // align center
+        var containerWidth = jQuery(notify).width() + 20;
+        $notifyContainer.css("margin-left", -containerWidth / 2);
+    }
+}
+

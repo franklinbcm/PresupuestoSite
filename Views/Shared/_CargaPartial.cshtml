@@ -1,7 +1,6 @@
 ﻿@model PresupuestoSite.Models.DTO.Cargas
 
  
-@*@using (Html.BeginForm("agregar", "https://localhost:44364/api/v1/presupuesto", FormMethod.Post, new { enctype = "multipart/form-data" }))*@
 @using (Html.BeginForm() )
 {
     @Html.AntiForgeryToken()
@@ -28,13 +27,17 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="col-12 d-flex justify-content-end text-end">
+                                <a id="aPresuFormato" href="#" class="btn btn-success" title="Descargar formato"><i class="fa fa-sharp fa-regular fa-file-excel text-white fa-lg"></i> Presupuesto Formato </a>&nbsp;&nbsp;
+                                <a id="aCuotaFormato" href="#" class="btn btn-info" title="Descargar formato"><i class="fa fa-sharp fa-regular fa-file-excel text-white fa-lg"></i> Cuota Formato </a>
+                            </div>
                             @*<div class="col-md-12 mb-2 mt-0">
-                                    <label class="form-label fw-bold text-capitalize" for="exampleFormControlSelect1">Documento</label>
-                                    <div class="mb-2">
-                                        @Html.DropDownListFor(m => m.presupuestoCarga.DETALLES, Model.TiposDocumentos,
-                                        new { @class = "form-control", @id = "intSelectOpt" })
-                                    </div>
-                                </div>*@
+            <label class="form-label fw-bold text-capitalize" for="exampleFormControlSelect1">Documento</label>
+            <div class="mb-2">
+                @Html.DropDownListFor(m => m.presupuestoCarga.DETALLES, Model.TiposDocumentos,
+                new { @class = "form-control", @id = "intSelectOpt" })
+            </div>
+        </div>*@
                             <div class="form-group col-md-12 mb-3 mt-4">
                                 <label for="postedFiles" class="form-label fw-bold text-capitalize">Seleccione Archivo Excel:</label>
                                 <div class="form-group">
@@ -46,7 +49,7 @@
                             </div>
                             <div class="col-8 mt-2">
                                 @*<a><i class="fas fa-plus"></i> Cargar<input type="submit" class="btn btn-primary" value="Cargar" /></a>*@
-                                <button id="btnUpload" class="btn btn-primary"  disabled=disabled><i class="fas fa-plus"></i> Cargar</button>&nbsp;&nbsp;
+                                <button id="btnUpload" class="btn btn-primary" disabled=disabled><i class="fas fa-plus"></i> Cargar</button>&nbsp;&nbsp;
                                 <input type="reset" class="btn btn-warning text-white" onclick="resetData();" value="Limpiar" />
                             </div>
 
