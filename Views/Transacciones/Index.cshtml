@@ -1,0 +1,173 @@
+﻿
+@{
+    ViewBag.Title = "Transacciones";
+}
+
+<div class="container mt-3">
+    <div class="row d-flex justify-content-start p-2">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="fa fa-regular fa-home"></i> INICIO</a></li>
+            <li class="breadcrumb-item active"><i class="fa fa-sharp fa-regular fa-cash-register mt-1"></i>TRANSACCIONES </li>
+        </ol>
+        <div class="d-flex justify-content-start mt-1  text-info"><h6>PRESUPUESTOS Y CUOTAS CARGADAS</h6></div>
+    </div>
+    <div class="row">
+        <div class="col-md-2 col-sm-12">
+            <label for="sopPresupAn" class="form-label fw-bold text-capitalize" title="Presupuesto - Año">Presupuesto</label>
+            <input type="number" min="2023" max="3000" value="2023" id="sopPresupAn" class="form-control" />
+        </div>
+        <div class="col-md-3 col-sm-12 form-group">
+            <label for="sopPartida" class="form-label fw-bold text-capitalize">Partida</label>
+            <select id="sopPartida" class="form-select">
+                <option>-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-3 col-sm-12 form-group">
+            <label for="sopGrupo" class="form-label fw-bold text-capitalize">Grupo</label>
+            <select id="sopGrupo" class="form-select">
+                <option>-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-4 col-sm-12 form-group">
+            <label for="sopSubPartida" class="form-label fw-bold text-capitalize">Subpartida</label>
+            <select id="sopSubPartida" class="form-select">
+                <option value="-1">-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-12 col-sm-12 mt-4 ">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="ckTodo" checked>
+                <label class="form-check-label fw-bold text-capitalize" for="ckTodo" title="Mostrar Todos los registos del presupuesto seleccionado">Mostrar Todo</label>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+<div class="container mt-3">
+    <div class="row" style="min-width:350px !important">
+        <div id="divTransacciones" style="display:block" class="row divOpciones">
+            @Html.Partial("_Transacciones")
+        </div>
+    </div>
+
+
+</div>
+<section>
+    <div class="offcanvas offcanvas-fullScreen offcanvas-start" tabindex="-1" id="offcanvasCargas" aria-labelledby="offcanvasExampleLabel" aria-modal="true" role="dialog">
+        <div class="offcanvas-header text-bg-info">
+            <h5 class="offcanvas-title text-white" id="offcanvasExampleLabel">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <i class="fa fa-regular fa-file-invoice-dollar"></i>
+                <span>DETALLES <i class="fa fa-sharp fa-solid fa-arrow-right"></i>&nbsp;</span>
+                <span>Clasificación:&nbsp;<span class="text-warning" id="spCodClasif" title="Código Clasificación"></span></span>
+                <span> | Fuente:&nbsp;<span class="text-warning" id="spFuente"></span></span>
+                <span> | Período:&nbsp;<span class="text-warning" id="spPeriodo"></span></span>
+                <span> | Moneda:&nbsp;<span class="text-warning" id="spMoneda"></span></span>
+                <input type="hidden" id="hfRegID" />
+            </h5>
+            @*<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>*@
+            @*<button type="button" class="btn btn-dark" data-bs-dismiss="offcanvas" aria-label="Close">X</button>*@
+        </div>
+
+        <div class="offcanvas-body">
+            <div class="container-fluid">
+                <div class="mb-2 mt-1 d-flex justify-content-center">
+                    <h5 class="text-info">MOVIMIENTOS UNIDAD FISCALIZADORA</h5>
+                </div>
+                <div id="divRegresar" class="mb-2 d-flex flex-row-reverse divOpciones">
+                    <button class="btn btn-info" data-bs-dismiss="offcanvas"><i class="fa fa-sharp fa-solid fa-arrow-left"></i> Regresar</button>
+                </div>
+                <div class="container-fluid d-flex justify-content-start text-start  alert alert-dismissible alert-light divOpciones">
+                    <div class="row">
+                        <div class="col-md-2 mb-2">
+                            <label for="inpPartida" class="form-label">Partida</label>
+                            <input type="text" class="form-control" id="inpPartida" readonly disabled="">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpGrupoDesc" class="form-label">Grupo</label>
+                            <input type="text" class="form-control" id="inpGrupoDesc" readonly disabled="">
+                        </div>
+                        <div class="col-md-4 mb-2">
+                            <label for="inpSubpartidaDesc" class="form-label">Subpartida</label>
+                            <input type="text" class="form-control" id="inpSubpartidaDesc" readonly disabled="">
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label for="inpUnidadFisc" class="form-label" title="Unidad Fiscalizadora">Unidad Fisc.</label>
+                            <input type="text" class="form-control" id="inpUnidadFisc" readonly disabled="">
+                        </div>
+                        <div class="col-md-2 col-sm-4 form-group">
+                            <label for="inpApropiacion" id="lbinpApropiacion" class="form-label" title="Apropiación Total">Aprop. Total</label>
+                            <div id="divinpApropiacion" class="input-group mb-2">
+                                <span class="input-group-text"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <input type="text" class="form-control" id="inpApropiacion" readonly disabled="">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-4 form-group">
+                            <label for="inpPresupuesto" id="lbinpPresupuesto" class="form-label" title="Monto de Ley Total">De Ley Total</label>
+                            <div id="divinpPresupuesto" class="input-group mb-2">
+                                <span class="input-group-text"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <input type="text" class="form-control" id="inpPresupuesto" readonly disabled="">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-4 form-group">
+                            <label for="inpCuota" id="lbinpCuota" class="form-label" title="Cuota Total">Cuota Total</label>
+                            <div id="divinpCuota" class="input-group mb-2">
+                                <span class="input-group-text"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <input type="text" class="form-control" id="inpCuota" readonly disabled="">
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-4 form-group">
+                            <label for="inpCompromiso" id="lbinpCompromiso" class="form-label" title="Compromiso Total">Comp. Total</label>
+                            <div id="divinpCompromiso" class="input-group mb-2">
+                                <span class="input-group-text"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <input type="text" class="form-control" id="inpCompromiso" readonly disabled="">
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-4 form-group">
+                            <label for="inpDisponibilidad" id="lbinpDisponibilidad" class="form-label" title="Disponible Total">Disp. Total</label>
+                            <div id="divinpDisponibilidad" class="input-group mb-2">
+                                <span class="input-group-text"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                                <input type="text" class="form-control" id="inpDisponibilidad" readonly disabled="">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br />
+                    <br />
+
+                </div>
+                <div class="container-fluid mt-3">
+                    <div class="row" style="min-width:350px !important">
+                        <div id="divTransacciones" style="display:block" class="row divOpciones">
+                            @Html.Partial("_Transacciones_Unidades")
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="container mt-3">
+                    <div class="row" style="min-width:350px !important">
+                        <div id="divUnidadFiscalizadora" style="display:none" class="row divOpciones">
+                            @Html.Partial("_UnidadFiscalizadoraPartial")
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/Scripts/Js/transacciones/Transcaccion.js"></script>
+    <script src="~/Scripts/Js/unidadFiscalizadora/Unidades.js"></script>
+
+}
+
+

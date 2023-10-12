@@ -73,7 +73,7 @@ function CargasInit() {
 }
 function PresupuestoInit() {
 	$('#inpPresupAn').val(new Date().getFullYear()).attr({
-		"min": new Date().getFullYear()
+		"min": new Date().getFullYear() - 1
 	});
 
 	$('#inpPresupAn').change((e) => {
@@ -90,22 +90,35 @@ function PresupuestoInit() {
 			cargarCuotaDatatable();
 
 	})
+	function FormatNumber(event) {
+		var dec = $(this).data('decimal');
+		var aux = "([+-]?[0-9])([0-9]{" + dec + "})$";
+		var expReg = new RegExp(aux);
+		$(event.target).val(function (index, value) {
+			return value.replace(/\D/g, "").replace(expReg, '$1.$2').replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
+		});
+	}
 
 	/*Numeric Format with two decimals*/
 	$('#inpPresupuesto').keypress(function (event) {
-		if (((event.which != 46 && event.which !== 45 ||(event.which == 46 && $(this).val() == '')) ||
-			($(this).val().indexOf('.') != -1) || ($(this).val().indexOf('-') != -1)) && (event.which < 48 || event.which > 57 || event.which == 188)) {
- 
-			event.preventDefault();
-		}
+		TransaccionesFormato(event, this)	 
 	}).on('paste', function (event) {
 		event.preventDefault();
 
-	});
-	$('#inpPresupuesto').blur((e) => {
-		var currentValue = $(e.currentTarget).val().replace(',', '').trim() ==''? 0 : parseFloat($(e.currentTarget).val());
+	}).blur((e) => {
+		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
+		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
+		if ($(e.currentTarget).val().includes('.')) {
+			if ($(e.currentTarget).val().split('.')[1].length > 2) {
+				$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val().split('.')[0] + '.' + $(e.currentTarget).val().split('.')[1].substring(0, 2)))
+			} else {
+				$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
+			}
+		} else {
+			$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
+		}
 		$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
-		if ( currentValue === 0) {
+		if (currentValue === 0) {
 			$('#divinpPresupuesto').removeClass("has-success").addClass("has-danger");
 			$('#inpPresupuesto').removeClass("is-valid").addClass("is-invalid");
 			$('#btnEditPresupuesto').attr("disabled", true);
@@ -115,8 +128,9 @@ function PresupuestoInit() {
 			$('#inpPresupuesto').removeClass("is-invalid").addClass("is-valid");
 			$('#btnEditPresupuesto').attr("disabled", false);
 		}
-		
-	})
+	});
+
+
 }
 
 
@@ -464,12 +478,12 @@ function cargarPresupuestoDatatable() {
 						text: ' Excel',
 						title: 'Exportar_Presupuesto_' + presupuestoAnualDe,
 					},
-					{
-						extend: 'csv',
-						className: "btn btn-info fa fa-sharp fa-regular fa-file-csv text-white",
-						text: ' CSV',
-						title: 'csvExportar_Presupuesto_' + presupuestoAnualDe,
-					},
+					//{
+					//	extend: 'csv',
+					//	className: "btn btn-info fa fa-sharp fa-regular fa-file-csv text-white",
+					//	text: ' CSV',
+					//	title: 'csvExportar_Presupuesto_' + presupuestoAnualDe,
+					//},
 				],
 				"columns": [
 					{
@@ -498,7 +512,7 @@ function cargarPresupuestoDatatable() {
 						"render": (item) => {
 							/*console.log(item)*/
 							return (
-								(item.length < 50 ? item : item.substr(0, 50) + '...')
+								(item !== null ? item.length < 50 ? item : item.substr(0, 50) + '...' : null)
 							);
 						}, "width": "40%", className: "dt-custom-column-text text-justify"
 					},
@@ -515,7 +529,7 @@ function cargarPresupuestoDatatable() {
 						"render": (item) => {
 							/*console.log(item)*/
 							return (
-								(item.length < 70 ? item : item.substr(0, 70) + '...')
+								(item !== null ? item.length < 70 ? item : item.substr(0, 70) + '...': null)
 							);
 						},
 						"width": "40%", className: "dt-custom-column-text text-justify"
@@ -582,6 +596,21 @@ function cargarCuotaDatatable() {
 				searching: true,
 				language: LangSpanish,
 				"lengthMenu": [8, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
+				dom: '<"top"B>, lfrtip',
+				buttons: [
+					{
+						extend: 'excelHtml5',
+						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
+						text: ' Excel',
+						title: 'Exportar_Cuotas_' + presupuestoAnualDe,
+					},
+					//{
+					//	extend: 'csv',
+					//	className: "btn btn-info fa fa-sharp fa-regular fa-file-csv text-white",
+					//	text: ' CSV',
+					//	title: 'csvExportar_Cuotas_' + presupuestoAnualDe,
+					//},
+				],
 				"columns": [
 					{
 						"data": "ID",
@@ -608,7 +637,7 @@ function cargarCuotaDatatable() {
 						"render": (item) => {
 							/*console.log(item)*/
 							return (
-								(item.length < 50 ? item : item.substr(0, 50) + '...')
+								(item !== null ? item.length < 50 ? item : item.substr(0, 50) + '...' : null)
 							);
 						}, "width": "38%", className: "dt-custom-column-text text-justify"
 					},
@@ -625,7 +654,7 @@ function cargarCuotaDatatable() {
 						"render": (item) => {
 							/*console.log(item)*/
 							return (
-								(item.length < 70 ? item : item.substr(0, 70) + '...')
+								(item !== null ? item.length < 70 ? item : item.substr(0, 70) + '...' : null)
 							);
 						},
 						"width": "40%", className: "dt-custom-column-text text-justify"

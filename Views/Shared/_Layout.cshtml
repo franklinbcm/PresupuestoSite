@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/base/jquery-ui.min.css" />
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm bg-primary" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-sm layout-menu" data-bs-theme="dark">
         <div class="container">
             <img class="img-logo rounded mx-auto d-block bg-white" src="~/Images/DGME-HD.jpg" alt="imagen logo" />&nbsp; @Html.ActionLink("DGME - PRESUPUESTOS", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 
@@ -30,7 +30,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li>@Html.ActionLink(" Cargas", "Index", "Cargas", new { area = "" }, new { @class = "dropdown-item fa fa-solid fa-cloud mt-1" })</li>
-                                <li>@Html.ActionLink(" Transacciones", "Contact", "Home", new { area = "" }, new { @class = "dropdown-item fa fa-sharp fa-regular fa-cash-register mt-1" })</li>
+                                <li>@Html.ActionLink(" Transacciones", "Index", "Transacciones", new { area = "" }, new { @class = "dropdown-item fa fa-sharp fa-regular fa-cash-register mt-1" })</li>
                                 <li>@Html.ActionLink(" Reportes", "Contact", "Home", new { area = "" }, new { @class = "dropdown-item fa fa-solid fa-chart-pie mt-1" })</li>
                                 <li>@Html.ActionLink(" Administrar", "Contact", "Home", new { area = "" }, new { @class = "dropdown-item fa fa-sharp fa-solid fa-wrench mt-1" })</li>
                             </ul>

@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.EnterpriseServices.Internal;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Web.Mvc;
 
 namespace PresupuestoSite.Common
 {
@@ -73,6 +75,12 @@ namespace PresupuestoSite.Common
 
 
             return Estado;
+        }
+        public static List<SelectListItem>  ListaVacia()
+        {
+            List<SelectListItem> selectListItems = new List<SelectListItem>();
+            selectListItems.Add(new SelectListItem() { Text = "-Seleccione-", Value = "-1" });
+            return selectListItems;
         }
     }
 }

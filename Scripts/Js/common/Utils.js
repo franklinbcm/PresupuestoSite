@@ -210,4 +210,12 @@ function notifyToastr(msg, type) {
         $notifyContainer.css("margin-left", -containerWidth / 2);
     }
 }
+/*Numeric Format with two decimals*/
+function TransaccionesFormato(event, id) {
+    if ((event.which != 46 || $(id).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+        if ((event.which != 45 || $(id).val().indexOf('-') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    }
+}
 

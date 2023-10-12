@@ -30,12 +30,52 @@ body {
     width: 650px;
     height: 450px;
 }
+.layout-menu {
+    background: rgb(52,89,230);
+    background: linear-gradient(90deg, rgba(52,89,230,1) 0%, rgba(52,89,230,1) 35%, rgba(63,52,230,1) 100%);
+}
+.breadcrumb {
+    font-size: 0.975rem;
+}
 table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
     text-align: left;
     background-color: #3459e6 !important;
     color: white;
     margin: 10px;
     border-radius: 2px;
+    -webkit-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+}
+div#tblTransacciones_wrapper table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background-color: #22699a !important;
+    color: white;
+    margin: 10px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+}
+/*div#tblTransacciones_filter {
+    float: left;
+    text-align: left;
+}*/
+.dataTables_wrapper.no-footer .dataTables_scrollBody {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
+    -moz-box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
+    box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
+}
+div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter {
+    margin: 7px 0px;
+}
+
+.text-bg-white {
+    background-color: white;
+}
+.inp-min-width{
+    min-width:180px !important
 }
 div#tblCuotaCargas_filter {
     margin: 7px 0px;
