@@ -174,6 +174,36 @@ namespace PresupuestoSite.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<JsonResult> AgregarUnidadFiscalizadora(UnidadFiscalizadoraDTO unidadFiscalizadora)
+        {
+
+            var resunt = await _transacServicio.AddUnidadFiscalizadora(unidadFiscalizadora);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditUnidadFiscalizadora(UnidadFiscalizadoraDTO  unidadFiscalizadora)
+        {
+
+            var resunt = await _transacServicio.EditUnidadFiscalizadora(unidadFiscalizadora);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
 
     }
 }

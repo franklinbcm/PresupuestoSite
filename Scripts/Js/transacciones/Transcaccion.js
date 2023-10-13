@@ -19,6 +19,7 @@ function Ckickes() {
 	
 	$('#btnBack').click((e) => {
 		e.preventDefault();
+		LimpiarNuevaUnidad();
 		$(".divOpciones").attr('style', 'display: none');
 		$("#divRegresar").show();
 		$("#divTransacciones.divOpciones").show();;
@@ -102,7 +103,7 @@ function fillDataEdit(data) {
 	$('#inpApropiacion').val(commaSeparateNumber(data.APROPIACION_TOTAL));
 	$('#inpDisponibilidad').val(commaSeparateNumber(data.DISPONIBILIDAD));
 	$('#inpGrupoDesc').val(`${data.TITULO_NOMBRE_GRUPO.length > 30 ? data.TITULO_NOMBRE_GRUPO.substr(0, 30) + '...' : data.TITULO_NOMBRE_GRUPO}`).attr('title', `${data.TITULO_NOMBRE_GRUPO}`);
-	$('#inpSubpartidaDesc').val(`${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA.length > 40 ? data.NOMBRE_SUBPARTIDA.substr(0, 40) + '...' : data.NOMBRE_SUBPARTIDA}`).attr('title', `${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA}`);
+	$('#inpSubpartidaDesc').val(`${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA.length > 50 ? data.NOMBRE_SUBPARTIDA.substr(0, 50) + '...' : data.NOMBRE_SUBPARTIDA}`).attr('title', `${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA}`);
 	$('#inpUnidadFisc').val(data.UNIDAD_FISCALIZADORA);
 	
 	cargarTransUnidadesDatatable();
@@ -306,6 +307,79 @@ function cargarTransDatatable() {
 		}
 	}, "GET", true);
 }
+function SaldoDisponible() {
+	$('#lbinpSaldo').removeClass("badge bg-danger blink");
+	var cuotaDisp = $('#inpCuotaTot').val().replaceAll(',', '');
+	var actual = $('#inpCompromisoUni').attr('data-item') === undefined ? 0 : $('#inpCompromisoUni').attr('data-item'); //Remover monto cuando es para editar una Unidad Fisc.
+	var compromisoDisp = $('#inpCompromisoTot').val().replaceAll(',', '');
+	var Disponible = (parseFloat(cuotaDisp) - parseFloat(compromisoDisp - parseFloat(actual))).toFixed(2);
+	var currrent = $('#inpCompromisoUni').val().replaceAll(',', '');
+	var result = (Disponible - parseFloat(currrent == '' ? 0 : currrent).toFixed(2)).toFixed(2);
+	$('#inpSaldo').val(commaSeparateNumber(result));
+
+}
+function FillDataToEdit(data) {
+
+	$('#inpID').val(data.ID);
+	$('#inpPresupuestoID').val($('#hfRegID').val());
+	$('#inpCuotaTot').val(commaSeparateNumber($('#inpCuota').val()));
+	$('#inpCompromisoTot').val(commaSeparateNumber($('#inpCompromiso').val()));
+	$('.cs-Compromiso').val(commaSeparateNumber(data.COMPROMISO)).attr('data-item', data.COMPROMISO).change();
+	$('.cs-Apropiacion').val(commaSeparateNumber(data.APROPIACION)).attr('data-item', data.APROPIACION).change();
+	$('#inpCodPedidosReserva').val(data.COD_PEDIDOS_RESERVAS);
+	$('#inpFecha').val(ConvertDateJsonToInputDate(data.FECHA));
+	$('#taDetalles').val(data.DETALLES);
+	$('#inpRegCrePor').val(data.CREADO_POR);
+	$('#inpRegCreacionFecha').val(ConvertDateJsonToDate(data.CREADO_EN));
+	$('#inpRegModPor').val(data.MODIFICADO_POR);
+	$('#inpRegModifFecha').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
+	$('#ckEstado').prop("checked", data.ESTATUS_REGISTRO === '1' ? true : false);
+	SaldoDisponible();
+}
+
+function EditarUnidad(e) {
+	FillDataToEdit(JSON.parse(atob($(e).attr('data-item'))));
+
+	$(".divOpciones").attr('style', 'display: none !important');
+	$("#divUnidadFiscalizadora").show();
+	$(".is-new-record").attr('style', 'display: block');
+	$('#divUnidades .cs-montos').each((idx) => {
+		$($('.cs-montos')[idx]).parent().removeClass("has-danger").addClass("has-success");
+		$($('.cs-montos')[idx]).removeClass("is-invalid").addClass("is-valid");
+	})
+	$('#btnEdit').parent().attr('style', 'display: block !important');
+	$('#btnCrear').parent().attr('style', 'display: none !important');
+}
+function LimpiarNuevaUnidad() {
+
+	var limpiar = '';
+	$(".divOpciones").attr('style', 'display: none !important');
+	$("#divUnidadFiscalizadora").show();
+	$(".is-new-record").attr('style', 'display: none');
+	$('#inpPresupuestoID').val($('#hfRegID').val());
+	$('#inpCuotaTot').val(commaSeparateNumber($('#inpCuota').val()));
+	$('#inpCompromisoTot').val(commaSeparateNumber($('#inpCompromiso').val()));
+	SaldoDisponible();
+	$('#inpID').val('');
+	$('.cs-Compromiso').val('').attr('data-item', '0').change();
+	$('.cs-Apropiacion').val('').attr('data-item', '0').change();
+	$('#inpCodPedidosReserva').val(limpiar);
+	$('#taDetalles').val(limpiar);
+	$('#inpRegCrePor').val(limpiar);
+	$('#inpRegCreacionFecha').val(limpiar);
+	$('#inpRegModPor').val(limpiar);
+	$('#inpRegModifFecha').val(limpiar);
+	$('#ckEstado').prop("checked", true);
+
+	setDefaultFecha();
+
+	$('#divUnidades .cs-montos').each((idx) => {
+		$($('.cs-montos')[idx]).parent().removeClass("has-success").addClass("has-danger");
+		$($('.cs-montos')[idx]).removeClass("is-valid").addClass("is-invalid");
+	})
+	$('#btnCrear').attr("disabled", true).parent().attr('style', 'display: block !important');
+	$('#btnEdit').parent().attr('style', 'display: none !important');
+}
 function cargarTransUnidadesDatatable() {
 
 	var presupuestoAnualDe = parseInt($("#spPeriodo").text());
@@ -330,9 +404,7 @@ function cargarTransUnidadesDatatable() {
 						className: "btn btn-primary fas fa-plus text-white",
 						text: ' Agregar Unidad',
 						action:  () => {
-							$(".divOpciones").attr('style', 'display: none !important');
-							$("#divUnidadFiscalizadora").show();
-							$(".is-new-record").attr('style', 'display: none');
+							LimpiarNuevaUnidad();
 							
 						}
 
@@ -342,7 +414,7 @@ function cargarTransUnidadesDatatable() {
 						extend: 'excelHtml5',
 						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
 						text: ' Excel',
-						title: 'Exportar_Presupuesto_' + presupuestoAnualDe,
+						title: 'Movimientos_Unidad_Fisc_' + presupuestoAnualDe,
 					},
 					/*{ extend: 'edit', editor },*/
 				],
@@ -351,7 +423,7 @@ function cargarTransUnidadesDatatable() {
 						"data": "ID",
 						"render": (item) => {
 							return `<div class="text-center">
-                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.PRESUPUESTOS_CARGADOS_ID == item)))}' title="Editar" href="#offcanvasCargas" class="btn btn-sm btn-warning text-white font-size-09" data-bs-toggle="offcanvas" onclick='VerItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
+                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar" href="#" class="btn btn-sm btn-warning text-white font-size-09" onclick='EditarUnidad(this);' role="button"  style="cursor:pointer; width:30px;">
                                 <i class="far fa-edit"></i>
                                 </a>
                             </div>

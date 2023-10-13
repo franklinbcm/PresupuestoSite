@@ -253,6 +253,83 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
         }
 
+        public async Task<List<UnidadFiscalizadora>> AddUnidadFiscalizadora(UnidadFiscalizadoraDTO unidadFiscalizadora)
+        {
+            List<UnidadFiscalizadora> presupuestos = new List<UnidadFiscalizadora>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, Utilidades.GetApiRutaUnida($"/unidadFiscalizadora/agregarUnidadAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(unidadFiscalizadora), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<UnidadFiscalizadora[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+        public async Task<List<UnidadFiscalizadora>> EditUnidadFiscalizadora(UnidadFiscalizadoraDTO unidadFiscalizadora)
+        {
+            List<UnidadFiscalizadora> presupuestos = new List<UnidadFiscalizadora>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, Utilidades.GetApiRutaUnida($"/unidadFiscalizadora/editarUnidadAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(unidadFiscalizadora), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<UnidadFiscalizadora[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+
 
     }
 }

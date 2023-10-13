@@ -41,6 +41,7 @@ var LangSpanish = {
 };
 var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAsync) {
     
+    HideLoading();
     $.ajax({
         type: RequestType,
         url: vUrl,
@@ -55,7 +56,7 @@ var CallAjax = function (vUrl, vParameter, vDataType, vSucess, RequestType, isAs
         error: function (data) {
             
             if (data.status === 0) {
-                toastr.error("Se ha perdido la conexión con el servidor");
+                notifyToastr("Se ha perdido la conexión con el servidor", 'error');
                 return false;
             }
             if (data.status !== 200) {
@@ -96,7 +97,7 @@ var CallAjaxFiles = function (vUrl, vParameter, vDataType, vSucess, RequestType,
         if (data.status === 0) {
             console.log(data);
 
-            toastr.error("Se ha perdido la conexión con el servidor");
+            notifyToastr("Se ha perdido la conexión con el servidor", 'error');
             return false;
         }
         if (data.status !== 200) {
@@ -144,11 +145,11 @@ function Delete(url) {
             url: url,
             success: function (data) {
                 if (data.success) {
-                    toastr.success(data.message);
+                    notifyToastr(data.message, 'success');
                     cargarDatatable();
                 }
                 else {
-                    toastr.error(data.message);
+                    notifyToastr(data.message, 'error');
                 }
             }
         });
@@ -164,6 +165,16 @@ function ConvertDateJsonToDate(stringDate) {
         return null;
     }
         
+}
+function ConvertDateJsonToInputDate(stringDate) {
+    if (stringDate !== null && stringDate != undefined) {
+        var data = new Date(parseInt(stringDate.replace('/Date(', '')));
+        return moment(new Date(data)).format("YYYY-MM-DD");
+    }
+    else {
+        return null;
+    }
+
 }
 function isNumberKey(evt) {
 
@@ -201,14 +212,68 @@ jQuery.fn.ForceNumericOnly =
 
 function notifyToastr(msg, type) {
     toastr.clear();
-    var notify = type == 'success' ? toastr.success(msg) : toastr.info(msg);
-
-    var $notifyContainer = jQuery(notify).closest('.toast-top-center');
-    if ($notifyContainer) {
-        // align center
-        var containerWidth = jQuery(notify).width() + 20;
-        $notifyContainer.css("margin-left", -containerWidth / 2);
+    toastr.options = {
+        "closeButton": true,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
     }
+    switch (type) {
+        case 'success':
+            toastr[type](`<div class="mb-3 mt-3">
+                      <div>
+                        <h5 class='blink'>${msg}</h5>
+                      </div>
+                    </div>`);
+            break;
+        case 'info':
+            toastr[type](`<div class="mb-3 mt-3">
+                      <div>
+                        <h5 class='blink'>${msg}</h5>
+                      </div>
+                    </div>`);
+            break;
+        case 'warning':
+            toastr[type](`<div class="mb-3 mt-3">
+                      <div>
+                        <h5 class='blink'>${msg}</h5>
+                      </div>
+                    </div>`);
+            break;
+        case 'error':
+            toastr[type](`<div class="mb-3 mt-3">
+                      <div>
+                        <h5 class='blink'>${msg}</h5>
+                      </div>
+                    </div>`);
+            break;
+        default:
+            toastr["info"](`<div class="mb-4 mt-4">
+                      <div>
+                        <h5 class='blink'>${msg}</h5>
+                      </div>
+                    </div>`);
+            break;
+    }
+     
+
+
+    //var $notifyContainer = jQuery(notify).closest('.toast-top-full-width');
+    //if ($notifyContainer) {
+    //    // align center
+    //    var containerWidth = jQuery(notify).width() + 20;
+    //    $notifyContainer.css("margin-left", -containerWidth / 2);
+    //}
 }
 /*Numeric Format with two decimals*/
 function TransaccionesFormato(event, id) {

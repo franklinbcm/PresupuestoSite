@@ -199,6 +199,7 @@
     <Compile Include="Models\DTO\PresupuestoCuotaCargaDTO.cs" />
     <Compile Include="Models\DTO\PresupuestoCargaDTO.cs" />
     <Compile Include="Models\DTO\PresupuestoYCuotaRemovDTO.cs" />
+    <Compile Include="Models\DTO\UnidadFiscalizadoraDTO.cs" />
     <Compile Include="Models\Grupo.cs" />
     <Compile Include="Models\PartidaGrupoSubPartida.cs" />
     <Compile Include="Models\Partidas.cs" />

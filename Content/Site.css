@@ -61,6 +61,12 @@ div#tblTransacciones_wrapper table.dataTable thead th, table.dataTable thead td,
     float: left;
     text-align: left;
 }*/
+.opc-date-format:after {
+    font-size: 9px;
+    color: gray;
+    content: ' (dd/mm/aaaa)';
+}
+
 .dataTables_wrapper.no-footer .dataTables_scrollBody {
     border-bottom: 1px solid rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);

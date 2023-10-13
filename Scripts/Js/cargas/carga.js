@@ -106,6 +106,9 @@ function PresupuestoInit() {
 		event.preventDefault();
 
 	}).blur((e) => {
+		if ($(e.currentTarget).val().substr(1).includes('-')) {
+			$(e.currentTarget).val($(e.currentTarget).val().replace('-', ''));
+		}
 		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
 		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
 		if ($(e.currentTarget).val().includes('.')) {
@@ -250,7 +253,7 @@ function UpdateEditar() {
 		DETALLES: $('#taDetalles').val().trim(),
 		PRESUPUESTO_ANUAL_DE: parseInt($('#inpPresupuestoAn').val()),
 		CREADO_POR: $('#inpUsr').val(),
-		ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true? "1" : "2"
+		ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true? "1" : "0"
 	}
 	if (!esPresupuesto) {
 		delete presupuestoCarga.MONTO_DE_LEY;
@@ -276,9 +279,7 @@ function UpdateEditar() {
 
 			if (data && data.Record) {
 				if (data.Record[0].ESTATUS_REQUEST == 200) {
-					toastr.options = {
-						positionClass: 'toast-top-center'
-					};
+
 					notifyToastr('Registro Actualizado', 'success');
 					$('#offcanvasCargas .btn-danger').click();
 					if (esPresupuesto) {
@@ -288,12 +289,12 @@ function UpdateEditar() {
 					}
 						
 				} else {
-					toastr.error(data.Record[0].MENSAJE_REQUEST);
+					notifyToastr(data.Record[0].MENSAJE_REQUEST, 'error');
 				}
 
 			}
 			else {
-				toastr.error(data.message);
+				notifyToastr(data.message, 'error');
 			}
 
 			 
@@ -420,9 +421,7 @@ function RemoverItem(e) {
 
 			if (data && data.Record) {
 				if (data.Record == true) {
-					toastr.options = {
-						positionClass: 'toast-top-center'
-					};
+
 					notifyToastr('Registro Eliminado!');
 					$('#offcanvasCargas .btn-danger').click();
 					if (esPresupuesto) {
@@ -432,12 +431,12 @@ function RemoverItem(e) {
 					}
 					
 				} else {
-					toastr.error(data.Record[0].MENSAJE_REQUEST);
+					notifyToastr(data.Record[0].MENSAJE_REQUEST, 'error');
 				}
 
 			}
 			else {
-				toastr.error(data.message);
+				notifyToastr(data.message, 'error');
 			}
 
 
