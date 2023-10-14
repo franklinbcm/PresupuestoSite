@@ -53,7 +53,7 @@ function clickBotones() {
 			title: "¿Esta seguro de Continuar?",
 			html: true,
 			customClass: 'swal-wide',
-			text: `Se modificará el registro <span class= "fw-bold text-success" > #${currentId}</span>`,
+			text: `Se registrará un nuevo compromiso para esta unidad fiscalizadora!`,
 			type: "info",
 			showCancelButton: true,
 			confirmButtonColor: "#3459e6",
@@ -62,7 +62,7 @@ function clickBotones() {
 		}, function () {
 
 
-			CallAjax("/Transacciones/AddUnidadFiscalizadora", JSON.stringify(unidadFiscalizadora), "json", function (data) {
+			CallAjax("/Transacciones/AgregarUnidadFiscalizadora", JSON.stringify(unidadFiscalizadora), "json", function (data) {
 
 				if (data && data.Record) {
 

@@ -32,7 +32,9 @@ function Ckickes() {
 		$("#divTransacciones.divOpciones").show();
 
 	})
-	
+	$('#divRegresar').click(() => {
+		cargarTransDatatable();
+	})
 	
 }
 function Changes() {
