@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Reportes";
+}
+
+
+<div class="container-fluid col-11 mt-3">
+    <div class="row d-flex  justify-content-start p-2">
+        <div class="d-flex justify-content-start mt-1  text-info"><h6>LISTADO DE REPORTES POR SUBPARTIDA</h6></div>
+    </div>
+    <div class="row">
+        <div class="row">
+            <div class="col-md-4 col-sm-12 form-group">
+                <label for="sopReporte" class="form-label fw-bold text-capitalize" title="Seleccione Reporte">Reporte</label>
+                <select id="sopReporte" class="form-select">
+                    <option value="-1">-Seleccione-</option>
+                    <option value="1">Saldo de Presupuesto</option>
+                </select>
+            </div>
+            <div class="col-md-2 col-sm-12">
+                <label for="sopPresupAn" class="form-label fw-bold text-capitalize" title="Presupuesto - Año">Presupuesto</label>
+                <input type="number" min="2023" max="3000" value="2023" id="sopPresupAn" class="form-control" />
+            </div>
+            <div class="col-md-6 col-sm-12 form-group">
+                <label for="sopSubPartida" class="form-label fw-bold text-capitalize" title="PosPre">Subpartida</label>
+                <select id="sopSubPartida" class="form-select">
+                    <option value="-1">-Seleccione-</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-2 mt-2">
+                <label for="inpPartida" class="form-label">Partida</label>
+                <input type="text" class="form-control" id="inpPartida" readonly disabled="">
+            </div>
+            <div class="col-md-3 mb-2 mt-2">
+                <label for="inpGrupo" class="form-label">Grupo</label>
+                <input type="text" class="form-control" id="inpGrupo" readonly disabled="">
+            </div>
+            <div class="col-md-3 form-group mt-2">
+                <label for="inpPresupuestoAct" id="lbinpPresupuestoAct" class="form-label" title="Presupuesto Actual">De Ley Total</label>
+                <div id="divinpPresupuestoAct" class="input-group mb-2">
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
+                    <input type="text" class="form-control cs-PresupuestoAct" id="inpPresupuestoAct" readonly disabled="">
+                </div>
+            </div>
+            <div class="col-md-3 mb-2 mt-2">
+                <label for="inpSaldoDisponibl" id="lbinpSaldoDisponibl" class="form-label">Saldo Disponible</label>
+                <div id="divinpSaldoDisponibl" class="input-group mb-2">
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
+                    <input type="text" class="form-control" id="inpSaldoDisponibl" readonly disabled="">
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="container-fluid col-11 mt-3">
+    <div class="row" style="min-width:350px !important">
+        <div id="divSaldoPresupuesto" style="display:none" class="row divOpciones">
+            @Html.Partial("_SaldoPresupuesto")
+        </div>
+    </div>
+
+
+</div>
+@section Scripts {
+    <script src="~/Scripts/Js/reportes/Reporte.js"></script>
+
+}

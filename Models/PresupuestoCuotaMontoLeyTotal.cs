@@ -29,5 +29,8 @@ namespace PresupuestoSite.Models
         public decimal CUOTA_PRESUPUESTARIA_TOTAL { get; set; }
         public decimal MONTO_DE_LEY_MENOS_CUOTA { get; set; }
         public int PRESUPUESTO_ANUAL_DE { get; set; }
+        public int TIPO_PRESUPUESTO_ID { get; set; }
+        public string CODIGO_TIPO_PRESUPUESTO { get; set; }
+        public string TIPO_PRESUPUESTO_NOMBRE { get; set; }
     }
 }

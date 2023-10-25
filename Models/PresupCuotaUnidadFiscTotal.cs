@@ -26,7 +26,9 @@ namespace PresupuestoSite.Models
         public decimal CUOTA_PRESUPUESTARIA_TOTAL { get; set; }
         public int PRESUPUESTOS_CARGADOS_ID { get; set; }
         public decimal COMPROMISO_TOTAL { get; set; }
-        public decimal APROPIACION_TOTAL { get; set; }
         public decimal DISPONIBILIDAD { get; set; }
+        public int TIPO_PRESUPUESTO_ID { get; set; }
+        public string CODIGO_TIPO_PRESUPUESTO { get; set; }
+        public string TIPO_PRESUPUESTO_NOMBRE { get; set; }
     }
 }

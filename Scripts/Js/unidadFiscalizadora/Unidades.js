@@ -39,16 +39,17 @@ function clickBotones() {
 			PRESUPUESTO_ID: parseInt($('#inpPresupuestoID').val()),
 			PRESUPUESTO_ANUAL_DE: parseInt($('#spPeriodo').text()),
 			COMPROMISO: $('.cs-Compromiso').val().replaceAll(',', ''),
-			APROPIACION: $('.cs-Apropiacion').val().replaceAll(',', ''),
 			FECHA: $('#inpFecha').val(),
 			DETALLES: $('#taDetalles').val(),
 			COD_PEDIDOS_RESERVAS: $('#inpCodPedidosReserva').val(),
 			CREADO_POR: $('#inpUsr').val(),
-			ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true ? "1" : "0"
+			ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true ? "1" : "0",
+			ES_PEDIDO: $('#inpRdoPedidos').is(":checked"),
+			LINEA: $('#inpLineas').val()
 
 		}
+		
 		 
-
 		swal({
 			title: "¿Esta seguro de Continuar?",
 			html: true,
@@ -97,12 +98,13 @@ function clickBotones() {
 			PRESUPUESTO_ID: parseInt($('#inpPresupuestoID').val()),
 			PRESUPUESTO_ANUAL_DE: parseInt($('#spPeriodo').text()),
 			COMPROMISO: $('.cs-Compromiso').val().replaceAll(',', ''),
-			APROPIACION: $('.cs-Apropiacion').val().replaceAll(',', ''),
 			FECHA: $('#inpFecha').val(),
 			DETALLES: $('#taDetalles').val(),
 			COD_PEDIDOS_RESERVAS: $('#inpCodPedidosReserva').val(),
 			CREADO_POR: $('#inpUsr').val(),
-			ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true ? "1" : "0"
+			ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true ? "1" : "0",
+			ES_PEDIDO: $('#inpRdoPedidos').is(":checked"),
+			LINEA: $('#inpLineas').val()
 
 		}
  
@@ -120,7 +122,7 @@ function clickBotones() {
 			CallAjax("/Transacciones/EditUnidadFiscalizadora", JSON.stringify(unidadFiscalizadora), "json", function (data) {
 
 				if (data && data.Record) {
-
+					
 					if (data.Result == 'Ok') {
 
 						notifyToastr('Registro Actualizado', 'info');

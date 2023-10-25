@@ -1,5 +1,6 @@
 ﻿using Microsoft.SqlServer.Server;
 using Newtonsoft.Json;
+using PresupuestoSite.Common;
 using PresupuestoSite.Models;
 using PresupuestoSite.Models.DTO;
 using PresupuestoSite.Models.ViewModel;
@@ -134,6 +135,42 @@ namespace PresupuestoSite.Controllers
                 Record = resunt,
             }, JsonRequestBehavior.AllowGet);
 
+
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetListaTipoPresupuesto()
+        {
+            var dataResult = await _cargasServicio.GetTipoPresupuesto();
+
+
+            if (dataResult.Any())
+            {
+
+                var data = dataResult.Select(i => new SelectListItem()
+                {
+                    Text = $"{i.PRESUPUESTO_NOMBRE}",
+                    Value = i.ID.ToString(),
+                }
+                ).Distinct();
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = data,
+                    Total = data != null ? data.ToList().Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = Utilidades.ListaVacia(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
 
         }
 

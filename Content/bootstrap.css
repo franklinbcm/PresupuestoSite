@@ -3387,9 +3387,9 @@ textarea.form-control-lg {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
-    border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
-    border-radius: var(--bs-btn-border-radius);
-    background-color: var(--bs-btn-bg);
+    border: var(--bs-btn-border-width) solid var(--bs-btn-border-color) !important;
+    border-radius: var(--bs-btn-border-radius) !important;
+    background-color: var(--bs-btn-bg) !important;
     box-shadow: var(--bs-btn-box-shadow);
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
@@ -3421,16 +3421,16 @@ textarea.form-control-lg {
 }
 
 .btn-check:focus-visible + .btn {
-    border-color: var(--bs-btn-hover-border-color);
+    border-color: var(--bs-btn-hover-border-color) !important;
     outline: 0;
-    box-shadow: var(--bs-btn-box-shadow), var(--bs-btn-focus-box-shadow);
+    box-shadow: var(--bs-btn-box-shadow), var(--bs-btn-focus-box-shadow) !important;
 }
 
 .btn-check:checked + .btn, :not(.btn-check) + .btn:active, .btn:first-child:active, .btn.active, .btn.show {
-    color: var(--bs-btn-active-color);
-    background-color: var(--bs-btn-active-bg);
-    border-color: var(--bs-btn-active-border-color);
-    box-shadow: var(--bs-btn-active-shadow);
+    color: var(--bs-btn-active-color) !important;
+    background-color: var(--bs-btn-active-bg) !important;
+    border-color: var(--bs-btn-active-border-color) !important;
+    box-shadow: var(--bs-btn-active-shadow) !important;
 }
 
     .btn-check:checked + .btn:focus-visible, :not(.btn-check) + .btn:active:focus-visible, .btn:first-child:active:focus-visible, .btn.active:focus-visible, .btn.show:focus-visible {

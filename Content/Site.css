@@ -57,6 +57,8 @@ div#tblTransacciones_wrapper table.dataTable thead th, table.dataTable thead td,
     -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
     box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
 }
+
+
 /*div#tblTransacciones_filter {
     float: left;
     text-align: left;
@@ -73,8 +75,8 @@ div#tblTransacciones_wrapper table.dataTable thead th, table.dataTable thead td,
     -moz-box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
     box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
 }
-div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter {
-    margin: 7px 0px;
+div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter, div#tblCuotaCargas_filter, div#tblPresupuestoCargas_filter, div#tblSaldoPresupuesto_filter {
+    margin: 9px 0px;
 }
 
 .text-bg-white {
@@ -83,12 +85,7 @@ div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUn
 .inp-min-width{
     min-width:180px !important
 }
-div#tblCuotaCargas_filter {
-    margin: 7px 0px;
-}
-div#tblPresupuestoCargas_filter {
-    margin: 7px 0px;
-}
+
 .dt-custom-column-text {
     text-transform: uppercase;
     font-size: 11px;
@@ -224,3 +221,38 @@ div.dt-buttons {
     float: none !important;
 }
 */
+.colon-sign:after {
+    content: "₡" !important;
+}
+.dollar-sign:after {
+    content: "$" !important;
+}
+.pesos-sign:after {
+    content: "$" !important;
+}
+.euros-sign:after {
+    content: "€" !important;
+}
+.libras-sign:after {
+    content: "£" !important;
+}
+.cs-isrequired-label::after {
+    content: " *" !important;
+    color:red;
+}
+.cs-transaction-bg {
+    background: url(../Images/DGME-HD.jpg) no-repeat fixed;
+
+ 
+}
+button.dt-button.buttons-columnVisibility {
+    font-size: 9px;
+    background-color: rgb(52,89,230) !important;
+    color: white !important;
+    margin: 10px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+}
+

@@ -14,6 +14,7 @@ namespace PresupuestoSite.Models.DTO
         public DateTime FECHA { get; set; }
         public string DETALLES { get; set; }
         public string COD_PEDIDOS_RESERVAS { get; set; }
-        public decimal? APROPIACION { get; set; }
+        public bool ES_PEDIDO { get; set; }
+        public string LINEA { get; set; }
     }
 }

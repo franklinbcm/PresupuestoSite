@@ -19,6 +19,8 @@ namespace PresupuestoSite.Models.ViewModel
         public int? SECUENCIA { get; set; }
         public string CODIGO_MONEDA { get; set; }
         public string MONEDA { get; set; }
+        public string CODIGO_TIPO_PRESUPUESTO { get; set; }
+        public string TIPO_PRESUPUESTO_NOMBRE { get; set; }
     }
 
 }

@@ -1,5 +1,5 @@
 ﻿/// <reference path="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js" />
-var divLoading = '<div class="loading2 blink" ><span><i class="fas fa-spinner fa-pulse"></i>&nbsp;Cargando...</span></div> ';
+var divLoading = '<div class="loading2 container-fluid px-5 blink" ><span><i class="fas fa-spinner fa-pulse"></i>&nbsp;Cargando...</span></div> ';
 var divImageLoaging = '<div id="loading2Image" class="Loading" style="display:none; z-index:9999999" <iframe src="about:blank"  style="border:none; top:0; left:0; height:100%; width:100%; z-index:-1; position:absolute;" /></div>  ';
 var BeginRequestHandler = function (sender, args) {
     $("body footer").prepend(divLoading);
@@ -166,6 +166,21 @@ function ConvertDateJsonToDate(stringDate) {
     }
         
 }
+function ConvertDateJsonToDateShort(stringDate) {
+    if (stringDate !== null && stringDate != undefined) {
+        var data = new Date(parseInt(stringDate.replace('/Date(', '')));
+        return moment(new Date(data)).format("DD/MM/YYYY");
+    }
+    else {
+        return null;
+    }
+
+}
+function NumberCommaSeparatedTwoDecimals(number) {
+    const fixedNumber = Number.parseFloat(number).toFixed(2);
+    return String(fixedNumber).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+}
 function ConvertDateJsonToInputDate(stringDate) {
     if (stringDate !== null && stringDate != undefined) {
         var data = new Date(parseInt(stringDate.replace('/Date(', '')));
@@ -282,5 +297,21 @@ function TransaccionesFormato(event, id) {
             event.preventDefault();
         }
     }
+}
+function TextCleanInputFormato(e) {  // Accept only alpha numerics, no special characters 
+    
+    var regex = new RegExp("^[a-zA-Z0-9 ñáéíóúÑÁÉÍÓÚ,#$:;*& \d\*\/\.\|\-\]+$");
+    var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+
+    if (regex.test(str)) {
+
+        if ($(e.currentTarget).val().indexOf('--') != -1) {
+            $(e.currentTarget).val($(e.currentTarget).val().replaceAll('--', '-'));
+        }
+        return true;
+    }
+
+    e.preventDefault();
+    return false;
 }
 

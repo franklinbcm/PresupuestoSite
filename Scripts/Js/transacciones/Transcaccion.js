@@ -11,23 +11,32 @@ function onInitPagina() {
 	Changes();
 	LimpiarTablas();
 	cargarTransDatatable();
-	Ckickes();
-	
+	Clickes();
+	$('.cs-input-text').keypress(function (event) {
+		TextCleanInputFormato(event)
+	}).on('paste', function (event) {
+		event.preventDefault();
+		
+	}).blur((e) => {
+		$(e.currentTarget).val($(e.currentTarget).val().replaceAll('--', '-'));
+	})
 }
 
-function Ckickes() {
+function Clickes() {
 	
 	$('#btnBack').click((e) => {
 		e.preventDefault();
 		LimpiarNuevaUnidad();
 		$(".divOpciones").attr('style', 'display: none');
+		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");;
 		$("#divRegresar").show();
-		$("#divTransacciones.divOpciones").show();;
+		$("#divTransacciones.divOpciones").show();
 		
 	})
 	$('#btnExit').click((e) => {
 		e.preventDefault();
 		$(".divOpciones").attr('style', 'display: none');
+		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");;
 		$("#divRegresar").show();
 		$("#divTransacciones.divOpciones").show();
 
@@ -102,7 +111,7 @@ function fillDataEdit(data) {
 	$('#inpPresupuesto').val(commaSeparateNumber(data.MONTO_DE_LEY));
 	$('#inpCuota').val(commaSeparateNumber(data.CUOTA_PRESUPUESTARIA_TOTAL));
 	$('#inpCompromiso').val(commaSeparateNumber(data.COMPROMISO_TOTAL));
-	$('#inpApropiacion').val(commaSeparateNumber(data.APROPIACION_TOTAL));
+	$('#inpPresupuestoAct').val(commaSeparateNumber(data.MONTO_DE_LEY));
 	$('#inpDisponibilidad').val(commaSeparateNumber(data.DISPONIBILIDAD));
 	$('#inpGrupoDesc').val(`${data.TITULO_NOMBRE_GRUPO.length > 30 ? data.TITULO_NOMBRE_GRUPO.substr(0, 30) + '...' : data.TITULO_NOMBRE_GRUPO}`).attr('title', `${data.TITULO_NOMBRE_GRUPO}`);
 	$('#inpSubpartidaDesc').val(`${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA.length > 50 ? data.NOMBRE_SUBPARTIDA.substr(0, 50) + '...' : data.NOMBRE_SUBPARTIDA}`).attr('title', `${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA}`);
@@ -203,11 +212,21 @@ function cargarTransDatatable() {
 				destroy: true,
 				searching: true,
 				language: LangSpanish,
+				colReorder: true,
+				responsive: true,
 				/*"paging": false,*/
 				"zeroRecords": " ",
 				lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				dom: '<"top"B>, lfrtip',
 				buttons: [
+
+					{
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
 					{
 						extend: 'excelHtml5',
 						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
@@ -278,11 +297,6 @@ function cargarTransDatatable() {
 						, className: "dt-custom-column-text"
 					},
 					{
-						"data": "APROPIACION_TOTAL", render: $.fn.dataTable.render.number(',', '.', 2, '')
-						, "width": "10%"
-						, className: "dt-custom-column-text"
-					},
-					{
 						"data": "DISPONIBILIDAD", render: $.fn.dataTable.render.number(',', '.', 2, '')
 						, "width": "10%"
 						, className: "dt-custom-column-text"
@@ -295,6 +309,7 @@ function cargarTransDatatable() {
 				],
 				"width": "100%"
 			});
+			
 
 		} else {
 			$("#tblTransacciones").hide();
@@ -321,13 +336,13 @@ function SaldoDisponible() {
 
 }
 function FillDataToEdit(data) {
-
+	
 	$('#inpID').val(data.ID);
 	$('#inpPresupuestoID').val($('#hfRegID').val());
 	$('#inpCuotaTot').val(commaSeparateNumber($('#inpCuota').val()));
 	$('#inpCompromisoTot').val(commaSeparateNumber($('#inpCompromiso').val()));
 	$('.cs-Compromiso').val(commaSeparateNumber(data.COMPROMISO)).attr('data-item', data.COMPROMISO).change();
-	$('.cs-Apropiacion').val(commaSeparateNumber(data.APROPIACION)).attr('data-item', data.APROPIACION).change();
+	$('.cs-PresupuestoAct').val($('#inpPresupuesto').val()).change();
 	$('#inpCodPedidosReserva').val(data.COD_PEDIDOS_RESERVAS);
 	$('#inpFecha').val(ConvertDateJsonToInputDate(data.FECHA));
 	$('#taDetalles').val(data.DETALLES);
@@ -336,6 +351,11 @@ function FillDataToEdit(data) {
 	$('#inpRegModPor').val(data.MODIFICADO_POR);
 	$('#inpRegModifFecha').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
 	$('#ckEstado').prop("checked", data.ESTATUS_REGISTRO === '1' ? true : false);
+	if (data.ES_PEDIDO == true) {
+		$('#inpRdoPedidos').prop("checked", true);
+	} else {
+		$('#inpRdoReservas').prop("checked", true);
+	}
 	SaldoDisponible();
 }
 
@@ -343,6 +363,7 @@ function EditarUnidad(e) {
 	FillDataToEdit(JSON.parse(atob($(e).attr('data-item'))));
 
 	$(".divOpciones").attr('style', 'display: none !important');
+	$("#h5textHeader").text('EDITAR - MOVIMIENTO UNIDAD FISCALIZADORA').removeClass("blink text-success text-info").addClass("text-warning");
 	$("#divUnidadFiscalizadora").show();
 	$(".is-new-record").attr('style', 'display: block');
 	$('#divUnidades .cs-montos').each((idx) => {
@@ -356,6 +377,7 @@ function LimpiarNuevaUnidad() {
 
 	var limpiar = '';
 	$(".divOpciones").attr('style', 'display: none !important');
+	$("#h5textHeader").text('NUEVO - MOVIMIENTO UNIDAD FISCALIZADORA').removeClass("text-info text-warning").addClass("blink text-success");
 	$("#divUnidadFiscalizadora").show();
 	$(".is-new-record").attr('style', 'display: none');
 	$('#inpPresupuestoID').val($('#hfRegID').val());
@@ -364,7 +386,7 @@ function LimpiarNuevaUnidad() {
 	SaldoDisponible();
 	$('#inpID').val('');
 	$('.cs-Compromiso').val('').attr('data-item', '0').change();
-	$('.cs-Apropiacion').val('').attr('data-item', '0').change();
+	$('.cs-PresupuestoAct').val($('#inpPresupuesto').val()).change();
 	$('#inpCodPedidosReserva').val(limpiar);
 	$('#taDetalles').val(limpiar);
 	$('#inpRegCrePor').val(limpiar);
@@ -372,6 +394,7 @@ function LimpiarNuevaUnidad() {
 	$('#inpRegModPor').val(limpiar);
 	$('#inpRegModifFecha').val(limpiar);
 	$('#ckEstado').prop("checked", true);
+	$('#inpRdoPedidos').prop("checked", true);
 
 	setDefaultFecha();
 
@@ -389,7 +412,7 @@ function cargarTransUnidadesDatatable() {
 	CallAjax(`/Transacciones/GetUnidadesFiscalizadoras?presupuestoAnualDe=${presupuestoAnualDe}&presupuestoID=${presupuestoID}`, undefined, "json", function (data) {
 
 		if (data && data.Record) {
-
+			
 			$("#tblTransaccionesUnidades").show();
 			dataTable = $("#tblTransaccionesUnidades").DataTable({
 				scrollX: true,
@@ -397,6 +420,9 @@ function cargarTransUnidadesDatatable() {
 				destroy: true,
 				searching: true,
 				language: LangSpanish,
+				colReorder: true,
+				responsive: true,
+				"paging": false,
 				"zeroRecords": " ",
 				lengthMenu: [6, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				dom: '<"top"B>, lfrtip',
@@ -413,11 +439,18 @@ function cargarTransUnidadesDatatable() {
 
 					},
 					{
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
+					{
 						extend: 'excelHtml5',
 						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
 						text: ' Excel',
 						title: 'Movimientos_Unidad_Fisc_' + presupuestoAnualDe,
-					},
+					}
 					/*{ extend: 'edit', editor },*/
 				],
 				"columns": [
@@ -438,11 +471,37 @@ function cargarTransUnidadesDatatable() {
 						, className: "dt-custom-column-text"
 					},
 					{
-						"data": "APROPIACION", render: $.fn.dataTable.render.number(',', '.', 2, '')
-						, "width": "10%"
-						, className: "dt-custom-column-text"
+						"data": "ES_PEDIDO",
+						"render": (item) => {
+							/*console.log(item)*/
+							return (
+								(item == 1 ? 'PEDIDO' : 'RESERVA')
+							);
+						},
+						"width": "40%", className: "dt-custom-column-text text-center"
 					},
-					{ "data": "COD_PEDIDOS_RESERVAS", "width": "30%", className: "dt-custom-column-text text-justify" },
+					{
+						"data": "ID",
+						"render": (item) => {
+							/*console.log(item)*/
+							/*debugger*/
+							return (
+
+								`<span title="${data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS}" >${data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS !== null ? data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS.length < 30 ? data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS : data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS.substr(0, 30) + '...' : null}</span>`
+							);
+						}, "width": "40%", className: "dt-custom-column-text text-justify"
+					},
+					{
+						"data": "ID",
+						"render": (item) => {
+							/*console.log(item)*/
+							/*debugger*/
+							return (
+
+								`<span title="${data.Record.find(x => x.ID == item).LINEA}" >${data.Record.find(x => x.ID == item).LINEA !== null ? data.Record.find(x => x.ID == item).LINEA.length < 20 ? data.Record.find(x => x.ID == item).LINEA : data.Record.find(x => x.ID == item).LINEA.substr(0, 20) + '...' : null}</span>`
+							);
+						}, "width": "40%", className: "dt-custom-column-text text-justify"
+					},
 					{
 						"data": "ID",
 						"render": (item) => {
@@ -453,6 +512,13 @@ function cargarTransUnidadesDatatable() {
 								`<span title="${data.Record.find(x => x.ID == item).DETALLES}" >${data.Record.find(x => x.ID == item).DETALLES !== null ? data.Record.find(x => x.ID == item).DETALLES.length < 40 ? data.Record.find(x => x.ID == item).DETALLES : data.Record.find(x => x.ID == item).DETALLES.substr(0, 40) + '...' : null  }</span>`
 							);
 						}, "width": "40%", className: "dt-custom-column-text text-justify"
+					},
+					{
+						"data": "FECHA", "render": (item) => {
+							return (
+								ConvertDateJsonToDateShort(item)
+							);
+						}, "width": "38%", className: "dt-custom-column-text text-center"
 					},
 					{ "data": "CREADO_POR", "width": "8%", className: "dt-custom-column-text text-justify" },
 					{

@@ -8,6 +8,7 @@ function onInitPagina() {
 	$('#aPresuFormato').attr("href", $('#inpApiBase').val().split('/api/')[0] + '/PresupuestoFormato/FormatoCargaPresupuestoDGME.xlsx');
 	$('#aCuotaFormato').attr("href", $('#inpApiBase').val().split('/api/')[0] + '/PresupuestoFormato/FormatoCuotaCargaPresupuestoDGME.xlsx');
 	CargasInit();
+	TipoPresupuesto();
 	PresupuestoInit();
 
 	$("input[name='btnradioCarga']").each(function () {
@@ -63,11 +64,28 @@ function CargasInit() {
 		$("#postedFiles").click();
 	})
 	$("#postedFiles").change(() => {
-		if ($('#postedFiles')[0].files.length > 0) {
+		if ($('#postedFiles')[0].files.length > 0 &&  $('#sopTipoPresupuesto option:selected').val() != -1 ) {
 			$("#btnUpload").attr("disabled", false);
+			
 		} else {
 			$("#btnUpload").attr("disabled", true);
 		}
+
+	});
+	$('#sopTipoPresupuesto').change(() => {
+		if ($('#postedFiles')[0].files.length > 0 && $('#sopTipoPresupuesto option:selected').val() != -1) {
+			$("#btnUpload").attr("disabled", false);
+			
+		} else {
+				$("#btnUpload").attr("disabled", true);
+			
+		}
+		if ($('#sopTipoPresupuesto option:selected').val() != -1) {
+			$("#lbsopTipoPresupuesto").removeClass('cs-isrequired-label');
+		} else {
+			$("#lbsopTipoPresupuesto").addClass('cs-isrequired-label');
+		}
+
 
 	});
 }
@@ -136,7 +154,25 @@ function PresupuestoInit() {
 
 }
 
+function TipoPresupuesto() {
 
+	CallAjax("/cargas/GetListaTipoPresupuesto", undefined, "json", function (data) {
+		
+		if (data && data.Record) {
+			var s = '<option value="-1">-Seleccione-</option>';
+			for (var i = 0; i < data.Record.length; i++) {
+				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
+			}
+			$("#sopTipoPresupuesto").html(s);
+
+		}
+		else {
+			toastr.error(data.message);
+		}
+
+
+	}, "GET", true);
+}
 
 function resetData() {
 	$("#btnUpload").attr("disabled", true);
@@ -156,7 +192,9 @@ function CargarDocumento() {
 	formData.append('postedFiles', dataUpload.files[0]);
 	formData.append('user', currentUser);
 	formData.append('yearBudget', currentYearBudget);
-
+	formData.append('user', currentUser);
+	formData.append('tipo_presupuesto_id', $('#sopTipoPresupuesto option:selected').val());
+	
 	//debugger
 	CallAjaxFiles(UriApi, formData, "json", function (data) {
 
@@ -359,7 +397,6 @@ function RemoverItem(e) {
 	var data = JSON.parse(atob($(e).attr('data-item')));
 
 	var esPresupuesto = $('#btnRdoPresupuesto').is(":checked");
-	debugger
 	var presupuestoCarga = {
 		ID: parseInt(data.ID),
 		PRESUPUESTO_ANUAL_DE: parseInt(data.PRESUPUESTO_ANUAL_DE),
@@ -459,6 +496,7 @@ function cargarPresupuestoDatatable() {
 	CallAjax("/Cargas/GetPresupuestos?presupuestoAnualDe=" + presupuestoAnualDe, undefined, "json", function (data) {
 
 		if (data && data.Record) {
+		
 			$("#tblPresupuestoCargas").show();
 			dataTable = $("#tblPresupuestoCargas").DataTable({
 				scrollX: true,
@@ -466,11 +504,20 @@ function cargarPresupuestoDatatable() {
 				destroy: true,
 				searching: true,
 				language: LangSpanish,
+				colReorder: true,
+				responsive: true,
 				"zeroRecords": " ",
 				lengthMenu: [8, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				/*dom: 'Bfrtip',*/
 				dom: '<"top"B>, lfrtip',
 				buttons: [
+					{
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
 					{
 						extend: 'excelHtml5',
 						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
@@ -523,6 +570,7 @@ function cargarPresupuestoDatatable() {
 					},
 					{ "data": "MONEDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CENTRO_GESTOR", "width": "8%", className: "dt-custom-column-text text-center" },
+					{ "data": "TIPO_PRESUPUESTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "DETALLES",
 						"render": (item) => {
@@ -593,10 +641,19 @@ function cargarCuotaDatatable() {
 				data: data.Record,
 				destroy: true,
 				searching: true,
+				colReorder: true,
+				responsive: true,
 				language: LangSpanish,
 				"lengthMenu": [8, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				dom: '<"top"B>, lfrtip',
 				buttons: [
+					{
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
 					{
 						extend: 'excelHtml5',
 						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
@@ -648,6 +705,7 @@ function cargarCuotaDatatable() {
 					},
 					{ "data": "MONEDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CENTRO_GESTOR", "width": "8%", className: "dt-custom-column-text text-center" },
+					{ "data": "TIPO_PRESUPUESTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "DETALLES_CUOTA",
 						"render": (item) => {

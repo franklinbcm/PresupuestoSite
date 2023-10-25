@@ -16,34 +16,40 @@
                 <label for="inpPresupuestoID" class="form-label">Presupuesto #</label>
                 <input type="text" class="form-control" id="inpPresupuestoID" readonly disabled="">
             </div>
-            <div class="col-md-4 mb-2">
-                <label for="inpPresupuestoID" class="form-label">Cuota</label>
-                <input type="text" class="form-control" id="inpCuotaTot" readonly disabled="">
+            <div class="col-md-4 form-group">
+                <label for="inpPresupuestoAct" id="lbinpPresupuestoAct" class="form-label" title="Presupuesto Actual">De Ley Total</label>
+                <div id="divinpPresupuestoAct" class="input-group mb-2">
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
+                    <input type="text" class="form-control cs-PresupuestoAct" id="inpPresupuestoAct" readonly disabled="">
+                    @*<div class="invalid-feedback">Requerido!</div>*@
+                </div>
             </div>
             <div class="col-md-4 mb-2">
-                <label for="inpPresupuestoID" class="form-label">Comprometido</label>
-                <input type="text" class="form-control" id="inpCompromisoTot" readonly disabled="">
+                <label for="inpCuotaTot" id="lbinpCuotaTot" class="form-label">Cuota</label>
+                <div id="divinpCuotaTot" class="input-group mb-2">
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
+                    <input type="text" class="form-control" id="inpCuotaTot" readonly disabled="">
+                </div>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label for="inpCompromisoTot" id="lbinpCompromisoTot" class="form-label">Comprometido</label>
+                <div id="divinpCompromisoTot" class="input-group mb-2">
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
+                    <input type="text" class="form-control" id="inpCompromisoTot" readonly disabled="">
+                </div>
             </div>
             <div class="col-md-4 form-group">
                 <label for="inpCompromisoUni" id="lbinpCompromisoUni" class="form-label">Compromiso</label>
                 <div id="divinpCompromisoUni" class="input-group mb-2 has-success">
-                    <span class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
-                    <input type="text" class="form-control is-valid cs-montos cs-Compromiso" id="inpCompromisoUni">
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
+                    <input type="text" class="form-control is-valid cs-montos cs-Compromiso" id="inpCompromisoUni" autocomplete="off">
                     @*<div class="invalid-feedback">Requerido!</div>*@
                 </div>
             </div>
             <div class="col-md-4 form-group">
-                <label for="inpApropiacion" id="lbinpApropiacion" class="form-label">Apropiación</label>
-                <div id="divinpApropiacion" class="input-group mb-2 has-success">
-                    <span class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
-                    <input type="text" class="form-control is-valid cs-montos cs-cero cs-Apropiacion" id="inpApropiacion">
-                    @*<div class="invalid-feedback">Requerido!</div>*@
-                </div>
-            </div>
-            <div class="col-md-4 form-group">
-                <label for="inpSaldo" id="lbinpSaldo" class="form-label" >Saldo Disponible</label>
+                <label for="inpSaldo" id="lbinpSaldo" class="form-label">Saldo Disponible</label>
                 <div id="divinpSaldo" class="input-group mb-2">
-                    <span class="input-group-text custon-btn-link"><i class="fa fa-light fa-dollar-sign text-success"></i></span>
+                    <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
                     <input type="text" class="form-control" id="inpSaldo" readonly disabled="">
                 </div>
             </div>
@@ -51,13 +57,30 @@
                 <label for="inpFecha" maxlength="80" class="form-label opc-date-format" title="Fecha">Fecha</label>
                 <input type="date" class="form-control" id="inpFecha">
             </div>
-            <div class="col-md-8 mb-2">
-                <label for="inpCodPedidosReserva" maxlength="80" class="form-label" title="Código Pedidos Reservas">Pedidos / Reservas</label>
-                <input type="text" class="form-control" id="inpCodPedidosReserva">
+
+            <div class="col-md-8">
+                <div class="mt-2">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inpRdoPedidos" value="1" checked>
+                        <label class="form-check-label" for="inlineRadio1">Pedido</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inpRdoReservas" value="0">
+                        <label class="form-check-label" for="inlineRadio2">Reserva</label>
+                    </div>
+                </div>
+                <input type="text" class="form-control cs-input-text" id="inpCodPedidosReserva" autocomplete="off">
+            </div>
+            <div class="col-md-12 form-group">
+                <label for="inpLineas" id="lbinpLineas" class="form-label">Línea</label>
+                <div id="divinpLineas" class="input-group mb-2 has-success">
+                    <input type="text" class="form-control is-valid cs-input-text" id="inpLineas" autocomplete="off">
+                    @*<div class="invalid-feedback">Requerido!</div>*@
+                </div>
             </div>
             <div class="col-md-12 mb-2 has-success">
                 <label for="taDetalles" class="form-label">Nota</label>
-                <textarea type="text" rows="2" class="form-control is-valid" maxlength="200" id="taDetalles"></textarea>
+                <textarea type="text" rows="2" class="form-control is-valid cs-input-text" maxlength="200" id="taDetalles" autocomplete="off"></textarea>
             </div>
             <div class="col-md-3 mb-2 is-new-record">
                 <label for="inpRegCrePor" class="form-label">Registrado Por</label>
