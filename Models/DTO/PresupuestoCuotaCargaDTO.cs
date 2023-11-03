@@ -18,6 +18,7 @@ namespace PresupuestoSite.Models.DTO
 
         [Required(ErrorMessage = "PRESUPUESTO_ANUAL_DE Requerido")]
         public int PRESUPUESTO_ANUAL_DE { get; set; }
+        public int TIPO_MOVIMIENTO_ID { get; set; }
     }
 
 }

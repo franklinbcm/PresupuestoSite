@@ -314,4 +314,241 @@ function TextCleanInputFormato(e) {  // Accept only alpha numerics, no special c
     e.preventDefault();
     return false;
 }
+function fnFechaReporteUltimoDiaMes() {
+    var month = parseInt(moment(new Date()).format("MM", "es"));
+    var lastDay = moment(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)).format("DD", "es");
+    var monthStr = '';
+    var year = moment(new Date()).format("YYYY", "es");
+    switch (month) {
+        case 1:
+            monthStr = 'ENERO';
+            break;
+        case 2:
+            monthStr = 'FEBRERO';
+            break;
+        case 3:
+            monthStr = 'MARZO';
+            break;
+        case 4:
+            monthStr = 'ABRIL';
+            break;
+        case 5:
+            monthStr = 'MAYO';
+            break;
+        case 6:
+            monthStr = 'JUNIO';
+            break;
+        case 7:
+            monthStr = 'JULIO';
+            break;
+        case 8:
+            monthStr = 'AGOSTO';
+            break;
+        case 9:
+            monthStr = 'SEPTIEMBRE';
+            break;
+        case 10:
+            monthStr = 'OCTUBRE';
+            break;
+        case 11:
+            monthStr = 'NOVIEMBRE';
+            break;
+        case 12:
+            monthStr = 'DICIEMBRE';
+            break;
+        default:
+    }
+    return `AL ${lastDay} DE ` + monthStr + ' DE ' + year;
+}
+function GetReportInforme(data) {
+    var recordInforme = [];
+    var generalMontoLey = 0;
+    var generalComprometido = 0;
+
+    if (data.Record.length != undefined) {
+
+        var partidaListado = data.Record.map(item => item.TITULO_PARTIDA)
+            .filter((value, index, self) => self.indexOf(value) === index).sort();
+
+        var grupoListado = data.Record.map(item => item.TITULO_GRUPO)
+            .filter((value, index, self) => self.indexOf(value) === index).sort();
+
+        var subPartidaListado = data.Record.map(item => item.TITULO_SUBPARTIDA)
+            .filter((value, index, self) => self.indexOf(value) === index).sort();
+
+        /*Partida*/
+        for (var i = 0; i < partidaListado.length; i++) {
+            var partidaTitulo = partidaListado[i];
+            var montoLey = 0;
+            var comprometido = 0;
+            var modificaciones = 0;
+            for (var item = 0; item < data.Record.length; item++) {
+                var partidaData = data.Record.filter(item => item.TITULO_PARTIDA == partidaTitulo);
+                if (data.Record[item].TITULO_PARTIDA == partidaTitulo) {
+                    montoLey = + parseFloat(partidaData.reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
+                    comprometido = + parseFloat(partidaData.reduce((total, obj) => obj.COMPROMISO + total, 0));
+                    generalMontoLey = + parseFloat(montoLey);
+                    generalComprometido = + parseFloat(comprometido);
+                }
+            }
+
+            recordInforme.push(
+                {
+                    ID: recordInforme.length,
+                    CENTRO_GESTOR: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).CENTRO_GESTOR,
+                    PARTIDA_SUBPARTIDA: partidaTitulo,
+                    FUENTE_FINANCIAMIENTO_FONDO: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).FUENTE_FINANCIAMIENTO_FONDO,
+                    PRESUPUESTO_INICIAL: montoLey,
+                    MODIFICACIONES: modificaciones,
+                    PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                    SOLICITADO: 0,
+                    COMPROMISO: comprometido,
+                    REC_MCIA: 0,
+                    COMPROMISO_TOTAL: comprometido,
+                    DEVENGADO: 0,
+                    PORCENT_EJECUCION: 0,
+                    BGCOLOR: 'bg-orange'
+
+                }
+            );
+            /*Grupo*/
+            for (var g = 0; g < grupoListado.length; g++) {
+                var grupoTitulo = grupoListado[g];
+                montoLey = 0;
+                comprometido = 0;
+                modificaciones = 0;
+                for (var item = 0; item < data.Record.length; item++) {
+                    if (data.Record[item].TITULO_GRUPO == grupoTitulo) {
+                        montoLey = + parseFloat(data.Record[item].MONTO_DE_LEY);
+                        comprometido = + parseFloat(data.Record[item].COMPROMISO);
+                    }
+                }
+                recordInforme.push(
+                    {
+                        ID: recordInforme.length,
+                        CENTRO_GESTOR: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).CENTRO_GESTOR,
+                        PARTIDA_SUBPARTIDA: grupoTitulo,
+                        FUENTE_FINANCIAMIENTO_FONDO: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).FUENTE_FINANCIAMIENTO_FONDO,
+                        PRESUPUESTO_INICIAL: montoLey,
+                        MODIFICACIONES: modificaciones,
+                        PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                        SOLICITADO: 0,
+                        COMPROMISO: comprometido,
+                        REC_MCIA: 0,
+                        COMPROMISO_TOTAL: comprometido,
+                        DEVENGADO: 0,
+                        PORCENT_EJECUCION: 0,
+                        BGCOLOR: 'bg-yellow'
+
+                    }
+                );
+                /*Subpartida*/
+                for (var s = 0; s < subPartidaListado.length; s++) {
+                    var subpartidaTitulo = subPartidaListado[s];
+                    montoLey = 0;
+                    comprometido = 0;
+                    modificaciones = 0;
+                    for (var item = 0; item < data.Record.length; item++) {
+                        var SupartidaData = data.Record.find(x => x.TITULO_SUBPARTIDA == subpartidaTitulo && x.TITULO_GRUPO == grupoTitulo);
+                        if (SupartidaData != undefined) {
+                            montoLey = + parseFloat(SupartidaData.MONTO_DE_LEY);
+                            comprometido = + parseFloat(SupartidaData.COMPROMISO);
+                        }
+                    }
+                    
+                    if (SupartidaData != undefined) {
+                        recordInforme.push(
+                            {
+                                ID: recordInforme.length,
+                                CENTRO_GESTOR: SupartidaData.CENTRO_GESTOR,
+                                PARTIDA_SUBPARTIDA: '&nbsp;&nbsp;&nbsp;' + SupartidaData.TITULO_SUBPARTIDA,
+                                FUENTE_FINANCIAMIENTO_FONDO: SupartidaData.FUENTE_FINANCIAMIENTO_FONDO,
+                                PRESUPUESTO_INICIAL: montoLey,
+                                MODIFICACIONES: modificaciones,
+                                PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                                SOLICITADO: 0,
+                                COMPROMISO: comprometido,
+                                REC_MCIA: 0,
+                                COMPROMISO_TOTAL: comprometido,
+                                DEVENGADO: 0,
+                                PORCENT_EJECUCION: 0,
+                                BGCOLOR: ''
+
+                            }
+                        );
+                    }
+
+
+
+                }
+
+            }
+            /*Total*/
+            recordInforme.push(
+                {
+                    ID: 999996,
+                    CENTRO_GESTOR: '&nbsp;',
+                    PARTIDA_SUBPARTIDA: 'TOTAL',
+                    FUENTE_FINANCIAMIENTO_FONDO: '&nbsp;',
+                    PRESUPUESTO_INICIAL: generalMontoLey,
+                    MODIFICACIONES: 0,
+                    PRESUPUESTO_TOTAL: generalMontoLey,
+                    SOLICITADO: 0,
+                    COMPROMISO: generalComprometido,
+                    REC_MCIA: 0,
+                    COMPROMISO_TOTAL: generalComprometido,
+                    DEVENGADO: 0,
+                    PORCENT_EJECUCION: 0,
+                    BGCOLOR: 'bg-primary-title text-white'
+
+                }
+            );
+            recordInforme.push(
+                {
+                    ID: 999997,
+                    CENTRO_GESTOR: '',
+                    PARTIDA_SUBPARTIDA: '',
+                    FUENTE_FINANCIAMIENTO_FONDO: '',
+                    PRESUPUESTO_INICIAL: generalMontoLey,
+                    MODIFICACIONES: 0,
+                    PRESUPUESTO_TOTAL: generalMontoLey,
+                    SOLICITADO: 0,
+                    COMPROMISO: generalComprometido,
+                    REC_MCIA: 0,
+                    COMPROMISO_TOTAL: generalComprometido,
+                    DEVENGADO: 0,
+                    PORCENT_EJECUCION: 0,
+                    BGCOLOR: 'bg-white text-white'
+
+                }
+            );
+            recordInforme.push(
+                {
+                    ID: 999999998,
+                    CENTRO_GESTOR: '',
+                    PARTIDA_SUBPARTIDA: '',
+                    FUENTE_FINANCIAMIENTO_FONDO: '',
+                    PRESUPUESTO_INICIAL: null,
+                    MODIFICACIONES: null,
+                    PRESUPUESTO_TOTAL: generalMontoLey,
+                    SOLICITADO: 0,
+                    COMPROMISO: generalComprometido,
+                    REC_MCIA: 0,
+                    COMPROMISO_TOTAL: generalComprometido,
+                    DEVENGADO: 0,
+                    PORCENT_EJECUCION: 0,
+                    BGCOLOR: 'bg-secondary'
+
+                }
+            );
+            
+
+
+        }
+
+
+    }
+    
+    return recordInforme;
+}
 

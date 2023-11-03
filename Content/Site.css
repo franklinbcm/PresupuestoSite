@@ -57,6 +57,16 @@ div#tblTransacciones_wrapper table.dataTable thead th, table.dataTable thead td,
     -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
     box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
 }
+div#tblInformeEjecucion_wrapper table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background-color: mediumseagreen !important;
+    color: white;
+    margin: 10px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+}
 
 
 /*div#tblTransacciones_filter {
@@ -75,7 +85,7 @@ div#tblTransacciones_wrapper table.dataTable thead th, table.dataTable thead td,
     -moz-box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
     box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
 }
-div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter, div#tblCuotaCargas_filter, div#tblPresupuestoCargas_filter, div#tblSaldoPresupuesto_filter {
+div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter, div#tblCuotaCargas_filter, div#tblPresupuestoCargas_filter, div#tblSaldoPresupuesto_filter, div#tblInformeEjecucion_filter {
     margin: 9px 0px;
 }
 
@@ -238,7 +248,8 @@ div.dt-buttons {
 }
 .cs-isrequired-label::after {
     content: " *" !important;
-    color:red;
+    color: red;
+    animation: blinker 1s linear infinite;
 }
 .cs-transaction-bg {
     background: url(../Images/DGME-HD.jpg) no-repeat fixed;
@@ -255,4 +266,15 @@ button.dt-button.buttons-columnVisibility {
     -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
     box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
 }
-
+.bg-orange {
+    background-color: #ffa500c9 !important;
+}
+.bg-yellow {
+    background-color: #e9e937db !important;
+}
+.bg-primary-title {
+    background-color: #1b37a2f0 !important;
+}
+.bg-white {
+    background-color: white !important;
+}

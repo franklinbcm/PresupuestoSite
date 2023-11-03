@@ -36,7 +36,7 @@ function clickBotones() {
 
 		var unidadFiscalizadora = {
 			ID: currentId == '' ? 0 : parseInt(currentId),
-			PRESUPUESTO_ID: parseInt($('#inpPresupuestoID').val()),
+			CUOTA_ID: parseInt($('#inpCuotaID').val()),
 			PRESUPUESTO_ANUAL_DE: parseInt($('#spPeriodo').text()),
 			COMPROMISO: $('.cs-Compromiso').val().replaceAll(',', ''),
 			FECHA: $('#inpFecha').val(),
@@ -95,7 +95,7 @@ function clickBotones() {
 
 		var unidadFiscalizadora = {
 			ID: currentId == '' ? 0 : parseInt(currentId),
-			PRESUPUESTO_ID: parseInt($('#inpPresupuestoID').val()),
+			CUOTA_ID: parseInt($('#inpCuotaID').val()),
 			PRESUPUESTO_ANUAL_DE: parseInt($('#spPeriodo').text()),
 			COMPROMISO: $('.cs-Compromiso').val().replaceAll(',', ''),
 			FECHA: $('#inpFecha').val(),
@@ -218,6 +218,11 @@ function inpMontos() {
 		}
 		if (!$(e.currentTarget).hasClass("cs-cero")) {
 			UnidadDisponible();
+		}
+		
+		if ($('#sopTipoMovimi option:selected').val() == -1 && currentValue != 0 &&  !$(e.currentTarget).hasClass("cs-cero")) {
+			$('#btnCrear').attr("disabled", true);
+			$('#btnEdit').attr("disabled", true);
 		}
 			
 	});

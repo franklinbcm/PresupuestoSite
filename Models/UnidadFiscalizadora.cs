@@ -16,6 +16,11 @@ namespace PresupuestoSite.Models
         public string COD_PEDIDOS_RESERVAS { get; set; }
         public bool ES_PEDIDO { get; set; }
         public string LINEA { get; set; }
+        public int TIPO_MOVIMIENTO_ID { get; set; }
+        public string CODIGO_TIPO_MOVIMIENTO { get; set; }
+        public string TIPO_MOVIMIENTO_NOMBRE { get; set; }
+        public int CUOTA_ID { get; set; }
+        public string DETALLES_CUOTA { get; set; }
 
 
     }

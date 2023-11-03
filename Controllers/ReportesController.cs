@@ -15,8 +15,9 @@ namespace PresupuestoSite.Controllers
     {
         private readonly ReportesServicio _reportesServicio = new ReportesServicio();
         // GET: Reportes
-        public ActionResult Index()
+        public  ActionResult Index()
         {
+          
             return View();
         }
 
@@ -25,7 +26,7 @@ namespace PresupuestoSite.Controllers
         public async Task<JsonResult> GetSubPartidas(int presupuestoAnualDe)
         {
             var dataResult = await _reportesServicio.GetSubPartidas(presupuestoAnualDe);
-
+            await this.GroupingWithCheckBox();
             if (dataResult.Any())
             {
 
@@ -44,7 +45,7 @@ namespace PresupuestoSite.Controllers
                 return Json(new
                 {
                     Result = "Ok",
-                    Record = Utilidades.ListaVacia(),
+                    Record = new SubpartidaPresupuestoCargado(),
                     Total = 0,
                 }, JsonRequestBehavior.AllowGet);
             }
@@ -55,7 +56,7 @@ namespace PresupuestoSite.Controllers
         public async Task<JsonResult> GetSubPartidasPresupuestosCargados(int presupuestoAnualDe, int partidaID, int grupoID, int subpartidaID)
         {
             var dataResult = await _reportesServicio.GetSubPartidasPresupuestosCargados(presupuestoAnualDe, partidaID, grupoID, subpartidaID);
-
+            
             if (dataResult.Any())
             {
 
@@ -78,6 +79,49 @@ namespace PresupuestoSite.Controllers
                 }, JsonRequestBehavior.AllowGet);;
             }
 
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetInformeEjecucion(int presupuestoAnualDe, string subpartidaCodigo)
+        {
+            var dataResult = await _reportesServicio.GetSubPartidasPresupuestosCargados(presupuestoAnualDe, 0, 0, 0);
+            dataResult = dataResult.Where(x=>x.CODIGO_SUBPARTIDA.Contains(string.IsNullOrEmpty(subpartidaCodigo)? x.CODIGO_SUBPARTIDA : subpartidaCodigo)).ToList();
+            if (dataResult.Any())
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = dataResult,
+                    Total = dataResult != null ? dataResult.Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new SaldoPresupuesto(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet); ;
+            }
+
+        }
+
+        public async Task<ActionResult> GroupingWithCheckBox()
+        {
+            var dataResult = await _reportesServicio.GetSubPartidas(2023);
+
+            var data = dataResult.Select(i => new SelectListItem()
+            {
+                Text = $"{i.CODIGO_SUBPARTIDA} - {i.TITULO_SUBPARTIDA}",
+                Value = i.SUBPARTIDA_ID.ToString(),
+            }
+            ).Distinct();
+            ViewBag.data = data;
+            return View();
         }
 
     }

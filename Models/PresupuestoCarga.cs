@@ -17,7 +17,7 @@ namespace PresupuestoSite.Models
         public decimal MONTO_DE_LEY { get; set; }
         public string DETALLES { get; set; }
         public int PRESUPUESTO_ANUAL_DE { get; set; }
-        public int TIPO_PRESUPUESTO_ID { get; set; }
+        public int TIPO_MOVIMIENTO_ID { get; set; }
 
     }
 }

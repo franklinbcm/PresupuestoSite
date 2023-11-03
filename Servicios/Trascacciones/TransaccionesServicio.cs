@@ -218,7 +218,7 @@ namespace PresupuestoSite.Servicios.Trascacciones
         {
             List<UnidadFiscalizadora> presupuestos = new List<UnidadFiscalizadora>();
             var stpresupuestoAnualDe = presupuestoAnualDe == null ? "null" : presupuestoAnualDe.ToString();
-            var stpresupuestoID = presupuestoID == null ? "null" : presupuestoID.ToString();
+            var stcuotaID = presupuestoID == null ? "null" : presupuestoID.ToString();
 
             //string token = "";
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/unidadFiscalizadora/UnidadFiscalizadoraProPresupuestoAsync/{stpresupuestoAnualDe}/{presupuestoID}")))
@@ -327,6 +327,47 @@ namespace PresupuestoSite.Servicios.Trascacciones
             }
 
             return presupuestos;
+
+        }
+
+        public async Task<List<PresupuestoCuotaCargaVM>> GetListaTipoMovimientoPorFiltros(int presupuestoAnualDe, int presupuestoCargadoID, int subpartidaID, string unidadFiscalizadora)
+        {
+            List<PresupuestoCuotaCargaVM> presupuestoCargaVM = new List<PresupuestoCuotaCargaVM>();
+            var stpresupuestoAnualDe = presupuestoAnualDe == null ? "null" : presupuestoAnualDe.ToString();
+            var stpresupuestoCargadoID = presupuestoCargadoID == null ? "null" : presupuestoCargadoID.ToString();
+            var stsubpartidaID = subpartidaID == null ? "null" : subpartidaID.ToString();
+            var stunidadFiscalizadora = unidadFiscalizadora == null ? "null" : unidadFiscalizadora.ToString();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/presupuestoCuota/GetPresupuestoCuotaUnidadFiscalizadoraTipoMovAsync/{stpresupuestoAnualDe}/{stpresupuestoCargadoID}/{stsubpartidaID}/{stunidadFiscalizadora}")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(jSon);
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestoCargaVM.AddRange(JsonConvert.DeserializeObject<PresupuestoCuotaCargaVM[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestoCargaVM;
 
         }
 

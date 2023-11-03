@@ -138,26 +138,19 @@ namespace PresupuestoSite.Controllers
 
         }
         [HttpGet]
-        public async Task<JsonResult> GetListaTipoPresupuesto()
+        public async Task<JsonResult> GetListaTipoMovimiento(bool esCarga)
         {
             var dataResult = await _cargasServicio.GetTipoPresupuesto();
-
+            dataResult = dataResult.Where(x => x.ES_CARGA == esCarga).ToList();
 
             if (dataResult.Any())
             {
 
-                var data = dataResult.Select(i => new SelectListItem()
-                {
-                    Text = $"{i.PRESUPUESTO_NOMBRE}",
-                    Value = i.ID.ToString(),
-                }
-                ).Distinct();
-
                 return Json(new
                 {
                     Result = "Ok",
-                    Record = data,
-                    Total = data != null ? data.ToList().Count() : 0,
+                    Record = dataResult,
+                    Total = dataResult != null ? dataResult.Count() : 0,
                 }, JsonRequestBehavior.AllowGet);
 
             }
@@ -167,7 +160,7 @@ namespace PresupuestoSite.Controllers
                 return Json(new
                 {
                     Result = "Ok",
-                    Record = Utilidades.ListaVacia(),
+                    Record = new TipoMovimiento(),
                     Total = 0,
                 }, JsonRequestBehavior.AllowGet);
             }

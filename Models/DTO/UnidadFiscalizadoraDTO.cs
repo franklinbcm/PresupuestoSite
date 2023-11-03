@@ -16,5 +16,6 @@ namespace PresupuestoSite.Models.DTO
         public string COD_PEDIDOS_RESERVAS { get; set; }
         public bool ES_PEDIDO { get; set; }
         public string LINEA { get; set; }
+        public int CUOTA_ID { get; set; }
     }
 }

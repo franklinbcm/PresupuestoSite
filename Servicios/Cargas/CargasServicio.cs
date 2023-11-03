@@ -299,12 +299,12 @@ namespace PresupuestoSite.Servicios.Cargas
 
         }
 
-        public async Task<List<TipoPresupuesto>> GetTipoPresupuesto()
+        public async Task<List<TipoMovimiento>> GetTipoPresupuesto()
         {
-            List<TipoPresupuesto> presupuestos = new List<TipoPresupuesto>();
+            List<TipoMovimiento> presupuestos = new List<TipoMovimiento>();
 
             //string token = "";
-            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/tipoPresupuesto/TodoTipoPresupuestosAsync")))
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/TipoMovimiento/TodoTipoMovimientosAsync")))
             {
                 //Usando Token
                 //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
@@ -323,7 +323,7 @@ namespace PresupuestoSite.Servicios.Cargas
                             if (resultData != null)
                             {
                                 resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
-                                presupuestos.AddRange(JsonConvert.DeserializeObject<TipoPresupuesto[]>(resultData));
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<TipoMovimiento[]>(resultData));
                             }
 
 

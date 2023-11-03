@@ -8,7 +8,7 @@ function onInitPagina() {
 	$('#aPresuFormato').attr("href", $('#inpApiBase').val().split('/api/')[0] + '/PresupuestoFormato/FormatoCargaPresupuestoDGME.xlsx');
 	$('#aCuotaFormato').attr("href", $('#inpApiBase').val().split('/api/')[0] + '/PresupuestoFormato/FormatoCuotaCargaPresupuestoDGME.xlsx');
 	CargasInit();
-	TipoPresupuesto();
+	TipoMovimiento();
 	PresupuestoInit();
 
 	$("input[name='btnradioCarga']").each(function () {
@@ -22,9 +22,11 @@ function onInitPagina() {
 		$(this).change((e) => {
 			if (e.currentTarget.id.includes('Presupuesto')) {
 				$('#inpApiUri').val($('#inpApiBase').val() + '/presupuesto/agregar');
+				TipoMovimiento();
 
 			} else {
 				$('#inpApiUri').val($('#inpApiBase').val() + '/presupuestoCuota/agregar');
+				TipoMovimiento();
 
 			}
 		})
@@ -64,7 +66,7 @@ function CargasInit() {
 		$("#postedFiles").click();
 	})
 	$("#postedFiles").change(() => {
-		if ($('#postedFiles')[0].files.length > 0 &&  $('#sopTipoPresupuesto option:selected').val() != -1 ) {
+		if ($('#postedFiles')[0].files.length > 0 &&  $('#sopTipoMovimiento option:selected').val() != -1 ) {
 			$("#btnUpload").attr("disabled", false);
 			
 		} else {
@@ -72,18 +74,19 @@ function CargasInit() {
 		}
 
 	});
-	$('#sopTipoPresupuesto').change(() => {
-		if ($('#postedFiles')[0].files.length > 0 && $('#sopTipoPresupuesto option:selected').val() != -1) {
+	$('#sopTipoMovimiento').change(() => {
+		
+		if ($('#postedFiles')[0].files.length > 0 && $('#sopTipoMovimiento option:selected').val() != -1) {
 			$("#btnUpload").attr("disabled", false);
 			
 		} else {
 				$("#btnUpload").attr("disabled", true);
 			
 		}
-		if ($('#sopTipoPresupuesto option:selected').val() != -1) {
-			$("#lbsopTipoPresupuesto").removeClass('cs-isrequired-label');
+		if ($('#sopTipoMovimiento option:selected').val() != -1) {
+			$("#lbsopTipoMovimiento").removeClass('cs-isrequired-label');
 		} else {
-			$("#lbsopTipoPresupuesto").addClass('cs-isrequired-label');
+			$("#lbsopTipoMovimiento").addClass('cs-isrequired-label');
 		}
 
 
@@ -154,16 +157,16 @@ function PresupuestoInit() {
 
 }
 
-function TipoPresupuesto() {
+function TipoMovimiento() {
 
-	CallAjax("/cargas/GetListaTipoPresupuesto", undefined, "json", function (data) {
+	CallAjax("/cargas/GetListaTipoMovimiento?esCarga=" + $('#ckPresupuesto').prop("checked"), undefined, "json", function (data) {
 		
 		if (data && data.Record) {
 			var s = '<option value="-1">-Seleccione-</option>';
 			for (var i = 0; i < data.Record.length; i++) {
-				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
+				s += '<option title="' + data.Record[i].DETALLES + '" value="' + data.Record[i].ID + '">' + data.Record[i].MOVIMIENTO_NOMBRE + '</option>';
 			}
-			$("#sopTipoPresupuesto").html(s);
+			$("#sopTipoMovimiento").html(s);
 
 		}
 		else {
@@ -192,8 +195,7 @@ function CargarDocumento() {
 	formData.append('postedFiles', dataUpload.files[0]);
 	formData.append('user', currentUser);
 	formData.append('yearBudget', currentYearBudget);
-	formData.append('user', currentUser);
-	formData.append('tipo_presupuesto_id', $('#sopTipoPresupuesto option:selected').val());
+	formData.append('tipo_movimiento_id', $('#sopTipoMovimiento option:selected').val());
 	
 	//debugger
 	CallAjaxFiles(UriApi, formData, "json", function (data) {
@@ -291,7 +293,8 @@ function UpdateEditar() {
 		DETALLES: $('#taDetalles').val().trim(),
 		PRESUPUESTO_ANUAL_DE: parseInt($('#inpPresupuestoAn').val()),
 		CREADO_POR: $('#inpUsr').val(),
-		ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true? "1" : "0"
+		ESTATUS_REGISTRO: $('#ckEstado').is(":checked") == true ? "1" : "0",
+		TIPO_MOVIMIENTO_ID: parseInt($('#inpTipoMovimient').attr('data-item'))
 	}
 	if (!esPresupuesto) {
 		delete presupuestoCarga.MONTO_DE_LEY;
@@ -316,7 +319,7 @@ function UpdateEditar() {
 		CallAjax(esPresupuesto ? "/Cargas/EditPresupuestoPorId" : "/Cargas/EditPresupuestoCuotaPorId", JSON.stringify(presupuestoCarga), "json", function (data) {
 
 			if (data && data.Record) {
-				if (data.Record[0].ESTATUS_REQUEST == 200) {
+				if (data.Result == 'Ok') {
 
 					notifyToastr('Registro Actualizado', 'success');
 					$('#offcanvasCargas .btn-danger').click();
@@ -382,7 +385,8 @@ function fillDataEdit(data) {
 	$('#inpSubpartidaDesc').val(data.NOMBRE_SUBPARTIDA);
 	$('#inpUnidadFisc').val(data.UNIDAD_FISCALIZADORA);
 	$('#inpMoneda').val(data.MONEDA);
-
+	$('#inpTipoMovimient').val(data.TIPO_MOVIMIENTO_NOMBRE).attr('data-item', data.TIPO_MOVIMIENTO_ID);
+	
 	$('#inpPresupuestoAn').val(data.PRESUPUESTO_ANUAL_DE);
 	$('#inpRegCrePor').val(data.CREADO_POR);
 	$('#inpRegCreacionFecha').val(ConvertDateJsonToDate(data.CREADO_EN));
@@ -570,7 +574,7 @@ function cargarPresupuestoDatatable() {
 					},
 					{ "data": "MONEDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CENTRO_GESTOR", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "TIPO_PRESUPUESTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
+					{ "data": "TIPO_MOVIMIENTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "DETALLES",
 						"render": (item) => {
@@ -705,7 +709,7 @@ function cargarCuotaDatatable() {
 					},
 					{ "data": "MONEDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CENTRO_GESTOR", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "TIPO_PRESUPUESTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
+					{ "data": "TIPO_MOVIMIENTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "DETALLES_CUOTA",
 						"render": (item) => {

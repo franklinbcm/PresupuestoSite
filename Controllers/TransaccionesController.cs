@@ -120,7 +120,7 @@ namespace PresupuestoSite.Controllers
                 var data = dataResult.Select(i => new SelectListItem()
                 {
                     Text = $"{i.CODIGO_SUBPARTIDA} - {i.NOMBRE_SUBPARTIDA ?? i.ABREV_NOMBRE}",
-                    Value = i.ID.ToString()
+                    Value = i.ID.ToString(),
                 }
                 ).Distinct();
 
@@ -143,6 +143,45 @@ namespace PresupuestoSite.Controllers
             }
 
         }
+        [HttpGet]
+        public async Task<JsonResult> GetListaTipoMovimientoPorFiltros(int presupuestoAnualDe,int presupuestoCargadoID, int subpartidaID, string unidadFiscalizadora)
+        {
+            var presupuestoCargaVM = await _transacServicio.GetListaTipoMovimientoPorFiltros(presupuestoAnualDe, presupuestoCargadoID, subpartidaID, unidadFiscalizadora);
+
+            var dataResult = presupuestoCargaVM;
+            if (dataResult.Any())
+            {
+
+                var data = dataResult.Select(i => new ListadosVM()
+                {
+                    Text = $"{i.TIPO_MOVIMIENTO_NOMBRE} - Cuota #{i.ID.ToString()}",
+                    Value = i.ID.ToString(),
+                    Titulo = i.DETALLES_CUOTA,
+                    Opcional = i.TIPO_MOVIMIENTO_ID.ToString(),
+                }
+                ).Distinct();
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = data,
+                    Total = data != null ? data.ToList().Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new ListadosVM(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         [HttpGet]
         public async Task<JsonResult> GetPresupCuotaUnidadFiscTotalFiltros(int? presupuestoAnualDe, int? partidaID, int? grupoID, int? subpartidaID)
         {
