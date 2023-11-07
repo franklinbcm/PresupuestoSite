@@ -3,7 +3,7 @@
     ViewBag.Title = "Transacciones";
 }
 
-<div class="container mt-3">
+<div class="container-fluid col-11 mt-3">
     <div class="row d-flex justify-content-start p-2">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/"><i class="fa fa-regular fa-home"></i> INICIO</a></li>
@@ -45,7 +45,7 @@
 
 
 </div>
-<div class="container mt-3">
+<div class="container-fluid col-11 mt-3">
     <div class="row" style="min-width:350px !important">
         <div id="divTransacciones" style="display:block" class="row divOpciones">
             @Html.Partial("_Transacciones")
@@ -141,8 +141,6 @@
                             @Html.Partial("_Transacciones_Unidades")
                         </div>
                     </div>
-
-
                 </div>
                 <div class="container mt-3">
                     <div class="row" style="min-width:350px !important">

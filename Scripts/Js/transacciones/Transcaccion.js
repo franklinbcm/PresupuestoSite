@@ -306,7 +306,17 @@ function cargarTransDatatable() {
                             `;
 						}, "width": "10%"
 					},
-					{ "data": "NOMBRE_PARTIDA", "width": "15%", className: "dt-custom-column-text text-center" },
+					{
+						"data": "NOMBRE_PARTIDA",
+						"render": (item) => {
+							/*console.log(item)*/
+							 debugger 
+							return (
+
+								`<span title="${data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA}" >${data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA !== null ? data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA.length < 22 ? data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA : data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA.substr(0, 22) + '...' : null}</span>`
+							);
+						}, "width": "40%", className: "dt-custom-column-text text-justify"
+					},
 					{
 						"data": "TITULO_NOMBRE_GRUPO",
 						"render": (item) => {

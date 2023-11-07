@@ -362,18 +362,13 @@ function fnFechaReporteUltimoDiaMes() {
 }
 function GetReportInforme(data) {
     var recordInforme = [];
-    var generalMontoLey = 0;
-    var generalComprometido = 0;
+    //var generalMontoLey = 0;
+    //var generalComprometido = 0;
+    var partidaIndex = 0;
 
     if (data.Record.length != undefined) {
 
         var partidaListado = data.Record.map(item => item.TITULO_PARTIDA)
-            .filter((value, index, self) => self.indexOf(value) === index).sort();
-
-        var grupoListado = data.Record.map(item => item.TITULO_GRUPO)
-            .filter((value, index, self) => self.indexOf(value) === index).sort();
-
-        var subPartidaListado = data.Record.map(item => item.TITULO_SUBPARTIDA)
             .filter((value, index, self) => self.indexOf(value) === index).sort();
 
         /*Partida*/
@@ -382,21 +377,30 @@ function GetReportInforme(data) {
             var montoLey = 0;
             var comprometido = 0;
             var modificaciones = 0;
+
+            /*Grupo*/
+            var grupoListado = data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo).map(item => item.TITULO_GRUPO)
+                .filter((value, index, self) => self.indexOf(value) === index).sort();
+
+            /*Subpartida*/
+            var subPartidaListado = data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo).map(item => item.TITULO_SUBPARTIDA)
+                .filter((value, index, self) => self.indexOf(value) === index).sort();
+            
             for (var item = 0; item < data.Record.length; item++) {
                 var partidaData = data.Record.filter(item => item.TITULO_PARTIDA == partidaTitulo);
                 if (data.Record[item].TITULO_PARTIDA == partidaTitulo) {
+                    
                     montoLey = + parseFloat(partidaData.reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
                     comprometido = + parseFloat(partidaData.reduce((total, obj) => obj.COMPROMISO + total, 0));
-                    generalMontoLey = + parseFloat(montoLey);
-                    generalComprometido = + parseFloat(comprometido);
                 }
             }
-
+            partidaIndex = partidaIndex + 1;
             recordInforme.push(
                 {
                     ID: recordInforme.length,
                     CENTRO_GESTOR: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).CENTRO_GESTOR,
                     PARTIDA_SUBPARTIDA: partidaTitulo,
+                    PARTIDA_PRINCIPAL: partidaTitulo,
                     FUENTE_FINANCIAMIENTO_FONDO: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).FUENTE_FINANCIAMIENTO_FONDO,
                     PRESUPUESTO_INICIAL: montoLey,
                     MODIFICACIONES: modificaciones,
@@ -407,27 +411,35 @@ function GetReportInforme(data) {
                     COMPROMISO_TOTAL: comprometido,
                     DEVENGADO: 0,
                     PORCENT_EJECUCION: 0,
-                    BGCOLOR: 'bg-orange'
+                    BGCOLOR: 'bg-orange',
+                    TIPO: 'PARTIDA',
+                    PARTIDA_SEC: partidaIndex
 
                 }
             );
+
+
             /*Grupo*/
             for (var g = 0; g < grupoListado.length; g++) {
                 var grupoTitulo = grupoListado[g];
                 montoLey = 0;
                 comprometido = 0;
                 modificaciones = 0;
-                for (var item = 0; item < data.Record.length; item++) {
-                    if (data.Record[item].TITULO_GRUPO == grupoTitulo) {
-                        montoLey = + parseFloat(data.Record[item].MONTO_DE_LEY);
-                        comprometido = + parseFloat(data.Record[item].COMPROMISO);
+                for (var itemGrupo = 0; itemGrupo < data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo).length; itemGrupo++) {
+                    if (data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].TITULO_GRUPO == grupoTitulo) {
+                        montoLey =  parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo && x.TITULO_GRUPO == grupoTitulo).reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
+                        comprometido = parseFloat(comprometido) + parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].COMPROMISO);
+
                     }
+                    
                 }
+                
                 recordInforme.push(
                     {
                         ID: recordInforme.length,
                         CENTRO_GESTOR: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).CENTRO_GESTOR,
                         PARTIDA_SUBPARTIDA: grupoTitulo,
+                        PARTIDA_PRINCIPAL: partidaTitulo,
                         FUENTE_FINANCIAMIENTO_FONDO: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).FUENTE_FINANCIAMIENTO_FONDO,
                         PRESUPUESTO_INICIAL: montoLey,
                         MODIFICACIONES: modificaciones,
@@ -438,30 +450,48 @@ function GetReportInforme(data) {
                         COMPROMISO_TOTAL: comprometido,
                         DEVENGADO: 0,
                         PORCENT_EJECUCION: 0,
-                        BGCOLOR: 'bg-yellow'
+                        BGCOLOR: 'bg-yellow',
+                        TIPO: 'GRUPO',
+                        PARTIDA_SEC: partidaIndex
 
                     }
                 );
+  
+                var prevMontoGral = 0, prevCompromisoGral=0;
                 /*Subpartida*/
                 for (var s = 0; s < subPartidaListado.length; s++) {
                     var subpartidaTitulo = subPartidaListado[s];
+                    
                     montoLey = 0;
                     comprometido = 0;
                     modificaciones = 0;
                     for (var item = 0; item < data.Record.length; item++) {
-                        var SupartidaData = data.Record.find(x => x.TITULO_SUBPARTIDA == subpartidaTitulo && x.TITULO_GRUPO == grupoTitulo);
+                        
+                        var SupartidaData = data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo && x.TITULO_SUBPARTIDA == subpartidaTitulo && x.TITULO_GRUPO == grupoTitulo);
+                         
                         if (SupartidaData != undefined) {
-                            montoLey = + parseFloat(SupartidaData.MONTO_DE_LEY);
-                            comprometido = + parseFloat(SupartidaData.COMPROMISO);
+                            montoLey = parseFloat(SupartidaData.MONTO_DE_LEY);
+                            comprometido = comprometido = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.COMPROMISO + total, 0));
                         }
+                        if (item == data.Record.length - 1) {
+                            prevMontoGral = parseFloat(prevMontoGral) + parseFloat(montoLey);
+                            prevCompromisoGral = parseFloat(prevCompromisoGral) + parseFloat(comprometido);
+                        }
+                        
+                         
                     }
+                    recordInforme.find(x => x.TIPO == 'GRUPO' && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_INICIAL = prevMontoGral;
+                    recordInforme.find(x => x.TIPO == 'GRUPO' && x.PARTIDA_SUBPARTIDA == grupoTitulo).COMPROMISO = prevCompromisoGral;
+                    recordInforme.find(x => x.TIPO == 'GRUPO' && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_TOTAL = prevMontoGral;
                     
                     if (SupartidaData != undefined) {
+                        
                         recordInforme.push(
                             {
                                 ID: recordInforme.length,
                                 CENTRO_GESTOR: SupartidaData.CENTRO_GESTOR,
                                 PARTIDA_SUBPARTIDA: '&nbsp;&nbsp;&nbsp;' + SupartidaData.TITULO_SUBPARTIDA,
+                                PARTIDA_PRINCIPAL: partidaTitulo,
                                 FUENTE_FINANCIAMIENTO_FONDO: SupartidaData.FUENTE_FINANCIAMIENTO_FONDO,
                                 PRESUPUESTO_INICIAL: montoLey,
                                 MODIFICACIONES: modificaciones,
@@ -472,7 +502,9 @@ function GetReportInforme(data) {
                                 COMPROMISO_TOTAL: comprometido,
                                 DEVENGADO: 0,
                                 PORCENT_EJECUCION: 0,
-                                BGCOLOR: ''
+                                BGCOLOR: '',
+                                TIPO: 'SUBPARTIDA',
+                                PARTIDA_SEC: partidaIndex
 
                             }
                         );
@@ -483,68 +515,93 @@ function GetReportInforme(data) {
                 }
 
             }
-            /*Total*/
-            recordInforme.push(
-                {
-                    ID: 999996,
-                    CENTRO_GESTOR: '&nbsp;',
-                    PARTIDA_SUBPARTIDA: 'TOTAL',
-                    FUENTE_FINANCIAMIENTO_FONDO: '&nbsp;',
-                    PRESUPUESTO_INICIAL: generalMontoLey,
-                    MODIFICACIONES: 0,
-                    PRESUPUESTO_TOTAL: generalMontoLey,
-                    SOLICITADO: 0,
-                    COMPROMISO: generalComprometido,
-                    REC_MCIA: 0,
-                    COMPROMISO_TOTAL: generalComprometido,
-                    DEVENGADO: 0,
-                    PORCENT_EJECUCION: 0,
-                    BGCOLOR: 'bg-primary-title text-white'
-
-                }
-            );
-            recordInforme.push(
-                {
-                    ID: 999997,
-                    CENTRO_GESTOR: '',
-                    PARTIDA_SUBPARTIDA: '',
-                    FUENTE_FINANCIAMIENTO_FONDO: '',
-                    PRESUPUESTO_INICIAL: generalMontoLey,
-                    MODIFICACIONES: 0,
-                    PRESUPUESTO_TOTAL: generalMontoLey,
-                    SOLICITADO: 0,
-                    COMPROMISO: generalComprometido,
-                    REC_MCIA: 0,
-                    COMPROMISO_TOTAL: generalComprometido,
-                    DEVENGADO: 0,
-                    PORCENT_EJECUCION: 0,
-                    BGCOLOR: 'bg-white text-white'
-
-                }
-            );
-            recordInforme.push(
-                {
-                    ID: 999999998,
-                    CENTRO_GESTOR: '',
-                    PARTIDA_SUBPARTIDA: '',
-                    FUENTE_FINANCIAMIENTO_FONDO: '',
-                    PRESUPUESTO_INICIAL: null,
-                    MODIFICACIONES: null,
-                    PRESUPUESTO_TOTAL: generalMontoLey,
-                    SOLICITADO: 0,
-                    COMPROMISO: generalComprometido,
-                    REC_MCIA: 0,
-                    COMPROMISO_TOTAL: generalComprometido,
-                    DEVENGADO: 0,
-                    PORCENT_EJECUCION: 0,
-                    BGCOLOR: 'bg-secondary'
-
-                }
-            );
             
 
-
         }
+
+
+        /*Total por Grupo*/
+        var partidaList = recordInforme.map(item => item.PARTIDA_SEC)
+            .filter((value, index, self) => self.indexOf(value) === index);
+
+        for (var ipart = 1; ipart < partidaList.length; ipart++) {
+            if (recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0] !== undefined) {               
+                recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_INICIAL = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
+                recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].COMPROMISO = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.COMPROMISO_TOTAL + total, 0);
+                recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_TOTAL = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
+            }
+        }
+
+
+        /*Total*/
+        var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == 'GRUPO').reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
+        var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == 'GRUPO').reduce((total, obj) => obj.COMPROMISO + total, 0));
+        recordInforme.push(
+            {
+                ID: 999996,
+                CENTRO_GESTOR: '&nbsp;',
+                PARTIDA_SUBPARTIDA: 'TOTAL',
+                PARTIDA_PRINCIPAL: '',
+                FUENTE_FINANCIAMIENTO_FONDO: '&nbsp;',
+                PRESUPUESTO_INICIAL: generalMontoLey,
+                MODIFICACIONES: 0,
+                PRESUPUESTO_TOTAL: generalMontoLey,
+                SOLICITADO: 0,
+                COMPROMISO: generalComprometido,
+                REC_MCIA: 0,
+                COMPROMISO_TOTAL: generalComprometido,
+                DEVENGADO: 0,
+                PORCENT_EJECUCION: 0,
+                BGCOLOR: 'bg-primary-title text-white',
+                TIPO: 'TOTAL',
+                PARTIDA_SEC: partidaIndex
+
+            }
+        );
+        recordInforme.push(
+            {
+                ID: 999997,
+                CENTRO_GESTOR: '',
+                PARTIDA_SUBPARTIDA: '',
+                PARTIDA_PRINCIPAL: '',
+                FUENTE_FINANCIAMIENTO_FONDO: '',
+                PRESUPUESTO_INICIAL: generalMontoLey,
+                MODIFICACIONES: 0,
+                PRESUPUESTO_TOTAL: generalMontoLey,
+                SOLICITADO: 0,
+                COMPROMISO: generalComprometido,
+                REC_MCIA: 0,
+                COMPROMISO_TOTAL: generalComprometido,
+                DEVENGADO: 0,
+                PORCENT_EJECUCION: 0,
+                BGCOLOR: 'bg-white text-white',
+                TIPO: '',
+                PARTIDA_SEC: partidaIndex
+
+            }
+        );
+        recordInforme.push(
+            {
+                ID: 999999998,
+                CENTRO_GESTOR: '',
+                PARTIDA_SUBPARTIDA: '',
+                PARTIDA_PRINCIPAL: '',
+                FUENTE_FINANCIAMIENTO_FONDO: '',
+                PRESUPUESTO_INICIAL: null,
+                MODIFICACIONES: null,
+                PRESUPUESTO_TOTAL: generalMontoLey,
+                SOLICITADO: 0,
+                COMPROMISO: generalComprometido,
+                REC_MCIA: 0,
+                COMPROMISO_TOTAL: generalComprometido,
+                DEVENGADO: 0,
+                PORCENT_EJECUCION: 0,
+                BGCOLOR: 'bg-secondary',
+                TIPO: '',
+                PARTIDA_SEC: partidaIndex
+
+            }
+        );
 
 
     }
