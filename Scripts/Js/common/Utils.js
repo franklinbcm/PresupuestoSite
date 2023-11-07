@@ -524,8 +524,10 @@ function GetReportInforme(data) {
         var partidaList = recordInforme.map(item => item.PARTIDA_SEC)
             .filter((value, index, self) => self.indexOf(value) === index);
 
-        for (var ipart = 1; ipart < partidaList.length; ipart++) {
-            if (recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0] !== undefined) {               
+        for (var ipart = 1; ipart <= partidaList.length; ipart++) {
+            
+            if (recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0] !== undefined) {    
+                
                 recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_INICIAL = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
                 recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].COMPROMISO = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.COMPROMISO_TOTAL + total, 0);
                 recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_TOTAL = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
