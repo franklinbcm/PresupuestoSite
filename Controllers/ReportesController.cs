@@ -85,7 +85,24 @@ namespace PresupuestoSite.Controllers
         public async Task<JsonResult> GetInformeEjecucion(int presupuestoAnualDe, string subpartidaCodigo)
         {
             var dataResult = await _reportesServicio.GetSubPartidasPresupuestosCargados(presupuestoAnualDe, 0, 0, 0);
-            dataResult = dataResult.Where(x=>x.CODIGO_SUBPARTIDA.Contains(string.IsNullOrEmpty(subpartidaCodigo)? x.CODIGO_SUBPARTIDA : subpartidaCodigo)).ToList();
+            List<SaldoPresupuesto>  saldoPresupuestos = new List<SaldoPresupuesto>();
+            var subpartidaListadoCode = subpartidaCodigo.TrimEnd(',').Split(',').OrderBy(i => i).ToList();
+            if(subpartidaListadoCode.Count() > 0)
+            {
+                foreach (var item in subpartidaListadoCode)
+                {
+                    saldoPresupuestos.AddRange(dataResult.Where(x => x.CODIGO_SUBPARTIDA.Contains(string.IsNullOrEmpty(item) ? x.CODIGO_SUBPARTIDA : item.Trim())).ToList());
+                }
+            }
+            else
+            {
+                saldoPresupuestos.AddRange(dataResult.Where(x => x.CODIGO_SUBPARTIDA.Contains(string.IsNullOrEmpty(subpartidaCodigo) ? x.CODIGO_SUBPARTIDA : subpartidaCodigo.Trim())).ToList());
+            }
+
+
+            dataResult = saldoPresupuestos;
+
+
             if (dataResult.Any())
             {
 

@@ -70,6 +70,7 @@ function clickBotones() {
 					if (data.Result == 'Ok') {
 
 						notifyToastr('Registro Creado', 'success');
+						ActualizarDatosMovimientos();
 						$('#btnBack').click();
 						cargarTransUnidadesDatatable();
 
@@ -124,8 +125,10 @@ function clickBotones() {
 				if (data && data.Record) {
 					
 					if (data.Result == 'Ok') {
-
+						
+						
 						notifyToastr('Registro Actualizado', 'info');
+						ActualizarDatosMovimientos();
 						$('#btnBack').click();
 						cargarTransUnidadesDatatable();
 
@@ -145,6 +148,36 @@ function clickBotones() {
 
 		});
 	})
+}
+function ActualizarDatosMovimientos() {
+	var subpartidaID = parseInt($('#inpSubpartidaDesc').attr('data-item'));
+	var presupuestoAnualDe = parseInt($('#spPeriodo').text())
+	CallAjax("/Transacciones/GetPresupCuotaUnidadFiscIndividual?presupuestoAnualDe=" + presupuestoAnualDe + "&subpartidaID=" + subpartidaID, undefined, "json", function (data) {
+
+		if (data && data.Record) {
+
+			if (data.Result == 'Ok') {
+				if (data.Record.length > 0) {
+					
+					$('#inpCompromiso').val(commaSeparateNumber(data.Record[0].COMPROMISO_TOTAL));
+					$('#inpDisponibilidad').val(commaSeparateNumber(data.Record[0].DISPONIBILIDAD));
+				}
+				
+
+			} else {
+				notifyToastr(JSON.stringify(data), 'error');
+			}
+
+		}
+		else {
+			notifyToastr(data.message, 'error');
+		}
+
+
+	}, "GET", true);
+
+
+ 
 }
 function changesFields() {
 	$('#inpFecha').change((e) => {

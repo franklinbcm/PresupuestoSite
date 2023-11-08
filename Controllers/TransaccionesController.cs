@@ -198,6 +198,22 @@ namespace PresupuestoSite.Controllers
 
         }
         [HttpGet]
+        public async Task<JsonResult> GetPresupCuotaUnidadFiscIndividual(int presupuestoAnualDe, int subpartidaID)
+        {
+
+            var cargas = await _transacServicio.GetPresupCuotaUnidadFiscTotalFiltros(presupuestoAnualDe, 0, 0, 0);
+            cargas = cargas.Where(x=>x.SUBPARTIDA_ID == subpartidaID).ToList();
+
+            return Json(new
+            {
+                Result = "Ok",
+                Record = cargas,
+                Total = cargas != null ? cargas.ToList().Count() : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+        [HttpGet]
         public async Task<JsonResult> GetUnidadesFiscalizadoras(int? presupuestoAnualDe, int? presupuestoID)
         {
 

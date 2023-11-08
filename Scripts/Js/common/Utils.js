@@ -361,10 +361,10 @@ function fnFechaReporteUltimoDiaMes() {
     return `AL ${lastDay} DE ` + monthStr + ' DE ' + year;
 }
 function GetReportInforme(data) {
+    const vPARTIDA = 'PARTIDA', vGRUPO = 'GRUPO', vSUBPARTIDA = 'SUBPARTIDA';
     var recordInforme = [];
-    //var generalMontoLey = 0;
-    //var generalComprometido = 0;
     var partidaIndex = 0;
+    
 
     if (data.Record.length != undefined) {
 
@@ -412,7 +412,7 @@ function GetReportInforme(data) {
                     DEVENGADO: 0,
                     PORCENT_EJECUCION: 0,
                     BGCOLOR: 'bg-orange',
-                    TIPO: 'PARTIDA',
+                    TIPO: vPARTIDA,
                     PARTIDA_SEC: partidaIndex
 
                 }
@@ -451,7 +451,7 @@ function GetReportInforme(data) {
                         DEVENGADO: 0,
                         PORCENT_EJECUCION: 0,
                         BGCOLOR: 'bg-yellow',
-                        TIPO: 'GRUPO',
+                        TIPO: vGRUPO,
                         PARTIDA_SEC: partidaIndex
 
                     }
@@ -480,9 +480,9 @@ function GetReportInforme(data) {
                         
                          
                     }
-                    recordInforme.find(x => x.TIPO == 'GRUPO' && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_INICIAL = prevMontoGral;
-                    recordInforme.find(x => x.TIPO == 'GRUPO' && x.PARTIDA_SUBPARTIDA == grupoTitulo).COMPROMISO = prevCompromisoGral;
-                    recordInforme.find(x => x.TIPO == 'GRUPO' && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_TOTAL = prevMontoGral;
+                    recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_INICIAL = prevMontoGral;
+                    recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).COMPROMISO = prevCompromisoGral;
+                    recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_TOTAL = prevMontoGral;
                     
                     if (SupartidaData != undefined) {
                         
@@ -503,7 +503,7 @@ function GetReportInforme(data) {
                                 DEVENGADO: 0,
                                 PORCENT_EJECUCION: 0,
                                 BGCOLOR: '',
-                                TIPO: 'SUBPARTIDA',
+                                TIPO: vSUBPARTIDA,
                                 PARTIDA_SEC: partidaIndex
 
                             }
@@ -526,18 +526,18 @@ function GetReportInforme(data) {
 
         for (var ipart = 1; ipart <= partidaList.length; ipart++) {
             
-            if (recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0] !== undefined) {    
+            if (recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0] !== undefined) {    
                 
-                recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_INICIAL = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
-                recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].COMPROMISO = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.COMPROMISO_TOTAL + total, 0);
-                recordInforme.filter(x => x.TIPO == 'PARTIDA' && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_TOTAL = recordInforme.filter(x => x.TIPO == 'GRUPO' && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
+                recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_INICIAL = recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
+                recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].COMPROMISO = recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.COMPROMISO_TOTAL + total, 0);
+                recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_TOTAL = recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
             }
         }
 
 
         /*Total*/
-        var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == 'GRUPO').reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
-        var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == 'GRUPO').reduce((total, obj) => obj.COMPROMISO + total, 0));
+        var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
+        var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.COMPROMISO + total, 0));
         recordInforme.push(
             {
                 ID: 999996,

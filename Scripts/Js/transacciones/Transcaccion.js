@@ -128,7 +128,7 @@ function VerItem(e) {
 	fillDataEdit(data);
 }
 function fillDataEdit(data) {
-
+	
 	/*Span*/
 	$('#spCodClasif').text(data.COD_DE_CLASIFICACION);
 	$('#spFuente').text(data.FUENTE_FINANCIAMIENTO_FONDO);
@@ -310,7 +310,7 @@ function cargarTransDatatable() {
 						"data": "NOMBRE_PARTIDA",
 						"render": (item) => {
 							/*console.log(item)*/
-							 debugger 
+							  
 							return (
 
 								`<span title="${data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA}" >${data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA !== null ? data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA.length < 22 ? data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA : data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA.substr(0, 22) + '...' : null}</span>`
