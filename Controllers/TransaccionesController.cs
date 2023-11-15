@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using PresupuestoSite.Common;
 using PresupuestoSite.Models;
+using PresupuestoSite.Models.Catalogos;
 using PresupuestoSite.Models.DTO;
 using PresupuestoSite.Models.ViewModel;
 using PresupuestoSite.Servicios.Cargas;
@@ -21,6 +22,8 @@ namespace PresupuestoSite.Controllers
     {
         // GET: Transacciones
         private readonly TransaccionesServicio _transacServicio = new TransaccionesServicio();
+        private readonly CargasServicio _cargaServicio = new CargasServicio();
+
         public ActionResult Index()
         {
             return View();
@@ -120,7 +123,7 @@ namespace PresupuestoSite.Controllers
                 var data = dataResult.Select(i => new SelectListItem()
                 {
                     Text = $"{i.CODIGO_SUBPARTIDA} - {i.NOMBRE_SUBPARTIDA ?? i.ABREV_NOMBRE}",
-                    Value = i.ID.ToString(),
+                    Value = i.ID.ToString()
                 }
                 ).Distinct();
 
@@ -138,6 +141,43 @@ namespace PresupuestoSite.Controllers
                 {
                     Result = "Ok",
                     Record = Utilidades.ListaVacia(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetLineasPartidasPorPresupuesto(int presupuestoAnualDe, int partidaID, int grupoID, int subpartidaID)
+        {
+            var partidasDetalles = await _cargaServicio.GetListadoPresupuestoPorAno(presupuestoAnualDe);
+
+            var dataResult = partidasDetalles.Where(x => x.GRUPO_ID == grupoID);
+            if (dataResult.Any())
+            {
+
+                var data = dataResult.Select(i => new ListadoOpcionesModels()
+                {
+                    Text = $"{i.CODIGO_SUBPARTIDA} - {i.NOMBRE_SUBPARTIDA ?? i.ABREV_NOMBRE}",
+                    Value = i.ID.ToString(),
+                    OpcionalData = JsonConvert.SerializeObject(i)
+                }
+                ).Distinct();
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = data,
+                    Total = data != null ? data.ToList().Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new ListadoOpcionesModels(),
                     Total = 0,
                 }, JsonRequestBehavior.AllowGet);
             }

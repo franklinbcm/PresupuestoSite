@@ -1,10 +1,15 @@
 ﻿/// <reference path="../common/utils.js" />
 $(document).ready(function () {
 	onInitPagina();
+
 });
+
 function onInitPagina() {
 	
 	$('#sopPresupAn').val(new Date().getFullYear()).attr({
+		"min": new Date().getFullYear() - 1
+	});
+	$('#sopPresupAnLinea').val(new Date().getFullYear()).attr({
 		"min": new Date().getFullYear() - 1
 	});
 	CargarPartida();
@@ -25,6 +30,20 @@ function onInitPagina() {
 }
 
 function Clickes() {
+	
+	$('#btnAddLinea').click((e) => {
+		LimpiarLinea();
+
+	})
+	
+	$('#btnBackLinea').click((e) => {
+		e.preventDefault();
+		$(".divOpciones").attr('style', 'display: none');
+		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");;
+		$("#divRegresar").show();
+		$("#divTransacciones.divOpciones").show();
+
+	})
 	
 	$('#btnBack').click((e) => {
 		e.preventDefault();
@@ -67,8 +86,24 @@ function Changes() {
 			$('#ckTodo').prop("checked", true);
 		}
 	})
+	$("#sopPartidaLinea").change(() => {
+		var partidaID = parseInt($('#sopPartidaLinea option:selected').val());
+		if (partidaID > 0) {
+			Eventos(partidaID);
+		} else {
+			Eventos(0);
+		}
+	})
 	$("#sopGrupo").change(() => {
 		var grupoID = parseInt($('#sopGrupo option:selected').val());
+		/*if (grupoID > 0) {*/
+		CargarSubpartida(grupoID)
+		LimpiarTablas();
+		cargarTransDatatable();
+		/*}*/
+	})
+	$("#sopGrupoLinea").change(() => {
+		var grupoID = parseInt($('#sopGrupoLinea option:selected').val());
 		/*if (grupoID > 0) {*/
 		CargarSubpartida(grupoID)
 		LimpiarTablas();
@@ -79,13 +114,19 @@ function Changes() {
 		LimpiarTablas();
 		cargarTransDatatable();
 	})
+	$("#sopSubPartidaLinea").change(() => {
+		LimpiarTablas();
+		cargarTransDatatable();
+	})
 	$('#ckTodo').change(() => {
+		
 		if ($('#ckTodo').prop("checked")) {
 			$('#sopPartida').val("-1").change();
 			setTimeout(() => {
 				cargarTransDatatable();
 			}, 300)
 		}
+		
 	});
 	$('#sopTipoMovimi').change(() => {
 
@@ -123,8 +164,15 @@ function Eventos(partidaID) {
 	cargarTransDatatable();
 	$('#ckTodo').prop("checked", false);
 }
+function EventosLinea(partidaID) {
+	CargarGrupo(partidaID)
+	$('#sopSubPartidaLinea').val("-1");
+	//LimpiarTablas()
+	//cargarTransDatatable();
+}
 function VerItem(e) {
 	var data = JSON.parse(atob($(e).attr('data-item')));
+	debugger
 	fillDataEdit(data);
 }
 function fillDataEdit(data) {
@@ -162,6 +210,7 @@ function CargarPartida() {
 				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
 			}
 			$("#sopPartida").html(s);
+			$("#sopPartidaLinea").html(s);
 
 
 		}
@@ -183,6 +232,7 @@ function CargarGrupo(partidaID) {
 				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
 			}
 			$("#sopGrupo").html(s);
+			$("#sopGrupoLinea").html(s);
 
 			CargarSubpartida(parseInt($('#sopGrupo option:selected').val()));
 
@@ -202,9 +252,31 @@ function CargarSubpartida(grupoID) {
 		if (data && data.Record) {
 			var s = '<option value="-1">-Seleccione-</option>';
 			for (var i = 0; i < data.Record.length; i++) {
+				debugger
 				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
 			}
 			$("#sopSubPartida").html(s);
+			$("#sopSubPartidaLinea").html(s);
+
+
+		}
+		else {
+			toastr.error(data.message);
+		}
+
+
+	}, "GET", true);
+}
+function CargarUnidadFiscalizadora(subpartidaID) {
+
+	CallAjax("/Transacciones/GetListaUnidadFiscalizadora?subpartidaID=" + subpartidaID, undefined, "json", function (data) {
+
+		if (data && data.Record) {
+			var s = '<option value="-1">-Seleccione-</option>';
+			for (var i = 0; i < data.Record.length; i++) {
+				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
+			}
+			$("#sopUnidadFisLinea").html(s);
 
 
 		}
@@ -276,7 +348,15 @@ function cargarTransDatatable() {
 				lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				dom: '<"top"B>, lfrtip',
 				buttons: [
+					//{
+					//	extend: 'collection',
+					//	className: "btn btn-warning fa fa-thin fa-credit-card text-white",
+					//	text: ' Agregar Línea',
+					//	action: () => {
+					//		LimpiarLinea();
 
+					//	}
+					//},
 					{
 						"extend": 'colvis',
 						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
@@ -476,6 +556,39 @@ function LimpiarNuevaUnidad() {
 	$('#btnCrear').attr("disabled", true).parent().attr('style', 'display: block !important');
 	$('#btnEdit').parent().attr('style', 'display: none !important');
 }
+function LimpiarLinea() {
+	
+	var limpiar = '';
+	$(".divOpciones").attr('style', 'display: none !important');
+	$("#h5textHeader").text('LÍNEA GASTO OBJETO').removeClass("text-info text-warning").addClass("text-success");
+	$("#divLinea").show();
+	$(".is-new-record").attr('style', 'display: none');
+	$('#inpCuotaID').val(limpiar);
+	$('#inpCuotaTot').val(commaSeparateNumber($('#inpCuota').val()));
+	$('#inpCompromisoTot').val(commaSeparateNumber($('#inpCompromiso').val()));
+/*	SaldoDisponible();*/
+	$('#inpID').val('');
+	$('.cs-Compromiso').val('').attr('data-item', '0').change();
+	$('.cs-PresupuestoAct').val($('#inpPresupuesto').val()).change();
+	$('#inpCodPedidosReserva').val(limpiar);
+	$('#taDetalles').val(limpiar);
+	$('#inpRegCrePor').val(limpiar);
+	$('#inpRegCreacionFecha').val(limpiar);
+	$('#inpRegModPor').val(limpiar);
+	$('#inpRegModifFecha').val(limpiar);
+	$('#ckEstado').prop("checked", true);
+	$('#inpRdoPedidos').prop("checked", true);
+	$('#inpTipoMovimi').val(limpiar);
+	//CargarTipoMovimiento($('#sopPresupAn').val(), $('#hfRegID').val(), $("#inpSubpartidaDesc").attr('data-item'), $('#inpUnidadFisc').val());
+	//setDefaultFecha();
+
+	$('#divUnidades .cs-montos').each((idx) => {
+		$($('.cs-montos')[idx]).parent().removeClass("has-success").addClass("has-danger");
+		$($('.cs-montos')[idx]).removeClass("is-valid").addClass("is-invalid");
+	})
+	$('#btnCrear').attr("disabled", true).parent().attr('style', 'display: block !important');
+	$('#btnEdit').parent().attr('style', 'display: none !important');
+}
 function cargarTransUnidadesDatatable() {
 
 	var presupuestoAnualDe = parseInt($("#spPeriodo").text());
@@ -498,15 +611,15 @@ function cargarTransUnidadesDatatable() {
 				lengthMenu: [6, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				dom: '<"top"B>, lfrtip',
 				buttons: [
+					
 					{
 						extend: 'collection',
 						className: "btn btn-primary fas fa-plus text-white",
 						text: ' Agregar Unidad',
-						action:  () => {
+						action: () => {
 							LimpiarNuevaUnidad();
-							
-						}
 
+						}
 
 					},
 					{

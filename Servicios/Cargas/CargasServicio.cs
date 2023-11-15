@@ -335,6 +335,45 @@ namespace PresupuestoSite.Servicios.Cargas
             return presupuestos;
 
         }
+        public async Task<List<PresupuestoCargaVM>> GetListadoPresupuestoPorAno(int presupuestoAnualDe)
+        {
+            List < PresupuestoCargaVM> presupuestoCarga = new List<PresupuestoCargaVM>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/presupuesto/TodoPresupuestoCargadoPorPresAsync/{presupuestoAnualDe}")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(jSon);
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestoCarga.AddRange(JsonConvert.DeserializeObject<PresupuestoCargaVM[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestoCarga;
+
+
+
+
+        }
 
 
 

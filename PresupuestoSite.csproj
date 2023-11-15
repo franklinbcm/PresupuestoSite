@@ -195,6 +195,7 @@
     </Compile>
     <Compile Include="Models\BaseEntidad.cs" />
     <Compile Include="Models\Catalogos\CatalogoModels.cs" />
+    <Compile Include="Models\Catalogos\ListadoOpcionesModels.cs" />
     <Compile Include="Models\DTO\BaseEntidadDTO.cs" />
     <Compile Include="Models\DTO\Cargas.cs" />
     <Compile Include="Models\DTO\PresupuestoCuotaCargaDTO.cs" />
@@ -291,6 +292,7 @@
     <Content Include="Views\Shared\_SaldoPresupuesto.cshtml" />
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Shared\_InformeEjecucion.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

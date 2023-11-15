@@ -84,11 +84,11 @@ function CargasInit() {
 			
 		}
 		if ($('#sopTipoMovimiento option:selected').val() != -1) {
-			$("#lbsopTipoMovimiento").removeClass('cs-isrequired-label');
+			$("#lbsopTipoPresupuesto").removeClass('cs-isrequired-label');
 		} else {
-			$("#lbsopTipoMovimiento").addClass('cs-isrequired-label');
+			$("#lbsopTipoPresupuesto").addClass('cs-isrequired-label');
 		}
-
+		$('#sopTipoMovimiento').attr('title', $("#sopTipoMovimiento  option:selected").text() + ' - ' + $("#sopTipoMovimiento  option:selected").attr('title'));
 
 	});
 }
@@ -197,7 +197,7 @@ function CargarDocumento() {
 	formData.append('yearBudget', currentYearBudget);
 	formData.append('tipo_movimiento_id', $('#sopTipoMovimiento option:selected').val());
 	
-	//debugger
+	 debugger
 	CallAjaxFiles(UriApi, formData, "json", function (data) {
 
 		if (data) {
@@ -572,9 +572,9 @@ function cargarPresupuestoDatatable() {
 						, "width": "10%"
 						, className: "dt-custom-column-text"
 					},
+					{ "data": "TIPO_MOVIMIENTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{ "data": "MONEDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CENTRO_GESTOR", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "TIPO_MOVIMIENTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "DETALLES",
 						"render": (item) => {
@@ -707,9 +707,9 @@ function cargarCuotaDatatable() {
 						, "width": "10%"
 						, className: "dt-custom-column-text"
 					},
+					{ "data": "TIPO_MOVIMIENTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{ "data": "MONEDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{ "data": "CENTRO_GESTOR", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "TIPO_MOVIMIENTO_NOMBRE", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "DETALLES_CUOTA",
 						"render": (item) => {

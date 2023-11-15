@@ -8,11 +8,7 @@
         <hr />
         <div id="divUnidades" class="row">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="col-md-1 mb-2">
-                <label for="inpID" class="form-label" title="ID Registro">#</label>
-                <input type="text" class="form-control" id="inpID" readonly disabled="">
-            </div>
-            <div class="col-md-3 mb-2">
+            <div class="col-md-4 mb-2">
                 <label for="inpCuotaID" class="form-label">Cuota #</label>
                 <input type="text" class="form-control" id="inpCuotaID" readonly disabled="">
             </div>
@@ -118,7 +114,7 @@
                     <label class="form-check-label" for="ckEstado">¿Registro Activo?</label>
                 </div>
             </div>
-
+            <input type="hidden" id="inpID" />
         </div>
 
         <div class="d-flex flex-row-reverse">

@@ -38,8 +38,14 @@
             <div class="form-check form-switch">
                 <input class="form-check-input" type="checkbox" id="ckTodo" checked>
                 <label class="form-check-label fw-bold text-capitalize" for="ckTodo" title="Mostrar Todos los registos del presupuesto seleccionado">Mostrar Todo</label>
+                <div class="d-flex justify-content-end">
+                    <a id="btnAddLinea" title="Ver Líneas de Gasto Objeto" href="#offcanvasCargas" data-bs-toggle="offcanvas" role="button" aria-controls="offcanvasExample">
+                        <i class="btn btn-warning fa fa-thin fa-credit-card text-white" aria-hidden="true"> Líneas Gasto Objeto</i>
+                    </a>
+                </div>
             </div>
         </div>
+
 
     </div>
 
@@ -144,6 +150,13 @@
                 </div>
                 <div class="container mt-3">
                     <div class="row" style="min-width:350px !important">
+                        <div id="divLinea" style="display:none" class="row divOpciones">
+                            @Html.Partial("_LineaGastoObjetoPartial")
+                        </div>
+                    </div>
+                </div>
+                <div class="container mt-3">
+                    <div class="row" style="min-width:350px !important">
                         <div id="divUnidadFiscalizadora" style="display:none" class="row divOpciones">
                             @Html.Partial("_UnidadFiscalizadoraPartial")
                         </div>
@@ -154,6 +167,7 @@
             </div>
         </div>
     </div>
+
 </section>
 @Html.Hidden("inpUsr", "Admin")
 

@@ -1,0 +1,103 @@
+﻿@model PresupuestoSite.Models.UnidadFiscalizadora
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="container alert alert-dismissible alert-info">
+    <hr />
+    <div id="divUnidades" class="row">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="col-md-2 col-sm-12">
+            <label for="sopPresupAnLinea" class="form-label fw-bold text-capitalize" title="Presupuesto - Año">Presupuesto</label>
+            <input type="number" min="2023" max="3000" value="2023" id="sopPresupAnLinea" class="form-control" />
+        </div>
+        <div class="col-md-5 col-sm-12 form-group">
+            <label for="sopPartidaLinea" class="form-label">Partida</label>
+            <select id="sopPartidaLinea" class="form-select">
+                <option>-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-5 col-sm-12 form-group">
+            <label for="sopGrupoLinea" class="form-label">Grupo</label>
+            <select id="sopGrupoLinea" class="form-select">
+                <option>-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-7 col-sm-12 form-group">
+            <label for="sopSubPartidaLinea" class="form-label" title="PosPre">Subpartida</label>
+            <select id="sopSubPartidaLinea" class="form-select">
+                <option value="-1">-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-5 col-sm-12 form-group">
+            <label for="sopUnidadFisLinea" class="form-label" title="PosPre">Unidad Fiscalizadora</label>
+            <select id="sopUnidadFisLinea" class="form-select">
+                <option value="-1">-Seleccione-</option>
+            </select>
+        </div>
+        <div class="col-md-2 mb-2 mt-2">
+            <label for="inpCuotaID" class="form-label">ID #</label>
+            <input type="text" class="form-control" id="inpLineaID" readonly disabled="">
+        </div>
+        <div class="col-md-3 form-group mt-2">
+            <label for="inpCodPresupuestario" id="lbinpCodPresupuestario" class="form-label" title="Código Presupuestario">Código Presupuestario</label>
+            <input type="text" class="form-control cs-CodPresupuestario" id="inpCodPresupuestario">
+        </div>
+        <div class="col-md-3 form-group mt-2">
+            <label for="inpContrato" id="lbinpContrato" class="form-label" title="Contrato Número">Contrato #</label>
+            <div id="divinpCodPresupuestario" class="input-group mb-2">
+                <input type="text" class="form-control cs-Contrato" id="inpContrato">
+            </div>
+        </div>
+        <div class="col-md-4 form-group mt-2">
+            <label for="inpProveedor" id="lbinpProveedor" class="form-label" title="Proveedor">Proveedor</label>
+            <div id="divinpProveedor" class="input-group mb-2">
+                <input type="text" class="form-control cs-Proveedor" id="inpProveedor">
+            </div>
+        </div>
+        <div class="col-md-12 mb-2 has-success">
+            <label for="taDescripcion" class="form-label">Descripción</label>
+            <textarea type="text" rows="2" class="form-control is-valid cs-input-text" maxlength="200" id="taDescripcion" autocomplete="off"></textarea>
+        </div>
+        <div class="col-md-3 mb-2 is-new-record">
+            <label for="inpRegCrePor" class="form-label">Registrado Por</label>
+            <input type="text" class="form-control" id="inpRegCrePor" readonly disabled="">
+        </div>
+        <div class="col-md-3 mb-2 is-new-record">
+            <label for="inpRegCreacionFecha" class="form-label">Registrado En</label>
+            <input type="text" class="form-control" id="inpRegCreacionFecha" readonly>
+        </div>
+        <div class="col-md-3 mb-2 is-new-record">
+            <label for="inpRegModPor" class="form-label">Modificado Por</label>
+            <input type="text" class="form-control" id="inpRegModPor" readonly disabled="">
+        </div>
+        <div class="col-md-3 mb-2 is-new-record">
+            <label for="inpRegModifFecha" class="form-label">Modificado En</label>
+            <input type="text" class="form-control" id="inpRegModifFecha" readonly disabled="">
+        </div>
+        <div class="col-md-6 mb-2 mt-2 is-new-record">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="ckEstado" checked>
+                <label class="form-check-label" for="ckEstado">¿Registro Activo?</label>
+            </div>
+        </div>
+        <input type="hidden" id="inpID" />
+    </div>
+
+    <div class="d-flex flex-row-reverse">
+        <div class="mt-2">
+            <button id="btnCrear" class="btn btn-success"><i class="fa fa-thin fa-credit-card text-white"></i> Crear Línea</button>
+        </div>
+        <div class="mt-2" style="display:none !important">
+            <button id="btnEdit" class="btn btn-success"><i class="far fa-edit text-white"></i> Editar</button>
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    <div class="mb-2 d-flex justify-content-start">
+        <button id="btnBackLinea" data-bs-dismiss="offcanvas" class="btn btn-info"><i class="fa fa-sharp fa-solid fa-arrow-left"></i> Regresar</button>&nbsp;
+    </div>
+</div>
