@@ -203,6 +203,8 @@
     <Compile Include="Models\DTO\PresupuestoYCuotaRemovDTO.cs" />
     <Compile Include="Models\DTO\UnidadFiscalizadoraDTO.cs" />
     <Compile Include="Models\Grupo.cs" />
+    <Compile Include="Models\LineaGastoObjeto.cs" />
+    <Compile Include="Models\LineaGastoObjetoMovimiento.cs" />
     <Compile Include="Models\ListadosVM.cs" />
     <Compile Include="Models\PartidaGrupoSubPartida.cs" />
     <Compile Include="Models\Partidas.cs" />
@@ -215,6 +217,7 @@
     <Compile Include="Models\SubpartidaPresupuestoCargado.cs" />
     <Compile Include="Models\TipoMovimiento.cs" />
     <Compile Include="Models\UnidadFiscalizadora.cs" />
+    <Compile Include="Models\ViewModel\LineaGastoObjetoMovimientoVM.cs" />
     <Compile Include="Models\ViewModel\PresupuestoCargaVM.cs" />
     <Compile Include="Models\ViewModel\PresupuestoCuotaCargaVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -263,6 +266,7 @@
     <Content Include="Scripts\Js\cargas\carga.js" />
     <Content Include="Scripts\Js\common\Utils.js" />
     <Content Include="Scripts\Js\home\Home.js" />
+    <Content Include="Scripts\Js\lineas\Linea.js" />
     <Content Include="Scripts\Js\reportes\Reporte.js" />
     <Content Include="Scripts\Js\transacciones\Transcaccion.js" />
     <Content Include="Scripts\Js\unidadFiscalizadora\Unidades.js" />
@@ -293,6 +297,12 @@
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Shared\_InformeEjecucion.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoOtrasInfoPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoCuotasPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoPresupuestoPartial.cshtml" />
+    <Content Include="Views\Shared\_TablaLineaGastoObjetoPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoPasoUnoPartial.cshtml" />
+    <Content Include="Views\Shared\_TablaMovLineaGastoObjetoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

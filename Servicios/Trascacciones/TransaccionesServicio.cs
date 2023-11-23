@@ -371,6 +371,82 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
         }
 
+        public async Task<List<LineaGastoObjeto>> GetLineaGastoObjeto(int presupuestoAnualDe)
+        {
+            List<LineaGastoObjeto> presupuestos = new List<LineaGastoObjeto>();
+            var stpresupuestoAnualDe = presupuestoAnualDe == null ? "null" : presupuestoAnualDe.ToString();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/LineaGastoObjeto/GetLineaGastoObjetoPorPresAsync/{stpresupuestoAnualDe}")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(jSon);
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<LineaGastoObjeto[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+
+        public async Task<List<LineaGastoObjetoMovimientoVM>> GetListadoMovimientoLineaGastoObjetoVM(int presupuestoAnualDe)
+        {
+            List<LineaGastoObjetoMovimientoVM> presupuestos = new List<LineaGastoObjetoMovimientoVM>();
+            var stpresupuestoAnualDe = presupuestoAnualDe == null ? "null" : presupuestoAnualDe.ToString();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/LineaGastoObjeto/GetLineaMovimientoGastoObjetoVMPorPresAsync/{stpresupuestoAnualDe}")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(jSon);
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<LineaGastoObjetoMovimientoVM[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+
 
     }
 }

@@ -40,7 +40,10 @@
                 <label class="form-check-label fw-bold text-capitalize" for="ckTodo" title="Mostrar Todos los registos del presupuesto seleccionado">Mostrar Todo</label>
                 <div class="d-flex justify-content-end">
                     <a id="btnAddLinea" title="Ver Líneas de Gasto Objeto" href="#offcanvasCargas" data-bs-toggle="offcanvas" role="button" aria-controls="offcanvasExample">
-                        <i class="btn btn-warning fa fa-thin fa-credit-card text-white" aria-hidden="true"> Líneas Gasto Objeto</i>
+                        <i class="btn btn-warning fa fa-thin fa-credit-card text-white" aria-hidden="true"> Líneas</i>
+                    </a>&nbsp;&nbsp;
+                    <a id="btnAddMovLinea" title="Ver Movimientos Líneas de Gasto Objeto" href="#offcanvasCargas" data-bs-toggle="offcanvas" role="button" aria-controls="offcanvasExample">
+                        <i class="btn btn-info fa fa-solid fa-truck text-white" aria-hidden="true"> Movimientos Líneas</i>
                     </a>
                 </div>
             </div>
@@ -51,7 +54,7 @@
 
 
 </div>
-<div class="container-fluid col-11 mt-3">
+<div class="container-fluid col-11 mt-0">
     <div class="row" style="min-width:350px !important">
         <div id="divTransacciones" style="display:block" class="row divOpciones">
             @Html.Partial("_Transacciones")
@@ -62,10 +65,8 @@
 </div>
 <section>
     <div class="offcanvas offcanvas-fullScreen offcanvas-start" tabindex="-1" id="offcanvasCargas" aria-labelledby="offcanvasExampleLabel" aria-modal="true" role="dialog">
-        <div class="offcanvas-header text-bg-primary">
-            <h5 class="offcanvas-title text-white" id="offcanvasExampleLabel">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div class="offcanvas-header text-bg-primary d-flex justify-content-center">
+            <h5 class="offcanvas-title text-white" id="offcanvasExampleLabelTitulo" style="display:block;">
                 <i class="fa fa-regular fa-file-invoice-dollar"></i>
                 <span>DETALLES <i class="fa fa-sharp fa-solid fa-arrow-right"></i>&nbsp;</span>
                 <span>Clasificación:&nbsp;<span class="text-warning" id="spCodClasif" title="Código Clasificación"></span></span>
@@ -74,6 +75,11 @@
                 <span> | Moneda:&nbsp;<span class="text-warning" id="spMoneda"></span></span>
                 <input type="hidden" id="hfRegID" />
                 <input type="hidden" id="hfRegCuotaID" />
+            </h5>
+            <h5 class="offcanvas-title text-white" id="offcanvasExampleLabelLinea" style="display:none;">
+                <i class="fa fa-thin fa-credit-card text-white"></i>
+                <span>LÍNEA GASTO OBJETO </span>
+
             </h5>
             @*<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>*@
             @*<button type="button" class="btn btn-dark" data-bs-dismiss="offcanvas" aria-label="Close">X</button>*@
@@ -87,7 +93,7 @@
                 <div id="divRegresar" class="mb-2 d-flex flex-row-reverse divOpciones">
                     <button class="btn btn-info" data-bs-dismiss="offcanvas"><i class="fa fa-sharp fa-solid fa-arrow-left"></i> Regresar</button>
                 </div>
-                <div class="container-fluid d-flex justify-content-start text-start  alert alert-dismissible alert-light divOpciones">
+                <div id="divMoviGeneral" class="container-fluid d-flex justify-content-start text-start  alert alert-dismissible alert-light divOpciones">
                     <div class="row">
                         <div class="col-md-2 mb-2">
                             <label for="inpPartida" class="form-label">Partida</label>
@@ -141,16 +147,16 @@
                     <br />
 
                 </div>
-                <div class="container-fluid mt-3">
+                <div class="container-fluid mt-0">
                     <div class="row" style="min-width:350px !important">
                         <div id="divTransacciones" style="display:block" class="row divOpciones">
                             @Html.Partial("_Transacciones_Unidades")
                         </div>
                     </div>
                 </div>
-                <div class="container mt-3">
+                <div class="container-fluid">
                     <div class="row" style="min-width:350px !important">
-                        <div id="divLinea" style="display:none" class="row divOpciones">
+                        <div id="divLinea" style="display:none" class="row divOpcionesLinea">
                             @Html.Partial("_LineaGastoObjetoPartial")
                         </div>
                     </div>
@@ -174,6 +180,7 @@
 @section Scripts {
     <script src="~/Scripts/Js/transacciones/Transcaccion.js"></script>
     <script src="~/Scripts/Js/unidadFiscalizadora/Unidades.js"></script>
+    <script src="~/Scripts/Js/lineas/Linea.js"></script>
 
 }
 

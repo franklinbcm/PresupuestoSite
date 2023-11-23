@@ -147,27 +147,74 @@ namespace PresupuestoSite.Controllers
 
         }
         [HttpGet]
-        public async Task<JsonResult> GetLineasPartidasPorPresupuesto(int presupuestoAnualDe, int partidaID, int grupoID, int subpartidaID)
+        public async Task<JsonResult> GetLineasPartidasPorPresupuesto(int presupuestoAnualDe, int partidaID = 0, int grupoID=0, int subpartidaID = 0)
         {
             var partidasDetalles = await _cargaServicio.GetListadoPresupuestoPorAno(presupuestoAnualDe);
 
-            var dataResult = partidasDetalles.Where(x => x.GRUPO_ID == grupoID);
-            if (dataResult.Any())
+            if (partidasDetalles.Any())
             {
+                List<ListadoOpcionesModels> partidas = new List<ListadoOpcionesModels>();
+                List<ListadoOpcionesModels> grupos = new List<ListadoOpcionesModels>();
+                List<ListadoOpcionesModels> subpartidas = new List<ListadoOpcionesModels>();
+                List<ListadoOpcionesModels> unidadFisc = new List<ListadoOpcionesModels>();
 
-                var data = dataResult.Select(i => new ListadoOpcionesModels()
+                foreach (var item in partidasDetalles)
                 {
-                    Text = $"{i.CODIGO_SUBPARTIDA} - {i.NOMBRE_SUBPARTIDA ?? i.ABREV_NOMBRE}",
-                    Value = i.ID.ToString(),
-                    OpcionalData = JsonConvert.SerializeObject(i)
+                    if (partidas.Where(x=> x.Value == item.PARTIDA_ID.ToString()).Count() == 0)
+                    {
+                        partidas.Add(new ListadoOpcionesModels()
+                        {
+                            Text = $"{item.NOMBRE_PARTIDA}",
+                            Value = item.PARTIDA_ID.ToString(),
+                        });
+                    }
                 }
-                ).Distinct();
+                foreach (var item in partidasDetalles.Where(x => x.PARTIDA_ID == partidaID))
+                {
+                    if (grupos.Where(x => x.Value == item.GRUPO_ID.ToString()).Count() == 0)
+                    {
+                        grupos.Add(new ListadoOpcionesModels()
+                        {
+                            Text = $"{item.CODIGO_GRUPO} - {item.NOMBRE_GRUPO}",
+                            Value = item.GRUPO_ID.ToString(),
+                        });
+                    }
+                }
+                foreach (var item in partidasDetalles.Where(x => x.GRUPO_ID == grupoID))
+                {
+                    if (subpartidas.Where(x => x.Value == item.SUBPARTIDA_ID.ToString()).Count() == 0)
+                    {
+                        subpartidas.Add(new ListadoOpcionesModels()
+                        {
+                            Text = $"{item.CODIGO_SUBPARTIDA} - {item.NOMBRE_SUBPARTIDA ?? item.ABREV_NOMBRE}",
+                            Value = item.SUBPARTIDA_ID.ToString(),
+                        });
+                    }
+                }
+
+                foreach (var item in partidasDetalles.Where(x => x.GRUPO_ID == grupoID && x.SUBPARTIDA_ID == subpartidaID))
+                {
+                    if (unidadFisc.Where(x => x.Value == item.SUBPARTIDA_ID.ToString()).Count() == 0)
+                    {
+                        unidadFisc.Add(new ListadoOpcionesModels()
+                        {
+                            Text = $"{item.CODIGO_SUBPARTIDA} - {item.UNIDAD_FISCALIZADORA}",
+                            Value = item.SUBPARTIDA_ID.ToString(),
+                            OpcionalData = JsonConvert.SerializeObject(item),
+                        });
+                    }
+                }
+
+
 
                 return Json(new
                 {
                     Result = "Ok",
-                    Record = data,
-                    Total = data != null ? data.ToList().Count() : 0,
+                    RecordPartida = partidas,
+                    RecordGrupo = grupos,
+                    RecordSubpartida = subpartidas,
+                    RecordUnidadFiscalizadora = unidadFisc,
+                    Total = partidasDetalles != null ? partidasDetalles.ToList().Count() : 0,
                 }, JsonRequestBehavior.AllowGet);
 
             }
@@ -177,7 +224,10 @@ namespace PresupuestoSite.Controllers
                 return Json(new
                 {
                     Result = "Ok",
-                    Record = new ListadoOpcionesModels(),
+                    RecordPartida = new ListadoOpcionesModels(),
+                    RecordGrupo = new ListadoOpcionesModels(),
+                    RecordSubpartida = new ListadoOpcionesModels(),
+                    RecordUnidadFiscalizadora = new ListadoOpcionesModels(),
                     Total = 0,
                 }, JsonRequestBehavior.AllowGet);
             }
@@ -294,6 +344,37 @@ namespace PresupuestoSite.Controllers
                 Result = "Ok",
                 Record = resunt,
                 Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetListadoLineaGastoObjeto(int presupuestoAnualDe)
+        {
+
+            var cargas = await _transacServicio.GetLineaGastoObjeto(presupuestoAnualDe);
+
+            return Json(new
+            {
+                Result = "Ok",
+                Record = cargas,
+                Total = cargas != null ? cargas.ToList().Count() : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetListadoMovimientoLineaGastoObjeto(int presupuestoAnualDe)
+        {
+
+            var cargas = await _transacServicio.GetListadoMovimientoLineaGastoObjetoVM(presupuestoAnualDe);
+
+            return Json(new
+            {
+                Result = "Ok",
+                Record = cargas,
+                Total = cargas != null ? cargas.ToList().Count() : 0,
             }, JsonRequestBehavior.AllowGet);
 
 
