@@ -397,104 +397,6 @@ function fillDataEdit(data) {
 	
 }
 
-function RemoverItem(e) {
-	var data = JSON.parse(atob($(e).attr('data-item')));
-
-	var esPresupuesto = $('#btnRdoPresupuesto').is(":checked");
-	var presupuestoCarga = {
-		ID: parseInt(data.ID),
-		PRESUPUESTO_ANUAL_DE: parseInt(data.PRESUPUESTO_ANUAL_DE),
-		CREADO_POR: $('#inpUsr').val()
-	}
-
-	swal({
-		title: "¿Esta seguro de borrar?",
-		html: true,
-		customClass: 'swal-wide',
-		text: `<div class="container d-flex justify-content-start text-center">
-				<div class="row">
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Clasificación: </span>${data.COD_DE_CLASIFICACION}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Fuente: </span>${data.FUENTE_FINANCIAMIENTO_FONDO}
-					</div>
-				    <div class="col-md-12 mt-2">
-						<span class="fw-bold">Partida: </span>${data.NOMBRE_PARTIDA}
-					</div>
-				    <div class="col-md-12 mt-2">
-						<span class="fw-bold">Grupo: </span>${data.CODIGO_GRUPO + ' - ' + data.NOMBRE_GRUPO}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Subpartida: </span><span class="text-info">${data.CODIGO_SUBPARTIDA}</span>, ${data.NOMBRE_SUBPARTIDA}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Unidad Fiscalizadora: </span>${data.UNIDAD_FISCALIZADORA}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">${esPresupuesto? "Presupuesto": "Cuota"}: </span>${esPresupuesto ? commaSeparateNumber(data.MONTO_DE_LEY) : commaSeparateNumber(data.CUOTA_PRESUPUESTARIA) + ' (' + data.MONEDA + ')'}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Detalle: </span>${esPresupuesto ? data.DETALLES : data.DETALLES_CUOTA}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Fecha: </span>${ConvertDateJsonToDate(data.CREADO_EN)}
-					</div>
-					<div class="col-md-12 mt-2">
-						<span class="fw-bold">Registro #: </span><span class="text-success">${data.ID}</span>
-					</div>
-					<div class="col-md-12 mt-5">
-					
-					</div>
-				</div>
-
-				<br />
-				<br />
-
-			   </div>`,
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonColor: "#da292e",
-		confirmButtonText: "Si, borrar!",
-		closeOnconfirm: true
-	}, function () {
-		CallAjax(esPresupuesto ? "/Cargas/RemovePresupuestoPorId" : "/Cargas/RemovePresupuestoCuotaPorId", JSON.stringify(presupuestoCarga), "json", function (data) {
-
-			if (data && data.Record) {
-				if (data.Record == true) {
-
-					notifyToastr('Registro Eliminado!');
-					$('#offcanvasCargas .btn-danger').click();
-					if (esPresupuesto) {
-						cargarPresupuestoDatatable();
-					} else {
-						cargarCuotaDatatable();
-					}
-					
-				} else {
-					notifyToastr(data.Record[0].MENSAJE_REQUEST, 'error');
-				}
-
-			}
-			else {
-				notifyToastr(data.message, 'error');
-			}
-
-
-		}, "POST", true);
-
-	});
-}
-//function ShowReg(data) {
-//	if (data.length > 0) {
-//		$("#isRecord").fadeOut();
-//		$("#divTbl").fadeIn("slow");
-//	} else {
-//		$("#divTbl").fadeOut();
-//		$("#isRecord").fadeIn();
-//	}
-
-//}
 function cargarPresupuestoDatatable() {
 	var presupuestoAnualDe = parseInt($("#inpPresupAn").val()); 
 	CallAjax("/Cargas/GetPresupuestos?presupuestoAnualDe=" + presupuestoAnualDe, undefined, "json", function (data) {
@@ -542,21 +444,17 @@ function cargarPresupuestoDatatable() {
 							/*console.log(data)*/
 							/*				debugger*/
 							return `<div class="text-center">
-                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar" href="#offcanvasCargas" class="btn btn-sm btn-info text-white font-size-09" data-bs-toggle="offcanvas" onclick='EditarItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
+                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar" href="#offcanvasCargas" class="btn btn-sm btn-warning text-white font-size-09" data-bs-toggle="offcanvas" onclick='EditarItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
                                 <i class="far fa-edit"></i>
-                                </a>
-                                &nbsp;
-                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}'title="Eliminar" class="btn btn-sm btn-danger text-white font-size-09" data-bs-toggle="offcanvas" onclick='RemoverItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
-                                <i class="far fa-trash-alt"></i>
                                 </a>
                             </div>
                             `;
-						}, "width": "20%"
+						}, "width": "10%"
 					},
-					{ "data": "NOMBRE_PARTIDA", "width": "15%", className: "dt-custom-column-text text-center" },
-					{ "data": "CODIGO_GRUPO", "width": "15%", className: "dt-custom-column-text text-center" },
+					{ "data": "NOMBRE_PARTIDA", "width": "15%", className: "dt-custom-column-text text-justify" },
+					{ "data": "CODIGO_GRUPO", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{ "data": "NOMBRE_GRUPO", "width": "15%", className: "dt-custom-column-text text-center" },
-					{ "data": "CODIGO_SUBPARTIDA", "width": "8%", className: "dt-custom-column-text text-center" },
+					{ "data": "CODIGO_SUBPARTIDA", "width": "8%", className: "dt-custom-column-text text-justify" },
 					{
 						"data": "NOMBRE_SUBPARTIDA",
 						"render": (item) => {
@@ -677,20 +575,16 @@ function cargarCuotaDatatable() {
 						"render": (item) => {
 							/*console.log(data)*/
 							return `<div class="text-center">
-                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar" href="#offcanvasCargas" class="btn btn-sm btn-info text-white font-size-09" data-bs-toggle="offcanvas" onclick='EditarItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
+                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar" href="#offcanvasCargas" class="btn btn-sm btn-warning text-white font-size-09" data-bs-toggle="offcanvas" onclick='EditarItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
                                 <i class="far fa-edit"></i>
-                                </a>
-                                &nbsp;
-                                <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}'title="Eliminar" class="btn btn-sm btn-danger text-white font-size-09" data-bs-toggle="offcanvas" onclick='RemoverItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
-                                <i class="far fa-trash-alt"></i>
                                 </a>
                             </div>
                         `;
 						}, "width": "20%"
 					},
-					{ "data": "NOMBRE_PARTIDA", "width": "15%", className: "dt-custom-column-text text-center" },
+					{ "data": "NOMBRE_PARTIDA", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{ "data": "CODIGO_GRUPO", "width": "15%", className: "dt-custom-column-text text-center" },
-					{ "data": "NOMBRE_GRUPO", "width": "15%", className: "dt-custom-column-text text-center" },
+					{ "data": "NOMBRE_GRUPO", "width": "15%", className: "dt-custom-column-text text-justify" },
 					{ "data": "CODIGO_SUBPARTIDA", "width": "8%", className: "dt-custom-column-text text-center" },
 					{
 						"data": "NOMBRE_SUBPARTIDA",

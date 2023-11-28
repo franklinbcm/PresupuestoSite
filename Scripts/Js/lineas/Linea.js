@@ -131,6 +131,7 @@ function ChangesLinea() {
 		CargarPartidaLinea();
 		$("#sopPartidaLinea").change();
 	})
+
 	$('#inpPresupAnLineaPasoDos').change((e) => {
 		CargarLineas();
 		CargarPartidaLinea();
@@ -487,7 +488,7 @@ function cargarTransLineaObjecDatatable() {
 function cargarTransMovLineaObjDatatable() {
 
 	var presupuestoAnualDe = parseInt($("#inpPresupAnLineaPasoDos").val());
-
+	
 	CallAjax(`/Transacciones/GetListadoMovimientoLineaGastoObjeto?presupuestoAnualDe=${presupuestoAnualDe}`, undefined, "json", function (data) {
 
 		if (data && data.Record) {
