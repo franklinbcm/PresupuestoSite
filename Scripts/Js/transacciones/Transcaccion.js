@@ -106,16 +106,16 @@ function Changes() {
 		}
 		
 		if ($('#sopTipoMovimi option:selected').val() == -1) {
-			$('#btnCrear').attr("disabled", true);
-			$('#btnEdit').attr("disabled", true);
+			$('#btnCrearUnidadF').attr("disabled", true);
+			$('#btnEditUnidadF').attr("disabled", true);
 
 		} else {
 			if ($('#inpCompromisoUni').val().length == 0) {
-				$('#btnCrear').attr("disabled", true);
-				$('#btnEdit').attr("disabled", true);
+				$('#btnCrearUnidadF').attr("disabled", true);
+				$('#btnEditUnidadF').attr("disabled", true);
 			} else {
-				$('#btnCrear').attr("disabled", false);
-				$('#btnEdit').attr("disabled", false);
+				$('#btnCrearUnidadF').attr("disabled", false);
+				$('#btnEditUnidadF').attr("disabled", false);
 			}
 
 		}
@@ -134,6 +134,8 @@ function VerItem(e) {
 	var data = JSON.parse(atob($(e).attr('data-item')));
 	
 	fillDataEdit(data);
+	OcultarLinea();
+	OcultarLineaMovimiento();
 }
 function fillDataEdit(data) {
 	
@@ -456,11 +458,11 @@ function EditarUnidad(e) {
 		$($('.cs-montos')[idx]).parent().removeClass("has-danger").addClass("has-success");
 		$($('.cs-montos')[idx]).removeClass("is-invalid").addClass("is-valid");
 	});
-	$('#btnEdit').parent().attr('style', 'display: block !important');
-	$('#btnCrear').parent().attr('style', 'display: none !important');
+	$('#btnEditUnidadF').parent().attr('style', 'display: block !important');
+	$('#btnCrearUnidadF').parent().attr('style', 'display: none !important');
 	$('#sopTipoMovimi').change();
-	OcultarLinea();
-	OcultarLineaMovimiento();
+	//OcultarLinea();
+	//OcultarLineaMovimiento();
 }
 function LimpiarNuevaUnidad() {
 
@@ -492,8 +494,8 @@ function LimpiarNuevaUnidad() {
 		$($('.cs-montos')[idx]).parent().removeClass("has-success").addClass("has-danger");
 		$($('.cs-montos')[idx]).removeClass("is-valid").addClass("is-invalid");
 	})
-	$('#btnCrear').attr("disabled", true).parent().attr('style', 'display: block !important');
-	$('#btnEdit').parent().attr('style', 'display: none !important');
+	$('#btnCrearUnidadF').attr("disabled", true).parent().attr('style', 'display: block !important');
+	$('#btnEditUnidadF').parent().attr('style', 'display: none !important');
 	OcultarLinea();
 	OcultarLineaMovimiento();
 }

@@ -21,8 +21,8 @@ function UnidadDisponible() {
 	if (result < 0) {
 		
 		$('#lbinpSaldo').addClass("badge bg-danger blink");
-		$('#btnCrear').attr("disabled", true);
-		$('#btnEdit').attr("disabled", true);
+		$('#btnCrearUnidadF').attr("disabled", true);
+		$('#btnEditUnidadF').attr("disabled", true);
 	} else {
 		$('#spDisponibilidad').text('');
 		$('#lbinpSaldo').removeClass("badge bg-danger blink");
@@ -30,7 +30,7 @@ function UnidadDisponible() {
 	 
 }
 function clickBotones() {
-	$('#btnCrear').click((e) => {
+	$('#btnCrearUnidadF').click((e) => {
 		e.preventDefault();
 		var currentId = $('#inpID').val();
 
@@ -90,7 +90,7 @@ function clickBotones() {
 		});
 	 
 	})
-	$('#btnEdit').click((e) => {
+	$('#btnEditUnidadF').click((e) => {
 		e.preventDefault();
 		var currentId = $('#inpID').val();
 
@@ -220,8 +220,8 @@ function inpMontos() {
 		if (currentValue === 0 && !$(e.currentTarget).hasClass("cs-cero")) {
 			$(e.currentTarget).parent().removeClass("has-success").addClass("has-danger");
 			$(e.currentTarget).removeClass("is-valid").addClass("is-invalid");
-			$('#btnCrear').attr("disabled", false);
-			$('#btnEdit').attr("disabled", false);
+			$('#btnCrearUnidadF').attr("disabled", false);
+			$('#btnEditUnidadF').attr("disabled", false);
 
 		} else {
 			if ($(e.currentTarget).val() == '') {
@@ -243,19 +243,19 @@ function inpMontos() {
 		})
 		
 		if (contarValidos === 0 && permitirPaso) {
-			$('#btnCrear').attr("disabled", false);
-			$('#btnEdit').attr("disabled", false);
+			$('#btnCrearUnidadF').attr("disabled", false);
+			$('#btnEditUnidadF').attr("disabled", false);
 		} else {
-			$('#btnCrear').attr("disabled", true);
-			$('#btnEdit').attr("disabled", true);
+			$('#btnCrearUnidadF').attr("disabled", true);
+			$('#btnEditUnidadF').attr("disabled", true);
 		}
 		if (!$(e.currentTarget).hasClass("cs-cero")) {
 			UnidadDisponible();
 		}
 		
 		if ($('#sopTipoMovimi option:selected').val() == -1 && currentValue != 0 &&  !$(e.currentTarget).hasClass("cs-cero")) {
-			$('#btnCrear').attr("disabled", true);
-			$('#btnEdit').attr("disabled", true);
+			$('#btnCrearUnidadF').attr("disabled", true);
+			$('#btnEditUnidadF').attr("disabled", true);
 		}
 			
 	});

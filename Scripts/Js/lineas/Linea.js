@@ -75,7 +75,7 @@ function ClickesLinea() {
 		$("#offcanvasExampleLabelTitulo").attr('style', 'display: none !important');
 		$("#offcanvasExampleLabelLinea").show();
 		OcultarLineaMovimiento();
-		
+		$("#divPasoIni").show();
 	})
 	$('#btnAddMovLinea').click((e) => {
 		fillPresupuesto();
