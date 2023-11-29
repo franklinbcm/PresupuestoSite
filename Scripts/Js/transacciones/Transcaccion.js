@@ -459,6 +459,8 @@ function EditarUnidad(e) {
 	$('#btnEdit').parent().attr('style', 'display: block !important');
 	$('#btnCrear').parent().attr('style', 'display: none !important');
 	$('#sopTipoMovimi').change();
+	OcultarLinea();
+	OcultarLineaMovimiento();
 }
 function LimpiarNuevaUnidad() {
 
@@ -493,6 +495,7 @@ function LimpiarNuevaUnidad() {
 	$('#btnCrear').attr("disabled", true).parent().attr('style', 'display: block !important');
 	$('#btnEdit').parent().attr('style', 'display: none !important');
 	OcultarLinea();
+	OcultarLineaMovimiento();
 }
 
 function cargarTransUnidadesDatatable() {
