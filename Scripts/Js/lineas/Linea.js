@@ -61,6 +61,12 @@ function ExitTodos() {
 	$("#divPasoDosLinea").hide();
 
 }
+function OcultarLinea() {
+	$("#divPasoIni").hide();
+}
+function OcultarLineaMovimiento() {
+	$("#divPasoMovimiento").hide();
+}
 function ClickesLinea() {
 
 	$('#btnAddLinea').click((e) => {
@@ -68,6 +74,7 @@ function ClickesLinea() {
 		LimpiarLinea();
 		$("#offcanvasExampleLabelTitulo").attr('style', 'display: none !important');
 		$("#offcanvasExampleLabelLinea").show();
+		OcultarLineaMovimiento();
 		
 	})
 	$('#btnAddMovLinea').click((e) => {
@@ -120,9 +127,71 @@ function ClickesLinea() {
 
 
 	})
+	
+
+	$('#btnCrearLineaG').click((e) => {
+		e.preventDefault();
+		GuardarOActualizarLinea(e, true)
+
+	});
+	$('#btnEditLineaG').click((e) => {
+		e.preventDefault();
+		GuardarOActualizarLinea(e, false)
+
+	});
 
 	
 
+}
+function GuardarOActualizarLinea(e, esCrear) {
+	var params = {
+		"ID": esCrear ? 0 : parseInt($('#inpID').val()),
+		"PRESUPUESTO_ANUAL_DE": parseInt($('#inpPresupAnLinea').val()),
+		"CODIGO_PRESUPUESTARIO": $('#inpCodPresupuestario').val(),
+		"DESCRIPCION": $('#inpDescripcion').val(),
+		"CONTRATO": $('#inpContrato').val(),
+		"PROVEEDOR": $('#inpProveedor').val(),
+		"CREADO_POR": $('#inpUsr').val(),
+		"ESTATUS_REGISTRO": $('#ckEstadoLinea').is(":checked") == true ? "1" : "0",
+	}
+
+	var titulo = esCrear ? 'creará' : 'actualizará';
+	var uriPatch = esCrear ? 'AgregarLineaGastoOb' : 'EditarLineaGastoOb';
+	swal({
+		title: "¿Esta seguro de Continuar?",
+		html: true,
+		customClass: 'swal-wide',
+		text: `Se ${titulo} la Línea de Gasto Objeto "${params.DESCRIPCION}".`,
+		type: "info",
+		showCancelButton: true,
+		confirmButtonColor: "#3459e6",
+		confirmButtonText: "Si, continuar!",
+		closeOnconfirm: true
+	}, function () {
+		CallAjax(`/Transacciones/${uriPatch}`, JSON.stringify(params), "json", function (data) {
+			debugger
+			if (data && data.Record) {
+
+				if (data.Result == 'Ok') {
+
+					notifyToastr(esCrear ? 'Registro Creado' : 'Registro Actualizado', 'success');
+					cargarTransLineaObjecDatatable();
+					$('#btnpasoBackUno').click();
+
+				} else {
+					toastr.error(data.Record[0].MENSAJE_REQUEST);
+				}
+
+			}
+			else {
+				toastr.error(data.message);
+			}
+
+
+		}, "POST", true);
+
+
+	});
 }
 function ChangesLinea() {
 	
@@ -156,9 +225,41 @@ function ChangesLinea() {
 		}
 		
 	})
+	$("#inpCodPresupuestario").change((e) => {
+		ValidadorLinea(validarFieldTexto(e));
+	})
+	$("#inpDescripcion").change((e) => {
+		ValidadorLinea(validarFieldTexto(e));
+	})
+	$("#inpContrato").change((e) => {
+		ValidadorLinea(validarFieldTexto(e));
+
+	})
+	$("#inpProveedor").change((e) => {
+		ValidadorLinea(validarFieldTexto(e));
+
+	})
+	
 	
 
 }
+function ValidadorLinea(esValido) {
+	var deshabilitar = false;
+	$('#divLineaG .cs-line-gasto').each((idx) => {
+		if ($($('#divLineaG .cs-line-gasto')[idx]).hasClass('is-invalid') == true) {
+			deshabilitar = true;
+		}
+
+	});
+	var btnUtilizado = (parseInt($('#inpID').val()) != NaN || parseInt($('#inpID').val()) == 0 ? true : false) ? 'btnCrearLineaG' : 'btnEditLineaG';
+	if (deshabilitar) {
+		$(`#${btnUtilizado}`).attr("disabled", true);
+
+	} else {
+		$(`#${btnUtilizado}`).attr("disabled", false);
+	}
+}
+
 function EventosLinea(partidaID) {
 	CargarGrupo(partidaID)
 	$('#sopSubPartidaLinea').val("-1");
@@ -313,7 +414,11 @@ function EditLinea(linea) {
 	$('#inpRegModifFecha').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
 	$('#inpID').val(data.ID);
 	$(".is-new-record").attr('style', 'display: block !important');
-	 
+	$("#btnEditLineaG").attr('style', 'display: block !important');
+	$("#btnCrearLineaG").attr('style', 'display: none !important');
+	$('#divLineaG .cs-line-gasto').each((idx) => {
+		$($('#divLineaG .cs-line-gasto')[idx]).removeClass("is-invalid").addClass("is-valid");
+	});
 	
 	$("#divPasoIni").hide();
 	$("#divPasoUnoLinea").show();
@@ -326,6 +431,13 @@ function GenerarNuevaLinea() {
 	$("#divPasoIni").hide();
 	$("#divPasoUnoLinea").show();
 	$("#divPasoDosLinea").hide();
+	$("#btnEditLineaG").attr('style', 'display: none !important');
+	$("#btnCrearLineaG").attr('style', 'display: block !important');
+	$('#btnCrearLineaG').attr("disabled", true);
+	$("#h5textHeader").text('NUEVA LÍNEA GASTO OBJETO').removeClass("text-info text-warning").addClass("blink text-success");
+	$('#divLineaG .cs-line-gasto').each((idx) => {
+		$($('#divLineaG .cs-line-gasto')[idx]).removeClass("is-valid").addClass("is-invalid");
+	});
 }
 function GenerarNuevoMovimiento() {
 	LimpiarPasos();
@@ -364,7 +476,7 @@ function LimpiarLinea() {
 	$('#inpRegCreacionFecha').val(limpiar);
 	$('#inpRegModPor').val(limpiar);
 	$('#inpRegModifFecha').val(limpiar);
-	$('#ckEstado').prop("checked", true);
+	$('#ckEstadoLinea').prop("checked", true);
 	$('#inpRdoPedidos').prop("checked", true);
 	$('#inpTipoMovimi').val(limpiar);
 	//CargarTipoMovimiento($('#sopPresupAn').val(), $('#hfRegID').val(), $("#inpSubpartidaDesc").attr('data-item'), $('#inpUnidadFisc').val());

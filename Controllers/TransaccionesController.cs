@@ -380,6 +380,38 @@ namespace PresupuestoSite.Controllers
 
         }
 
+        [HttpPost]
+        public async Task<JsonResult> AgregarLineaGastoOb(LineaGastoObjetoDTO lineaGastoObjetoDTO)
+        {
+
+            var resunt = await _transacServicio.AgregarLineaGastoObjeto(lineaGastoObjetoDTO);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditarLineaGastoOb(LineaGastoObjetoDTO lineaGastoObjetoDTO)
+        {
+
+            var resunt = await _transacServicio.EditarLineaGastoObjeto(lineaGastoObjetoDTO);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+
 
     }
 }

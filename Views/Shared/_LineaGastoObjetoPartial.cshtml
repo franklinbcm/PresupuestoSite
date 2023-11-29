@@ -12,10 +12,18 @@
 
         <div class="row">
             <h5 class="text-primary">Información General</h5>
+            <div class="mb-2 d-flex flex-row-reverse">
+                <div class="mt-2">
+                    <button id="btnpasoBackUno" class="btn btn-dark"><i class="fa fa-solid fa-arrow-left text-white text-white"></i> Atrás</button>
+                </div>
+                <div class="mt-2">
+                    <button id="btnExitPasoUno" class="btn btn-info text-white" data-bs-dismiss="offcanvas"><i class="fa fa-regular fa-home"></i> Salir</button>&nbsp;&nbsp;
+                </div>
+            </div>
             <br />
             <br />
             <fieldset class="mx-3 mb-3">
-                <div class="row border border-white border-2 rounded">
+                <div id="divLineaG" class="row border border-white border-2 rounded">
                     <h5 class="text-info mb-3 mt-2">Línea</h5>
                     <div class="col-md-1 mt-2 col-sm-12 form-group">
                         <label for="inpPresupAnLinea" class="form-label" title="Presupuesto - Año">Presupuesto</label>
@@ -24,22 +32,22 @@
 
                     <div class="col-md-3 form-group mt-2">
                         <label for="inpCodPresupuestario" id="lbinpCodPresupuestario" class="form-label" title="Código Presupuestario">Código Presup.</label>
-                        <input type="text" class="form-control cs-CodPresupuestario" id="inpCodPresupuestario">
+                        <input type="text" class="form-control cs-CodPresupuestario is-valid cs-line-gasto" id="inpCodPresupuestario">
                     </div>
                     <div class="col-md-8 form-group mt-2">
                         <label for="inpDescripcion" class="form-label">Descripción&nbsp;Línea</label>
-                        <input type="text" class="form-control cs-CodPresupuestario" id="inpDescripcion">
+                        <input type="text" class="form-control cs-CodPresupuestario is-valid cs-line-gasto" id="inpDescripcion">
                     </div>
                     <div class="col-md-4 form-group mt-2">
                         <label for="inpContrato" id="lbinpContrato" class="form-label" title="Contrato Número">Contrato #</label>
                         <div id="divinpCodPresupuestario" class="input-group mb-2">
-                            <input type="text" class="form-control cs-Contrato" id="inpContrato">
+                            <input type="text" class="form-control cs-Contrato is-valid cs-line-gasto" id="inpContrato">
                         </div>
                     </div>
                     <div class="col-md-8 form-group mt-2">
                         <label for="inpProveedor" id="lbinpProveedor" class="form-label" title="Proveedor">Proveedor</label>
                         <div id="divinpProveedor" class="input-group mb-2">
-                            <input type="text" class="form-control cs-Proveedor" id="inpProveedor">
+                            <input type="text" class="form-control cs-Proveedor is-valid cs-line-gasto" id="inpProveedor">
                         </div>
                     </div>
                     <div class="col-md-3 mb-2 is-new-record">
@@ -60,7 +68,7 @@
                     </div>
                     <div class="col-md-6 mb-2 mt-2 is-new-record">
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="ckEstado" checked>
+                            <input class="form-check-input" type="checkbox" id="ckEstadoLinea" checked>
                             <label class="form-check-label" for="ckEstado">¿Registro Activo?</label>
                         </div>
                     </div>
@@ -68,15 +76,16 @@
                 </div>
             </fieldset>
         </div>
-
         <div class="d-flex flex-row-reverse">
-            <div class="mt-2">
-                <button id="btnpasoBackUno" class="btn btn-dark"><i class="fa fa-solid fa-arrow-left text-white text-white"></i> Atrás</button>
+            <div class="mt-1" style="display: block !important">
+                <button id="btnCrearLineaG" class="btn btn-success"><i class="fas fa-plus text-white"></i> Crear Unidad</button>
             </div>
-            <div class="mt-2">
-                <button id="btnExitPasoUno" class="btn btn-info text-white" data-bs-dismiss="offcanvas"><i class="fa fa-regular fa-home"></i> Salir</button>&nbsp;&nbsp;
+            <div class="mt-1" style="display:block !important">
+                <button id="btnEditLineaG" class="btn btn-success"><i class="far fa-edit text-white"></i> Editar</button>
             </div>
+
         </div>
+
     </div>
     <div id="divPasoMovimiento" style="display:block">
         @Html.Partial("_TablaMovLineaGastoObjetoPartial")

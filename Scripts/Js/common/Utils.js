@@ -610,4 +610,16 @@ function GetReportInforme(data) {
     
     return recordInforme;
 }
+function validarFieldTexto(e) {
+    var currentValue = e.currentTarget.value.trim();
+    var result = true;
+    if (currentValue == '' && currentValue.length <= 1) {
+        $(e.currentTarget).removeClass("is-valid").addClass("is-invalid");
+        result = false;
+    } else {
+        $(e.currentTarget).removeClass("is-invalid").addClass("is-valid");
+    }
+    return result;
+         
+}
 

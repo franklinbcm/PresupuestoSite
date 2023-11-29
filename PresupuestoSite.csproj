@@ -198,6 +198,7 @@
     <Compile Include="Models\Catalogos\ListadoOpcionesModels.cs" />
     <Compile Include="Models\DTO\BaseEntidadDTO.cs" />
     <Compile Include="Models\DTO\Cargas.cs" />
+    <Compile Include="Models\DTO\LineaGastoObjetoDTO.cs" />
     <Compile Include="Models\DTO\PresupuestoCuotaCargaDTO.cs" />
     <Compile Include="Models\DTO\PresupuestoCargaDTO.cs" />
     <Compile Include="Models\DTO\PresupuestoYCuotaRemovDTO.cs" />

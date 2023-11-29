@@ -35,7 +35,7 @@ function Clickes() {
 		e.preventDefault();
 		LimpiarNuevaUnidad();
 		$(".divOpciones").attr('style', 'display: none !important');
-		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");;
+		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");
 		$("#divRegresar").show();
 		$("#divTransacciones.divOpciones").show();
 		$("#divMoviGeneral").show();
@@ -44,7 +44,7 @@ function Clickes() {
 	$('#btnExit').click((e) => {
 		e.preventDefault();
 		$(".divOpciones").attr('style', 'display: none !important');
-		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");;
+		$("#h5textHeader").text('MOVIMIENTOS UNIDAD FISCALIZADORA').removeClass("blink text-success text-warning").addClass("text-info");
 		$("#divRegresar").show();
 		$("#divTransacciones.divOpciones").show();
 		$("#divMoviGeneral").show();
@@ -492,6 +492,7 @@ function LimpiarNuevaUnidad() {
 	})
 	$('#btnCrear').attr("disabled", true).parent().attr('style', 'display: block !important');
 	$('#btnEdit').parent().attr('style', 'display: none !important');
+	OcultarLinea();
 }
 
 function cargarTransUnidadesDatatable() {
