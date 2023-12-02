@@ -527,5 +527,84 @@ namespace PresupuestoSite.Servicios.Trascacciones
         }
 
 
+        public async Task<List<LineaGastoObjetoMovimiento>> AgregarLineaGastoObjMovimiento(LineaGastoObjetoMovimientoDTO lineaGastoObjetoMovimiento)
+        {
+            List<LineaGastoObjetoMovimiento> lineaGastoObjetoList = new List<LineaGastoObjetoMovimiento>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, Utilidades.GetApiRutaUnida($"/LineaGastoObjeto/agregarLineaMovimientoAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(lineaGastoObjetoMovimiento), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                lineaGastoObjetoList.AddRange(JsonConvert.DeserializeObject<LineaGastoObjetoMovimiento[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return lineaGastoObjetoList;
+
+        }
+
+        public async Task<List<LineaGastoObjetoMovimiento>> EditarLineaGastoObjMovimiento(LineaGastoObjetoMovimientoDTO lineaGastoObjetoMovimiento)
+        {
+            List<LineaGastoObjetoMovimiento> lineaGastoObjetoList = new List<LineaGastoObjetoMovimiento>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Put, Utilidades.GetApiRutaUnida($"/LineaGastoObjeto/editarLineaMovimientoAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //Parameters
+                request.Content = new StringContent(JsonConvert.SerializeObject(lineaGastoObjetoMovimiento), Encoding.UTF8, "application/json");
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(Utilidades.ArreglarCulturaString(jSon));
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                lineaGastoObjetoList.AddRange(JsonConvert.DeserializeObject<LineaGastoObjetoMovimiento[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return lineaGastoObjetoList;
+
+        }
+
+
     }
 }

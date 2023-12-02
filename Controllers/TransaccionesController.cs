@@ -364,21 +364,7 @@ namespace PresupuestoSite.Controllers
 
 
         }
-        [HttpGet]
-        public async Task<JsonResult> GetListadoMovimientoLineaGastoObjeto(int presupuestoAnualDe)
-        {
 
-            var cargas = await _transacServicio.GetListadoMovimientoLineaGastoObjetoVM(presupuestoAnualDe);
-
-            return Json(new
-            {
-                Result = "Ok",
-                Record = cargas,
-                Total = cargas != null ? cargas.ToList().Count() : 0,
-            }, JsonRequestBehavior.AllowGet);
-
-
-        }
 
         [HttpPost]
         public async Task<JsonResult> AgregarLineaGastoOb(LineaGastoObjetoDTO lineaGastoObjetoDTO)
@@ -410,7 +396,51 @@ namespace PresupuestoSite.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetListadoMovimientoLineaGastoObjeto(int presupuestoAnualDe)
+        {
 
+            var cargas = await _transacServicio.GetListadoMovimientoLineaGastoObjetoVM(presupuestoAnualDe);
+
+            return Json(new
+            {
+                Result = "Ok",
+                Record = cargas,
+                Total = cargas != null ? cargas.ToList().Count() : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AgregarLineaGastoObMovimiento(LineaGastoObjetoMovimientoDTO lineaGastoObjetoMovimiento)
+        {
+
+            var resunt = await _transacServicio.AgregarLineaGastoObjMovimiento(lineaGastoObjetoMovimiento);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> EditarLineaGastoObMovimiento(LineaGastoObjetoMovimientoDTO lineaGastoObjetoMovimiento)
+        {
+
+            var resunt = await _transacServicio.EditarLineaGastoObjMovimiento(lineaGastoObjetoMovimiento);
+            return Json(new
+            {
+                Result = "Ok",
+                Record = resunt,
+                Total = resunt != null ? 1 : 0,
+            }, JsonRequestBehavior.AllowGet);
+
+
+        }
 
 
     }

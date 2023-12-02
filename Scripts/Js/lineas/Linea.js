@@ -46,6 +46,9 @@ function LimpiarPasos() {
 	$('#inpRegModPor').val(limpiar);
 	$('#inpRegModifFecha').val(limpiar);
 	$('#inpIDPasoDos').val(limpiar);
+	$('.cs-isfield').each((idx) => {
+		$($('.cs-isfield')[idx]).val(limpiar);
+	});
 }
 function ExitTodos() {
 	$(".divOpcionesLinea").attr('style', 'display: none');
@@ -251,12 +254,19 @@ function ValidadorLinea(esValido) {
 		}
 
 	});
-	var btnUtilizado = (parseInt($('#inpID').val()) != NaN || parseInt($('#inpID').val()) == 0 ? true : false) ? 'btnCrearLineaG' : 'btnEditLineaG';
+	
+	var TipoProceso = parseInt($('#inpID').val());
+	var controlProceso = '#btnCrearLineaG';
+
+	if (TipoProceso != NaN && TipoProceso > 0) {
+		controlProceso = '#btnEditLineaG';
+	}
+	 
 	if (deshabilitar) {
-		$(`#${btnUtilizado}`).attr("disabled", true);
+		$(controlProceso).attr("disabled", true);
 
 	} else {
-		$(`#${btnUtilizado}`).attr("disabled", false);
+		$(controlProceso).attr("disabled", false);
 	}
 }
 
@@ -423,7 +433,74 @@ function EditLinea(linea) {
 	$("#divPasoIni").hide();
 	$("#divPasoUnoLinea").show();
 	$("#divPasoDosLinea").hide();
+	$("#divPasoMovimiento").hide();
 }
+function EditLineaMovimiento(linea) {
+	var data = JSON.parse(atob($(linea).attr('data-item')));
+	GenerarNuevoMovimiento();
+	setTimeout(() => {
+		CompletarMovimiento(data);
+	}, 300)
+	debugger
+
+
+}
+function CompletarMovimiento(data) {
+	$("#sopLineasActivas").val(data.LINE_ID);
+	$("#sopPartidaLinea").val(data.PARTIDA_ID).change().attr('disabled', true);
+	setTimeout(() => {
+		$("#sopGrupoLinea").val(data.GRUPO_ID).change().attr('disabled', true);
+		setTimeout(() => {
+			$("#sopSubPartidaLinea").val(data.SUBPARTIDA_ID).change().attr('disabled', true);
+			setTimeout(() => {
+				$("#sopUnidadFisLinea").val(data.SUBPARTIDA_ID).change().attr('disabled', true);
+			}, 300)
+		}, 250)
+	}, 250)
+	
+	setTimeout(() => {
+		$("#inpPresupInicialLinea").val(commaSeparateNumber(data.MONTO_DE_LEY));
+
+		$("#inpCuotaUnoTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_UNO));
+		$("#inpCuotaDosTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_DOS));
+		$("#inpCuotaTresTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_TRES));
+		$("#inpCuotaCuartaTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_CUATRO));
+		$("#inpCuotaTotalLinea").val(commaSeparateNumber(data.CUOTA_TOTAL));
+
+		$("#inpArrastreCompLinea").val(commaSeparateNumber(data.ARRASTRE_COMPROMISO));
+		$("#inpContenidoEcoLinea").val(commaSeparateNumber(data.CONTENIDO_ECONOMICO));
+		$("#inpContenidoEcoNumeroLinea").val(data.CONTENIDO_ECONOMICO_DESC);
+		$("#inpPedidoLinea").val(commaSeparateNumber(data.PEDIDO));
+		$("#inpPedidoNumeroLinea").val(data.PEDIDO_DESC);
+		$("#inpReservaLinea").val(commaSeparateNumber(data.RESERVA));
+		$("#inpReservaNumeroLinea").val(data.RESERVA_DESC);
+		$("#inpSolicitudPedidoLinea").val(commaSeparateNumber(data.SOLICITUD_PEDIDO));
+		$("#inpSolicitudPedidoNumeroLinea").val(data.SOLICITUD_PEDIDO_DESC);
+		$("#inpFacturaLinea").val(commaSeparateNumber(data.FACTURA));
+		$("#inpFacturaNumeroLinea").val(data.FACTURA_DESC);
+		$("#inpDisponibleCtaLinea").val(commaSeparateNumber(data.DISPONIBLE_CUOTA_TOTAL));
+		$("#inpDisponiblePresupLinea").val(commaSeparateNumber(data.DISPONIBLE_PRESUPUESTO_TOTAL));
+
+		$("#inpFechaLinea").val(ConvertDateJsonToDate(data.FECHA));
+		$("#taDetalles").val(data.DESCRIPCION);
+
+		$('#inpRegCrePorMov').val(data.CREADO_POR);
+		$('#inpRegCreacionFechaMov').val(ConvertDateJsonToDate(data.CREADO_EN));
+		$('#inpRegModPorMov').val(data.MODIFICADO_POR);
+		$('#inpRegModifFechaMov').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
+		$('#ckEstadoMovimiento').prop("checked", data.ESTATUS_REGISTRO === '1' ? true : false);
+		$('#inpIDPasoDos').val(data.ID);
+	}, 200);
+	
+	$(".is-new-record").attr('style', 'display: block !important');
+	//$("#btnEditLineaG").attr('style', 'display: block !important');
+	//$("#btnCrearLineaG").attr('style', 'display: none !important');
+	//$('#divLineaG .cs-line-gasto').each((idx) => {
+	//	$($('#divLineaG .cs-line-gasto')[idx]).removeClass("is-invalid").addClass("is-valid");
+	//});
+}
+
+
 function GenerarNuevaLinea() {
 	LimpiarPasos();
 	$(".is-new-record").attr('style', 'display: none !important');
@@ -449,6 +526,10 @@ function GenerarNuevoMovimiento() {
 	$("#divPasoUnoLinea").hide();
 	$("#divPasoMovimiento").hide();
 	$("#divPasoDosLinea").show();
+	$("#sopPartidaLinea").val('-1').change().attr('disabled', false);
+	$("#sopGrupoLinea").attr('disabled', false);
+	$("#sopSubPartidaLinea").attr('disabled', false);
+	$("#sopUnidadFisLinea").attr('disabled', false);
 
 }
 function fillPresupuesto() {sopPresupAnLinea
@@ -514,7 +595,7 @@ function cargarTransLineaObjecDatatable() {
 				buttons: [
 					{
 						extend: 'collection',
-						className: "btn btn-warning fa fa-thin fa-credit-card text-white",
+						className: "btn btn-success fa fa-thin fa-credit-card text-white",
 						text: ' Agregar Línea',
 						action: () => {
 							GenerarNuevaLinea();
@@ -621,7 +702,7 @@ function cargarTransMovLineaObjDatatable() {
 				buttons: [
 					{
 						extend: 'collection',
-						className: "btn btn-warning fa fa-thin fa-credit-card text-white",
+						className: "btn btn-success fa fa-thin fa-credit-card text-white",
 						text: ' Agregar Movimiento',
 						action: () => {
 							GenerarNuevoMovimiento();
@@ -636,7 +717,7 @@ function cargarTransMovLineaObjDatatable() {
 						"render": (item) => {
 
 							return `<div class="text-center">
-								<a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar Línea"  class="btn btn-sm btn-warning text-white font-size-09"  onclick='EditLinea(this);'  style="cursor:pointer; width:30px;">
+								<a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar Línea"  class="btn btn-sm btn-warning text-white font-size-09"  onclick='EditLineaMovimiento(this);'  style="cursor:pointer; width:30px;">
 									<i class="fa fa-regular fa-pen"></i>
                                 </a>
                             </div>
