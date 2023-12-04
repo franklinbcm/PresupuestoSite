@@ -299,12 +299,12 @@
     <Content Include="Views\Reportes\Index.cshtml" />
     <Content Include="Views\Shared\_InformeEjecucion.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoPartial.cshtml" />
-    <Content Include="Views\Shared\_LineaGastoObjetoOtrasInfoPartial.cshtml" />
-    <Content Include="Views\Shared\_LineaGastoObjetoCuotasPartial.cshtml" />
-    <Content Include="Views\Shared\_LineaGastoObjetoPresupuestoPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoMovOtrasInfoPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoMovCuotasPartial.cshtml" />
+    <Content Include="Views\Shared\_LineaGastoObjetoMovPresupuestoPartial.cshtml" />
     <Content Include="Views\Shared\_TablaLineaGastoObjetoPartial.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoPasoUnoPartial.cshtml" />
-    <Content Include="Views\Shared\_TablaMovLineaGastoObjetoPartial.cshtml" />
+    <Content Include="Views\Shared\_TablaLineaGastoObjetoMovPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
