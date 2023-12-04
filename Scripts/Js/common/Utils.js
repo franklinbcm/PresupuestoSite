@@ -615,11 +615,33 @@ function validarFieldTexto(e) {
     var result = true;
     if (currentValue == '' && currentValue.length <= 1) {
         $(e.currentTarget).removeClass("is-valid").addClass("is-invalid");
+        $($(e.currentTarget).parent().find('label')).addClass("cs-isrequired-label");
+        $($(e.currentTarget).parent().parent().find('label')[0]).addClass("cs-isrequired-label");
+
         result = false;
     } else {
         $(e.currentTarget).removeClass("is-invalid").addClass("is-valid");
+        $($(e.currentTarget).parent().find('label')).removeClass("cs-isrequired-label");
+        $($(e.currentTarget).parent().parent().find('label')[0]).removeClass("cs-isrequired-label");
     }
     return result;
          
+}
+function validarFieldSelectBlinkLabel(controlId) {
+    var currentValue = parseInt($('#' + controlId + ' option:selected').val());
+    var result = true;
+    if (currentValue > 0) {
+        $($("#" + controlId).parent().find('label')).removeClass("cs-isrequired-label");
+        $("#" + controlId).removeClass("is-invalid").addClass("is-valid");
+        result = false;
+    }
+    else {
+        $($("#" + controlId).parent().find('label')).addClass("cs-isrequired-label");
+        $("#" + controlId).removeClass("is-valid").addClass("is-invalid");
+
+    }
+    return result;
+
+    
 }
 

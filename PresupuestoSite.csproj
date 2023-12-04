@@ -269,6 +269,7 @@
     <Content Include="Scripts\Js\common\Utils.js" />
     <Content Include="Scripts\Js\home\Home.js" />
     <Content Include="Scripts\Js\lineas\Linea.js" />
+    <Content Include="Scripts\Js\lineas\LineaMovimiento.js" />
     <Content Include="Scripts\Js\reportes\Reporte.js" />
     <Content Include="Scripts\Js\transacciones\Transcaccion.js" />
     <Content Include="Scripts\Js\unidadFiscalizadora\Unidades.js" />

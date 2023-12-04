@@ -1,4 +1,5 @@
 ﻿/// <reference path="../common/utils.js" />
+/// <reference path="LineaMovimiento.js" />
 $(document).ready(function () {
 	onInitPaginaLinea();
 
@@ -23,6 +24,7 @@ function PasoUnoAtras() {
 	$("#divPasoUnoLinea").hide();
 	$("#divPasoDosLinea").hide();
 }
+
 function LimpiarPasos() {
 	var limpiar = '';
 	$('#inpPresupAnLinea').val(limpiar);
@@ -80,36 +82,13 @@ function ClickesLinea() {
 		OcultarLineaMovimiento();
 		$("#divPasoIni").show();
 	})
-	$('#btnAddMovLinea').click((e) => {
-		fillPresupuesto();
-		CargarLineas();
-		cargarTransMovLineaObjDatatable();
-		LimpiarLinea();
-		$("#offcanvasExampleLabelTitulo").attr('style', 'display: none !important');
-		$("#offcanvasExampleLabelLinea").show();
-		$("#h5textHeader").text('MOVIMIENTOS LÍNEA GASTO OBJETO').removeClass("blink text-success text-warning").addClass("text-info");
-		$(".is-new-record").attr('style', 'display: none !important');
-		$("#divPasoIni").hide();
-		$("#divPasoUnoLinea").hide();
-		$("#divPasoMovimiento").show();
-
-	})
 	
-
-	$('#btnpasoDos').click((e) => {
-		e.preventDefault();
-		$(".divOpcionesLinea").attr('style', 'display: none !important');
-		$("#divLinea").show();
-		$("#divPasoMovimiento").show();
-		$("#divPasoUnoLinea").hide();
-
-
-	})
 	$('#btnpasoBackUno').click((e) => {
 		e.preventDefault();
 		PasoUnoAtras();
 
 	})
+
 	
 	$('#btnExitPasoUno').click((e) => {
 		e.preventDefault();
@@ -134,7 +113,7 @@ function ClickesLinea() {
 
 	$('#btnCrearLineaG').click((e) => {
 		e.preventDefault();
-		GuardarOActualizarLinea(e, true)
+		GuardarOActualizarLinea(e)
 
 	});
 	$('#btnEditLineaG').click((e) => {
@@ -146,7 +125,7 @@ function ClickesLinea() {
 	
 
 }
-function GuardarOActualizarLinea(e, esCrear) {
+function GuardarOActualizarLinea(e, esCrear = true) {
 	var params = {
 		"ID": esCrear ? 0 : parseInt($('#inpID').val()),
 		"PRESUPUESTO_ANUAL_DE": parseInt($('#inpPresupAnLinea').val()),
@@ -218,16 +197,7 @@ function ChangesLinea() {
 	$("#sopSubPartidaLinea").change(() => {
 		CargarUnidadFiscalizadoraLinea();
 	})
-	$("#sopLineasActivas").change(() => {
-		var value = parseInt($('#sopLineasActivas  option:selected').val());
-		if (value > 0) {
-			var data = JSON.parse(atob($('#sopLineasActivas  option:selected').attr('data-item')));
-			$('#inpIDPasoDos').val(data.ID);
-			$('#sopLineasActivas').attr('title', data.DESCRIPCION + ', CÓD. PRESUP.: ' + data.CODIGO_PRESUPUESTARIO + ', CONTRATO: ' + data.CONTRATO + ', PROVEEDOR: ' + data.PROVEEDOR); 
-			
-		}
-		
-	})
+
 	$("#inpCodPresupuestario").change((e) => {
 		ValidadorLinea(validarFieldTexto(e));
 	})
@@ -435,71 +405,6 @@ function EditLinea(linea) {
 	$("#divPasoDosLinea").hide();
 	$("#divPasoMovimiento").hide();
 }
-function EditLineaMovimiento(linea) {
-	var data = JSON.parse(atob($(linea).attr('data-item')));
-	GenerarNuevoMovimiento();
-	setTimeout(() => {
-		CompletarMovimiento(data);
-	}, 300)
-	debugger
-
-
-}
-function CompletarMovimiento(data) {
-	$("#sopLineasActivas").val(data.LINE_ID);
-	$("#sopPartidaLinea").val(data.PARTIDA_ID).change().attr('disabled', true);
-	setTimeout(() => {
-		$("#sopGrupoLinea").val(data.GRUPO_ID).change().attr('disabled', true);
-		setTimeout(() => {
-			$("#sopSubPartidaLinea").val(data.SUBPARTIDA_ID).change().attr('disabled', true);
-			setTimeout(() => {
-				$("#sopUnidadFisLinea").val(data.SUBPARTIDA_ID).change().attr('disabled', true);
-			}, 300)
-		}, 250)
-	}, 250)
-	
-	setTimeout(() => {
-		$("#inpPresupInicialLinea").val(commaSeparateNumber(data.MONTO_DE_LEY));
-
-		$("#inpCuotaUnoTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_UNO));
-		$("#inpCuotaDosTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_DOS));
-		$("#inpCuotaTresTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_TRES));
-		$("#inpCuotaCuartaTrimestreLinea").val(commaSeparateNumber(data.CUOTA_TRIMESTRE_CUATRO));
-		$("#inpCuotaTotalLinea").val(commaSeparateNumber(data.CUOTA_TOTAL));
-
-		$("#inpArrastreCompLinea").val(commaSeparateNumber(data.ARRASTRE_COMPROMISO));
-		$("#inpContenidoEcoLinea").val(commaSeparateNumber(data.CONTENIDO_ECONOMICO));
-		$("#inpContenidoEcoNumeroLinea").val(data.CONTENIDO_ECONOMICO_DESC);
-		$("#inpPedidoLinea").val(commaSeparateNumber(data.PEDIDO));
-		$("#inpPedidoNumeroLinea").val(data.PEDIDO_DESC);
-		$("#inpReservaLinea").val(commaSeparateNumber(data.RESERVA));
-		$("#inpReservaNumeroLinea").val(data.RESERVA_DESC);
-		$("#inpSolicitudPedidoLinea").val(commaSeparateNumber(data.SOLICITUD_PEDIDO));
-		$("#inpSolicitudPedidoNumeroLinea").val(data.SOLICITUD_PEDIDO_DESC);
-		$("#inpFacturaLinea").val(commaSeparateNumber(data.FACTURA));
-		$("#inpFacturaNumeroLinea").val(data.FACTURA_DESC);
-		$("#inpDisponibleCtaLinea").val(commaSeparateNumber(data.DISPONIBLE_CUOTA_TOTAL));
-		$("#inpDisponiblePresupLinea").val(commaSeparateNumber(data.DISPONIBLE_PRESUPUESTO_TOTAL));
-
-		$("#inpFechaLinea").val(ConvertDateJsonToDate(data.FECHA));
-		$("#taDetalles").val(data.DESCRIPCION);
-
-		$('#inpRegCrePorMov').val(data.CREADO_POR);
-		$('#inpRegCreacionFechaMov').val(ConvertDateJsonToDate(data.CREADO_EN));
-		$('#inpRegModPorMov').val(data.MODIFICADO_POR);
-		$('#inpRegModifFechaMov').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
-		$('#ckEstadoMovimiento').prop("checked", data.ESTATUS_REGISTRO === '1' ? true : false);
-		$('#inpIDPasoDos').val(data.ID);
-	}, 200);
-	
-	$(".is-new-record").attr('style', 'display: block !important');
-	//$("#btnEditLineaG").attr('style', 'display: block !important');
-	//$("#btnCrearLineaG").attr('style', 'display: none !important');
-	//$('#divLineaG .cs-line-gasto').each((idx) => {
-	//	$($('#divLineaG .cs-line-gasto')[idx]).removeClass("is-invalid").addClass("is-valid");
-	//});
-}
-
 
 function GenerarNuevaLinea() {
 	LimpiarPasos();
@@ -516,22 +421,7 @@ function GenerarNuevaLinea() {
 		$($('#divLineaG .cs-line-gasto')[idx]).removeClass("is-valid").addClass("is-invalid");
 	});
 }
-function GenerarNuevoMovimiento() {
-	LimpiarPasos();
-	CargarPartidaLinea();
-	fillPresupuesto();
-	$(".is-new-record").attr('style', 'display: none !important');
-	$('#inpPresupAnLinea').val($('#sopPresupAnLinea').val());
-	$("#divPasoIni").hide();
-	$("#divPasoUnoLinea").hide();
-	$("#divPasoMovimiento").hide();
-	$("#divPasoDosLinea").show();
-	$("#sopPartidaLinea").val('-1').change().attr('disabled', false);
-	$("#sopGrupoLinea").attr('disabled', false);
-	$("#sopSubPartidaLinea").attr('disabled', false);
-	$("#sopUnidadFisLinea").attr('disabled', false);
 
-}
 function fillPresupuesto() {sopPresupAnLinea
 	$('#inpPresupAnLineaPasoDos').val(new Date().getFullYear()).attr({
 		"min": new Date().getFullYear() - 1
@@ -678,139 +568,6 @@ function cargarTransLineaObjecDatatable() {
 	}, "GET", true);
 }
 
-function cargarTransMovLineaObjDatatable() {
 
-	var presupuestoAnualDe = parseInt($("#inpPresupAnLineaPasoDos").val());
-	
-	CallAjax(`/Transacciones/GetListadoMovimientoLineaGastoObjeto?presupuestoAnualDe=${presupuestoAnualDe}`, undefined, "json", function (data) {
-
-		if (data && data.Record) {
-			
-			$("#tblMovimientoLiniaGastoObjeto").show();
-			dataTable = $("#tblMovimientoLiniaGastoObjeto").DataTable({
-				scrollX: true,
-				data: data.Record,
-				destroy: true,
-				searching: true,
-				language: LangSpanish,
-				colReorder: true,
-				responsive: true,
-				/*"paging": false,*/
-				"zeroRecords": " ",
-				lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
-				dom: '<"top"B>, lfrtip',
-				buttons: [
-					{
-						extend: 'collection',
-						className: "btn btn-success fa fa-thin fa-credit-card text-white",
-						text: ' Agregar Movimiento',
-						action: () => {
-							GenerarNuevoMovimiento();
-
-						}
-					}
-
-				],
-				"columns": [
-					{
-						"data": "ID",
-						"render": (item) => {
-
-							return `<div class="text-center">
-								<a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.ID == item)))}' title="Editar Línea"  class="btn btn-sm btn-warning text-white font-size-09"  onclick='EditLineaMovimiento(this);'  style="cursor:pointer; width:30px;">
-									<i class="fa fa-regular fa-pen"></i>
-                                </a>
-                            </div>
-                            `;
-						}, "width": "5%"
-					},
-					{
-						"data": "ID",
-						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
-							return (
-
-								`<span title="${data.Record.find(x => x.ID == item).DESCRIPCION_LINEA_GASTO_OBJETO}" >${data.Record.find(x => x.ID == item).DESCRIPCION_LINEA_GASTO_OBJETO}</span>`
-							);
-						}, "width": "30%", className: "dt-custom-column-text text-justify"
-					},
-					{
-						"data": "ID",
-						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
-							return (
-
-								`<span title="${data.Record.find(x => x.ID == item).NOMBRE_PARTIDA}" >${data.Record.find(x => x.ID == item).NOMBRE_PARTIDA}</span>`
-							);
-						}, "width": "30%", className: "dt-custom-column-text text-justify"
-					},
-					{
-						"data": "ID",
-						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
-							return (
-
-								`<span title="${data.Record.find(x => x.ID == item).NOMBRE_GRUPO}" >${data.Record.find(x => x.ID == item).NOMBRE_GRUPO}</span>`
-							);
-						}, "width": "30%", className: "dt-custom-column-text text-justify"
-					},
-					{
-						"data": "NOMBRE_SUBPARTIDA",
-						"render": (item) => {
-							/*console.log(item)*/
-							return (
-								(item !== null ? item.length < 50 ? item : item.substr(0, 50) + '...' : null)
-							);
-						}, "width": "50%", className: "dt-custom-column-text text-justify"
-					},
-					{ "data": "UNIDAD_FISCALIZADORA", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "ARRASTRE_COMPROMISO", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "PEDIDO", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "PEDIDO_DESC", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "RESERVA", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "RESERVA_DESC", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "SOLICITUD_PEDIDO", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "SOLICITUD_PEDIDO_DESC", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "FACTURA", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "FACTURA_DESC", "width": "8%", className: "dt-custom-column-text text-center" },
-					{
-						"data": "DESCRIPCION",
-						"render": (item) => {
-							/*console.log(item)*/
-							return (
-								(item !== null ? item.length < 50 ? item : item.substr(0, 50) + '...' : null)
-							);
-						}, "width": "50%", className: "dt-custom-column-text text-justify"
-					},
-					{
-						"data": "FECHA", "render": (item) => {
-							return (
-								ConvertDateJsonToDateShort(item)
-							);
-						}, "width": "38%", className: "dt-custom-column-text text-center"
-					},
-					{ "data": "PRESUPUESTO_ANUAL_DE", "width": "8%", className: "dt-custom-column-text text-center" },
-					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" }
-				],
-				"width": "100%"
-			});
-
-
-		} else {
-			/*$("#tblMovimientoLiniaGastoObjeto").hide();*/
-			$("#tblMovimientoLiniaGastoObjeto").DataTable({
-				destroy: true,
-				searching: false,
-				language: LangSpanish,
-				data: null,
-				"bLengthChange": false,
-				"bPaginate": false
-			});
-		}
-	}, "GET", true);
-}
 
 
