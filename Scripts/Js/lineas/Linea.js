@@ -143,7 +143,7 @@ function GuardarOActualizarLinea(e, esCrear = true) {
 		title: "¿Esta seguro de Continuar?",
 		html: true,
 		customClass: 'swal-wide',
-		text: `Se ${titulo} la Línea de Gasto Objeto "${params.DESCRIPCION}".`,
+		text: `Se ${titulo} la Línea de Gasto Objeto <span class= "fw-bold text-success" > ${params.DESCRIPCION}</span>.`,
 		type: "info",
 		showCancelButton: true,
 		confirmButtonColor: "#3459e6",
@@ -548,6 +548,16 @@ function cargarTransLineaObjecDatatable() {
 						}, "width": "50%", className: "dt-custom-column-text text-justify"
 					},
 					{ "data": "PRESUPUESTO_ANUAL_DE", "width": "8%", className: "dt-custom-column-text text-center" },
+					{
+						"data": "ESTATUS_REGISTRO",
+						"render": (item) => {
+							/*console.log(item)*/
+							return (
+								(item == 1 ? 'ACTIVO' : 'INACTIVO')
+							);
+						},
+						"width": "40%", className: "dt-custom-column-text text-center"
+					},
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" }
 				],
 				"width": "100%"

@@ -7,6 +7,7 @@ $(document).ready(function () {
 function onInitPaginaLineaMovimiento() {
 	ClickeMovimiento();
 	changeMovimiento();
+	MovimientoNumerico();
 }
 
 function ClickeMovimiento() {
@@ -56,6 +57,7 @@ function changeMovimiento() {
 	$("#sopLineasActivas").change((e) => {
 
 		var value = validarFieldSelectBlinkLabel(e.currentTarget.id);
+		ValidadorMovimiento(value);
 		if (!value) {
 			
 			var data = JSON.parse(atob($('#' + e.currentTarget.id + ' option:selected').attr('data-item')));
@@ -98,27 +100,14 @@ function changeMovimiento() {
  
 }
 function ValidadorMovimiento(esValido) {
-	var deshabilitar = false;
-	$('#divPasoDosLinea').each((idx) => {
-		if ($($('#divPasoDosLinea')[idx]).hasClass('is-invalid') == true) {
-			deshabilitar = true;
-		}
-
-	});
-
-	//var TipoProceso = parseInt($('#inpID').val());
-	//var controlProceso = '#btnCrear';
-
-	//if (TipoProceso != NaN && TipoProceso > 0) {
-	//	controlProceso = '#btnEdit';
-	//}
-
-	//if (deshabilitar) {
-	//	$(controlProceso).attr("disabled", true);
-
-	//} else {
-	//	$(controlProceso).attr("disabled", false);
-	//}
+	 
+	if ($('#divMovimiento .is-invalid').length > 0) {
+		$('.cs-btn-general').attr("disabled", true);
+	} else {
+		$('.cs-btn-general').attr("disabled", false);
+	}
+ 
+	
 }
 function MovimientoAtras() {
 	$(".divOpcionesLinea").attr('style', 'display: none !important');
@@ -127,6 +116,7 @@ function MovimientoAtras() {
 	$("#divPasoUnoLinea").hide();
 	$("#divPasoMovimiento").show();
 	$("#divLinea").show()
+	$("#h5textHeader").text('MOVIMIENTOS LÍNEA GASTO OBJETO').removeClass("blink text-success text-info text-warning").addClass("text-info text-primary");
 
 }
 function CompletarMovimiento(data) {
@@ -195,7 +185,7 @@ function EditLineaMovimiento(linea) {
 	setTimeout(() => {
 		CompletarMovimiento(data);
 	}, 300)
-
+	$("#h5textHeader").text('EDITAR MOVIMIENTOS LÍNEA GASTO OBJETO').removeClass("blink text-success").addClass("text-info text-warning");
 }
 function GenerarNuevoMovimiento() {
 	LimpiarPasos();
@@ -227,7 +217,8 @@ function GenerarNuevoMovimiento() {
 	$("#btnCrearMov").parent().attr('style', 'display: block !important');
 	$("#btnEditMov").parent().attr('style', 'display: none !important');
 	$('#inpMovimientoID').val(0);
-
+	$("#h5textHeader").text('NUEVO MOVIMIENTOS LÍNEA GASTO OBJETO').removeClass("text-info text-warning").addClass("blink text-success");
+	
 }
 
 function GuardarOActualizarMovimiento(e, esCrear = true) {
@@ -251,18 +242,16 @@ function GuardarOActualizarMovimiento(e, esCrear = true) {
 		"FECHA": $('#inpFechaLinea').val(),
 		"DESCRIPCION": $('#taDetalles').val(),
 		"CREADO_POR": $('#inpUsr').val(),
-		"ESTATUS_REGISTRO": $('#ckEstadoLinea').is(":checked") == true ? "1" : "0",
+		"ESTATUS_REGISTRO": $('#ckEstadoMovimiento').is(":checked") == true ? "1" : "0",
 	};
  
-	
-	debugger
 	var titulo = esCrear ? 'creará' : 'actualizará';
 	var uriPatch = esCrear ? 'AgregarLineaGastoObMovimiento' : 'EditarLineaGastoObMovimiento';
 	swal({
 		title: "¿Esta seguro de Continuar?",
 		html: true,
 		customClass: 'swal-wide',
-		text: `Se ${titulo} el Movimiento Línea Gasto Objeto "${unidadFisc}".`,
+		text: `Se ${titulo} el Movimiento Línea Gasto Objeto <span class= "fw-bold text-success" > ${unidadFisc}</span>.`,
 		type: "info",
 		showCancelButton: true,
 		confirmButtonColor: "#3459e6",
@@ -270,14 +259,14 @@ function GuardarOActualizarMovimiento(e, esCrear = true) {
 		closeOnconfirm: true
 	}, function () {
 		CallAjax(`/Transacciones/${uriPatch}`, JSON.stringify(params), "json", function (data) {
-			debugger
+			
 			if (data && data.Record) {
 
 				if (data.Result == 'Ok') {
 
 					notifyToastr(esCrear ? 'Registro Creado' : 'Registro Actualizado', 'success');
-					cargarTransLineaObjecDatatable();
-					$('#btnpasoBackUno').click();
+					cargarTransMovLineaObjDatatable();
+					$('#btnBackPasoDos').click();
 
 				} else {
 					toastr.error(data.Record[0].MENSAJE_REQUEST);
@@ -318,7 +307,7 @@ function cargarTransMovLineaObjDatatable() {
 				buttons: [
 					{
 						extend: 'collection',
-						className: "btn btn-success fa fa-thin fa-credit-card text-white",
+						className: "btn btn-success fa fa-solid fa-plus text-white",
 						text: ' Agregar Movimiento',
 						action: () => {
 							GenerarNuevoMovimiento();
@@ -409,6 +398,16 @@ function cargarTransMovLineaObjDatatable() {
 						}, "width": "38%", className: "dt-custom-column-text text-center"
 					},
 					{ "data": "PRESUPUESTO_ANUAL_DE", "width": "8%", className: "dt-custom-column-text text-center" },
+					{
+						"data": "ESTATUS_REGISTRO",
+						"render": (item) => {
+							/*console.log(item)*/
+							return (
+								(item == 1 ? 'ACTIVO' : 'INACTIVO')
+							);
+						},
+						"width": "40%", className: "dt-custom-column-text text-center"
+					},
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" }
 				],
 				"width": "100%"
@@ -427,4 +426,35 @@ function cargarTransMovLineaObjDatatable() {
 			});
 		}
 	}, "GET", true);
+}
+
+function MovimientoNumerico() {
+
+	/*Numeric Format with two decimals*/
+	$('.cs-movimiento-num').keypress(function (event) {
+		TransaccionesFormato(event, this)
+	}).on('paste', function (event) {
+		event.preventDefault();
+
+	}).blur((e) => {
+		if ($(e.currentTarget).val().substr(1).includes('-')) {
+			$(e.currentTarget).val($(e.currentTarget).val().replace('-', ''));
+		}
+
+		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
+		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
+		if ($(e.currentTarget).val().includes('.')) {
+			if ($(e.currentTarget).val().split('.')[1].length > 2) {
+				$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val().split('.')[0] + '.' + $(e.currentTarget).val().split('.')[1].substring(0, 2)))
+			} else {
+				$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
+			}
+		} else {
+			$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
+		}
+		$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val()))
+
+		
+
+	});
 }

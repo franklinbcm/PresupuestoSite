@@ -119,7 +119,8 @@ function Changes() {
 			}
 
 		}
-
+		
+		$('#sopLineaUnidad').change();
 	});
 
 }
@@ -136,6 +137,7 @@ function VerItem(e) {
 	fillDataEdit(data);
 	OcultarLinea();
 	OcultarLineaMovimiento();
+	CargarLineasPorUnidad();
 }
 function fillDataEdit(data) {
 	
@@ -593,7 +595,7 @@ function cargarTransUnidadesDatatable() {
 							/*debugger*/
 							return (
 
-								`<span title="${data.Record.find(x => x.ID == item).LINEA}" >${data.Record.find(x => x.ID == item).LINEA !== null ? data.Record.find(x => x.ID == item).LINEA.length < 20 ? data.Record.find(x => x.ID == item).LINEA : data.Record.find(x => x.ID == item).LINEA.substr(0, 20) + '...' : null}</span>`
+								`<span title="${data.Record.find(x => x.ID == item).LINEA_MOV_ID}" >${data.Record.find(x => x.ID == item).LINEA_MOV_ID }</span>`
 							);
 						}, "width": "40%", className: "dt-custom-column-text text-justify"
 					},

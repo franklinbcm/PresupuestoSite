@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="col-md-4 mb-2">
-                <label for="inpFecha"  class="form-label opc-date-format" title="Fecha">Fecha</label>
+                <label for="inpFecha" class="form-label opc-date-format" title="Fecha">Fecha</label>
                 <input type="date" maxlength="80" class="form-control" id="inpFecha">
             </div>
 
@@ -74,12 +74,12 @@
                 </select>
             </div>
             <div class="col-md-12 form-group">
-                <label for="inpLineas" id="lbinpLineas" class="form-label">Línea</label>
-                <div id="divinpLineas" class="input-group mb-2 has-success">
-                    <input type="text" class="form-control is-valid cs-input-text" id="inpLineas" autocomplete="off">
-                    @*<div class="invalid-feedback">Requerido!</div>*@
-                </div>
+                <label for="sopLineaUnidad" class="form-label cs-isrequired-label">Líneas</label>
+                <select id="sopLineaUnidad" class="form-select is-invalid">
+                    <option>-Seleccione-</option>
+                </select>
             </div>
+
             <div class="col-md-12 mb-2 has-success">
                 <label for="taDetalles" class="form-label">Nota</label>
                 <textarea type="text" rows="2" class="form-control is-valid cs-input-text" maxlength="200" id="taDetalles" autocomplete="off"></textarea>

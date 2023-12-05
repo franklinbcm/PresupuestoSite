@@ -6,7 +6,7 @@
             <label for="inpArrastreCompLinea" id="lbinpArrastreCompLinea" class="form-label">Arrastre&nbsp;Compromiso</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield" id="inpArrastreCompLinea" readonly disabled="">
+                <input type="text" class="form-control cs-isfield cs-movimiento-num" id="inpArrastreCompLinea" readonly disabled="">
             </div>
         </div>
         @*<div class="col-md-5">
@@ -17,7 +17,7 @@
             <label for="inpContenidoEcoLinea" id="lbinpContenidoEcoLinea" class="form-label cs-isrequired-label">Contenido&nbsp;Económico</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield is-invalid" id="inpContenidoEcoLinea">
+                <input type="text" class="form-control cs-isfield is-invalid cs-movimiento-num" id="inpContenidoEcoLinea">
             </div>
         </div>
         <div class="col-md-4">
@@ -28,7 +28,7 @@
             <label for="inpPedidoLinea" id="lbinpPedidoLinea" class="form-label cs-isrequired-label">Pedido</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield is-invalid" id="inpPedidoLinea" autocomplete="off">
+                <input type="text" class="form-control cs-isfield is-invalid cs-movimiento-num" id="inpPedidoLinea" autocomplete="off">
             </div>
         </div>
         <div class="col-md-3">
@@ -39,7 +39,7 @@
             <label for="inpReservaLinea" id="lbinpReservaLinea" class="form-label cs-isrequired-label">Reserva</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield is-invalid" id="inpReservaLinea" autocomplete="off">
+                <input type="text" class="form-control cs-isfield is-invalid cs-movimiento-num" id="inpReservaLinea" autocomplete="off">
             </div>
         </div>
         <div class="col-md-3">
@@ -50,7 +50,7 @@
             <label for="inpSolicitudPedidoLinea" id="lbinpSolicitudPedidoLinea" class="form-label cs-isrequired-label">Solicitud&nbsp;Pedido</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield is-invalid" id="inpSolicitudPedidoLinea" autocomplete="off">
+                <input type="text" class="form-control cs-isfield is-invalid cs-movimiento-num" id="inpSolicitudPedidoLinea" autocomplete="off">
             </div>
         </div>
         <div class="col-md-3">
@@ -58,10 +58,10 @@
             <input type="text" class="form-control cs-isfield" id="inpSolicitudPedidoNumeroLinea" autocomplete="off">
         </div>
         <div class="col-md-3">
-            <label for="inpFacturaLinea" id="lbinpFacturaLinea" class="form-label cs-isrequired-label">Factura</label>
+            <label for="inpFacturaLinea" id="lbinpFacturaLinea" class="form-label cs-isrequired-label">Facturas</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield is-invalid" id="inpFacturaLinea" autocomplete="off">
+                <input type="text" class="form-control cs-isfield is-invalid cs-movimiento-num" id="inpFacturaLinea" autocomplete="off">
             </div>
         </div>
         <div class="col-md-3">
@@ -72,14 +72,14 @@
             <label for="inpDisponibleCtaLinea" id="lbinpDisponibleCtaLinea" class="form-label">Disponible&nbsp;Cuota</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield" id="inpDisponibleCtaLinea" readonly disabled="">
+                <input type="text" class="form-control cs-isfield cs-movimiento-num" id="inpDisponibleCtaLinea" readonly disabled="">
             </div>
         </div>
         <div class="col-md-4">
             <label for="inpDisponiblePresupLinea" id="lbinpDisponiblePresupLinea" class="form-label">Disponible&nbsp;Presupuesto</label>
             <div class="input-group mb-2">
                 <span class="input-group-text custon-btn-link"><i class="colon-sign text-success"></i></span>
-                <input type="text" class="form-control cs-isfield" id="inpDisponiblePresupLinea" readonly disabled="">
+                <input type="text" class="form-control cs-isfield cs-movimiento-num" id="inpDisponiblePresupLinea" readonly disabled="">
             </div>
         </div>
         <div class="col-md-4">
@@ -118,10 +118,10 @@
     <div class="d-flex flex-row-reverse">
         <i class="fa-solid fa-person-through-window"></i>
         <div class="mt-2">
-            <button id="btnCrearMov" class="btn btn-success"><i class="fa fa-thin fa-credit-card text-white"></i> Crear&nbsp;Movimiento</button>
+            <button id="btnCrearMov" class="btn btn-success cs-btn-general"><i class="fa fa-solid fa-plus text-white"></i> Crear&nbsp;Movimiento</button>
         </div>
         <div class="mt-2" style="display:none !important">
-            <button id="btnEditMov" class="btn btn-success"><i class="far fa-edit text-white"></i> Editar&nbsp;Movimiento</button>
+            <button id="btnEditMov" class="btn btn-success cs-btn-general"><i class="far fa-edit text-white"></i> Editar&nbsp;Movimiento</button>
         </div>
     </div>
 </fieldset>

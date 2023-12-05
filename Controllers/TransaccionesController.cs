@@ -412,6 +412,46 @@ namespace PresupuestoSite.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetListadoMovimientoPorPresupuestoID(int presupuestoAnualDe, int presupuestoID)
+        {
+
+            var cargas = await _transacServicio.GetListadoMovimientoLineaGastoObjetoVM(presupuestoAnualDe);
+            var dataResult = cargas.Where(x => x.PRESUPUESTO_ID == presupuestoID);
+
+            if (dataResult.Any())
+            {
+
+                var data = dataResult.Select(i => new ListadosVM()
+                {
+                    Text = $"{i.DESCRIPCION_LINEA_GASTO_OBJETO} - Unidad Fisc. #{i.UNIDAD_FISCALIZADORA}",
+                    Value = i.ID.ToString(),
+                    Titulo = i.DESCRIPCION_LINEA_GASTO_OBJETO,
+                    Opcional = JsonConvert.SerializeObject(i),
+                }
+                ).Distinct();
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = data,
+                    Total = data != null ? data.ToList().Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new ListadosVM(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         [HttpPost]
         public async Task<JsonResult> AgregarLineaGastoObMovimiento(LineaGastoObjetoMovimientoDTO lineaGastoObjetoMovimiento)
         {

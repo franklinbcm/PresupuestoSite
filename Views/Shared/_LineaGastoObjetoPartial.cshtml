@@ -109,19 +109,20 @@
             </h5>
             <br />
             <br />
-            <div>
-                @Html.Partial("_LineaGastoObjetoPasoUnoPartial")
+            <div id="divMovimiento">
+                <div>
+                    @Html.Partial("_LineaGastoObjetoPasoUnoPartial")
+                </div>
+                <div>
+                    @Html.Partial("_LineaGastoObjetoMovPresupuestoPartial")
+                </div>
+                <div>
+                    @Html.Partial("_LineaGastoObjetoMovCuotasPartial")
+                </div>
+                <div>
+                    @Html.Partial("_LineaGastoObjetoMovOtrasInfoPartial")
+                </div>
             </div>
-            <div>
-                @Html.Partial("_LineaGastoObjetoMovPresupuestoPartial")
-            </div>
-            <div>
-                @Html.Partial("_LineaGastoObjetoMovCuotasPartial")
-            </div>
-            <div>
-                @Html.Partial("_LineaGastoObjetoMovOtrasInfoPartial")
-            </div>
-
         </div>
 
         <div class="d-flex flex-row-reverse">
