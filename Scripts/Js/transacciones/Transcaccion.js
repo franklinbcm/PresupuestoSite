@@ -20,10 +20,6 @@ function onInitPagina() {
 	$('.cs-input-text').keypress(function (event) {
 		TextCleanInputFormato(event)
 	})
-	//.on('paste', function (event) {
-	//	event.preventDefault();
-		
-	//})
 	.blur((e) => {
 		$(e.currentTarget).val($(e.currentTarget).val().replaceAll('--', '-'));
 	})
@@ -77,11 +73,10 @@ function Changes() {
 
 	$("#sopGrupo").change(() => {
 		var grupoID = parseInt($('#sopGrupo option:selected').val());
-		/*if (grupoID > 0) {*/
 		CargarSubpartida(grupoID)
 		LimpiarTablas();
 		cargarTransDatatable();
-		/*}*/
+
 	})
 
 	$('#ckTodo').change(() => {
@@ -141,12 +136,12 @@ function VerItem(e) {
 }
 function fillDataEdit(data) {
 	
-	/*Span*/
+
 	$('#spCodClasif').text(data.COD_DE_CLASIFICACION);
 	$('#spFuente').text(data.FUENTE_FINANCIAMIENTO_FONDO);
 	$('#spPeriodo').text(data.PRESUPUESTO_ANUAL_DE);
 	$('#spMoneda').text(data.MONEDA.substr(0, 3)).attr('title', data.MONEDA);
-	/*Input*/
+
 	$('#inpPartida').val(data.NOMBRE_PARTIDA);
 	$('#hfRegID').val(data.PRESUPUESTOS_CARGADOS_ID);
 	$('#inpPresupuesto').val(commaSeparateNumber(data.MONTO_DE_LEY));
@@ -214,7 +209,6 @@ function CargarSubpartida(grupoID) {
 		if (data && data.Record) {
 			var s = '<option value="-1">-Seleccione-</option>';
 			for (var i = 0; i < data.Record.length; i++) {
-				debugger
 				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
 			}
 			$("#sopSubPartida").html(s);
@@ -284,20 +278,10 @@ function cargarTransDatatable() {
 				language: LangSpanish,
 				colReorder: true,
 				responsive: true,
-				/*"paging": false,*/
 				"zeroRecords": " ",
 				lengthMenu: [10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
 				dom: '<"top"B>, lfrtip',
 				buttons: [
-					//{
-					//	extend: 'collection',
-					//	className: "btn btn-warning fa fa-thin fa-credit-card text-white",
-					//	text: ' Agregar Línea',
-					//	action: () => {
-					//		LimpiarLinea();
-
-					//	}
-					//},
 					{
 						"extend": 'colvis',
 						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
@@ -317,8 +301,6 @@ function cargarTransDatatable() {
 					{
 						"data": "PRESUPUESTOS_CARGADOS_ID",
 						"render": (item) => {
-							/*console.log(data)*/
-											/*debugger*/
 							return `<div class="text-center">
                                 <a  data-item='${btoa(JSON.stringify(data.Record.find(x => x.PRESUPUESTOS_CARGADOS_ID == item)))}' title="Ver" href="#offcanvasCargas" class="btn btn-sm btn-info text-white font-size-09" data-bs-toggle="offcanvas" onclick='VerItem(this);' role="button" aria-controls="offcanvasExample" style="cursor:pointer; width:30px;">
                                 <i class="far fa-solid fa-eye"></i>
@@ -330,8 +312,6 @@ function cargarTransDatatable() {
 					{
 						"data": "NOMBRE_PARTIDA",
 						"render": (item) => {
-							/*console.log(item)*/
-							  
 							return (
 
 								`<span title="${data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA}" >${data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA !== null ? data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA.length < 22 ? data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA : data.Record.find(x => x.NOMBRE_PARTIDA == item).NOMBRE_PARTIDA.substr(0, 22) + '...' : null}</span>`
@@ -341,7 +321,6 @@ function cargarTransDatatable() {
 					{
 						"data": "TITULO_NOMBRE_GRUPO",
 						"render": (item) => {
-							/*console.log(item)*/
 							return (
 								(item !== null ? item.length < 35 ? item : item.substr(0, 35) + '...' : null)
 							);
@@ -350,8 +329,6 @@ function cargarTransDatatable() {
 					{
 						"data": "PRESUPUESTOS_CARGADOS_ID",
 						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
 							return (
 								
 								`<span title="${data.Record.find(x => x.PRESUPUESTOS_CARGADOS_ID == item).NOMBRE_SUBPARTIDA}" >${data.Record.find(x => x.PRESUPUESTOS_CARGADOS_ID == item).CODIGO_SUBPARTIDA}</span>`
@@ -361,7 +338,6 @@ function cargarTransDatatable() {
 					{
 						"data": "NOMBRE_SUBPARTIDA",
 						"render": (item) => {
-							/*console.log(item)*/
 							return (
 								(item !== null? item.length < 40 ? item : item.substr(0, 40) + '...': null)
 							);
@@ -437,6 +413,7 @@ function FillDataToEdit(data) {
 	$('#inpFecha').val(ConvertDateJsonToInputDate(data.FECHA));
 	$('#taDetalles').val(data.DETALLES);
 	$('#inpRegCrePor').val(data.CREADO_POR);
+	$('#sopLineaUnidad').val(data.LINEA_MOV_ID == null ? -1 : data.LINEA_MOV_ID).change();
 	$('#inpRegCreacionFecha').val(ConvertDateJsonToDate(data.CREADO_EN));
 	$('#inpRegModPor').val(data.MODIFICADO_POR);
 	$('#inpRegModifFecha').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
@@ -463,8 +440,7 @@ function EditarUnidad(e) {
 	$('#btnEditUnidadF').parent().attr('style', 'display: block !important');
 	$('#btnCrearUnidadF').parent().attr('style', 'display: none !important');
 	$('#sopTipoMovimi').change();
-	//OcultarLinea();
-	//OcultarLineaMovimiento();
+
 }
 function LimpiarNuevaUnidad() {
 
@@ -548,7 +524,6 @@ function cargarTransUnidadesDatatable() {
 						text: ' Excel',
 						title: 'Movimientos_Unidad_Fisc_' + presupuestoAnualDe,
 					}
-					/*{ extend: 'edit', editor },*/
 				],
 				"columns": [
 					{
@@ -570,7 +545,6 @@ function cargarTransUnidadesDatatable() {
 					{
 						"data": "ES_PEDIDO",
 						"render": (item) => {
-							/*console.log(item)*/
 							return (
 								(item == 1 ? 'PEDIDO' : 'RESERVA')
 							);
@@ -580,8 +554,6 @@ function cargarTransUnidadesDatatable() {
 					{
 						"data": "ID",
 						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
 							return (
 
 								`<span title="${data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS}" >${data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS !== null ? data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS.length < 30 ? data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS : data.Record.find(x => x.ID == item).COD_PEDIDOS_RESERVAS.substr(0, 30) + '...' : null}</span>`
@@ -591,19 +563,15 @@ function cargarTransUnidadesDatatable() {
 					{
 						"data": "ID",
 						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
 							return (
 
-								`<span title="${data.Record.find(x => x.ID == item).LINEA_MOV_ID}" >${data.Record.find(x => x.ID == item).LINEA_MOV_ID }</span>`
+								`<span title="${data.Record.find(x => x.ID == item).LIN_CAB_DESCRIPCION + ', CONTRATO: ' + data.Record.find(x => x.ID == item).LIN_CAB_CONTRATO + ', PROVEEDOR: ' + data.Record.find(x => x.ID == item).LIN_CAB_PROVEEDOR }" >${data.Record.find(x => x.ID == item).LIN_CAB_DESCRIPCION !== null ? data.Record.find(x => x.ID == item).LIN_CAB_DESCRIPCION.length < 40 ? data.Record.find(x => x.ID == item).LIN_CAB_DESCRIPCION : data.Record.find(x => x.ID == item).LIN_CAB_DESCRIPCION.substr(0, 40) + '...' : null  }</span>`
 							);
 						}, "width": "40%", className: "dt-custom-column-text text-justify"
 					},
 					{
 						"data": "ID",
 						"render": (item) => {
-							/*console.log(item)*/
-							/*debugger*/
 							return (
 
 								`<span title="${data.Record.find(x => x.ID == item).DETALLES}" >${data.Record.find(x => x.ID == item).DETALLES !== null ? data.Record.find(x => x.ID == item).DETALLES.length < 40 ? data.Record.find(x => x.ID == item).DETALLES : data.Record.find(x => x.ID == item).DETALLES.substr(0, 40) + '...' : null  }</span>`
@@ -638,7 +606,6 @@ function cargarTransUnidadesDatatable() {
 					{
 						"data": "ESTATUS_REGISTRO",
 						"render": (item) => {
-							/*console.log(item)*/
 							return (
 								(item == 1 ? 'ACTIVO' : 'INACTIVO')
 							);

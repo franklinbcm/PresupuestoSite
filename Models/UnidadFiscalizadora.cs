@@ -21,6 +21,11 @@ namespace PresupuestoSite.Models
         public string TIPO_MOVIMIENTO_NOMBRE { get; set; }
         public int CUOTA_ID { get; set; }
         public string DETALLES_CUOTA { get; set; }
+        public int? LINEA_CAB_ID { get; set; }
+        public string LIN_CAB_DESCRIPCION { get; set; }
+        public string LIN_CAB_CODIGO_PRESUPUESTARIO { get; set; }
+        public string LIN_CAB_CONTRATO { get; set; }
+        public string LIN_CAB_PROVEEDOR { get; set; }
 
 
     }
