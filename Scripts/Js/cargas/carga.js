@@ -426,6 +426,8 @@ function fillDataEdit(data) {
 	$('#inpTipoMovimient').val(data.TIPO_MOVIMIENTO_NOMBRE).attr('data-item', data.TIPO_MOVIMIENTO_ID);
 	
 	$('#inpPresupuestoAn').val(data.PRESUPUESTO_ANUAL_DE);
+	$('#inpUnidadFiscDepartamento').val(data.NOMBRE_UNIDAD_FISCALIZADORA);
+	$('#inpTrimestrePrevio').val(data.NOMBRE_TRIMESTRE);
 	$('#inpRegCrePor').val(data.CREADO_POR);
 	$('#inpRegCreacionFecha').val(ConvertDateJsonToDate(data.CREADO_EN));
 	$('#inpRegModPor').val(data.MODIFICADO_POR);
@@ -560,6 +562,7 @@ function cargarPresupuestoDatatable() {
 							);
 						}, "width": "40%", className: "dt-custom-column-text text-justify"
 					},
+					{ "data": "NOMBRE_TRIMESTRE", "width": "20%", className: "dt-custom-column-text text-justify" },
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" },
 				],
 				"width": "100%"
@@ -700,6 +703,7 @@ function cargarCuotaDatatable() {
 							);
 						}, "width": "40%", className: "dt-custom-column-text text-justify"
 					},
+					{ "data": "NOMBRE_TRIMESTRE", "width": "20%", className: "dt-custom-column-text text-justify" },
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" },
 				],
 				"width": "100%"
