@@ -260,6 +260,16 @@ function cargarSaldoPresupuestoDatatable() {
 							);
 						}, "width": "8%", className: "dt-custom-column-text text-center", 
 					},
+					{
+						"data": "ID",
+						"render": (item) => {
+							
+							return (
+								
+								item != undefined ? `<span title="${data.Record.find(x => x.ID == item).NOMBRE_UNIDAD_FISCALIZADORA}" >${data.Record.find(x => x.ID == item).NOMBRE_UNIDAD_FISCALIZADORA !== null && data.Record.find(x => x.ID == item).NOMBRE_UNIDAD_FISCALIZADORA != undefined ? data.Record.find(x => x.ID == item).NOMBRE_UNIDAD_FISCALIZADORA.length < 40 ? data.Record.find(x => x.ID == item).NOMBRE_UNIDAD_FISCALIZADORA : data.Record.find(x => x.ID == item).NOMBRE_UNIDAD_FISCALIZADORA.substr(0, 40) + '...' : ''}</span>` : null
+							);
+						}, "width": "55%", className: "dt-custom-column-text text-justify",
+					},
 
 
 

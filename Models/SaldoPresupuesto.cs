@@ -34,6 +34,7 @@ namespace PresupuestoSite.Models
         public string TITULO_PARTIDA { get; set; }
         public string TITULO_GRUPO { get; set; }
         public string TITULO_SUBPARTIDA { get; set; }
+        public string NOMBRE_UNIDAD_FISCALIZADORA { get; set; }
         public SaldoPresupuestoGeneral GENERAL { get; set; }
     }
     public class SaldoPresupuestoGeneral

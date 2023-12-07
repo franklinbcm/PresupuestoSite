@@ -167,6 +167,44 @@ namespace PresupuestoSite.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<JsonResult> GetListaTrimestre()
+        {
+            var dataResult = await _cargasServicio.GetTrimestreTodo();
+            dataResult = dataResult.ToList();
+
+            if (dataResult.Any())
+            {
+
+                var data = dataResult.Select(i => new ListadosVM()
+                {
+                    Text = $"{i.NOMBRE_TRIMESTRE}",
+                    Value = i.CODIGO.ToString(),
+                    Titulo = i.NOMBRE_TRIMESTRE,
+                    Opcional = JsonConvert.SerializeObject(i),
+                }
+                ).Distinct();
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = data,
+                    Total = data != null ? data.ToList().Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new ListadosVM(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
 
 

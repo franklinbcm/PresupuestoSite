@@ -491,7 +491,19 @@ function cargarTransLineaObjecDatatable() {
 							GenerarNuevaLinea();
 
 						}
-					}
+					}, {
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
+					{
+						extend: 'excelHtml5',
+						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
+						text: ' Excel',
+						title: 'Exportar_Linea_Gasto_Objeto_' + presupuestoAnualDe,
+					},
 
 				],
 				"columns": [

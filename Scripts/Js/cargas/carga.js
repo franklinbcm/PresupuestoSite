@@ -10,6 +10,7 @@ function onInitPagina() {
 	CargasInit();
 	TipoMovimiento();
 	PresupuestoInit();
+	Trimestre();
 
 	$("input[name='btnradioCarga']").each(function () {
 		$(this).change((e) => {
@@ -66,7 +67,7 @@ function CargasInit() {
 		$("#postedFiles").click();
 	})
 	$("#postedFiles").change(() => {
-		if ($('#postedFiles')[0].files.length > 0 &&  $('#sopTipoMovimiento option:selected').val() != -1 ) {
+		if ($('#postedFiles')[0].files.length > 0 && $('#sopTipoMovimiento option:selected').val() != -1 && $('#sopTrimestre option:selected').val() != -1 ) {
 			$("#btnUpload").attr("disabled", false);
 			
 		} else {
@@ -89,6 +90,23 @@ function CargasInit() {
 			$("#lbsopTipoPresupuesto").addClass('cs-isrequired-label');
 		}
 		$('#sopTipoMovimiento').attr('title', $("#sopTipoMovimiento  option:selected").text() + ' - ' + $("#sopTipoMovimiento  option:selected").attr('title'));
+
+	});
+	$('#sopTrimestre').change(() => {
+
+		if ($('#postedFiles')[0].files.length > 0 && $('#sopTipoMovimiento option:selected').val() != -1 && $('#sopTrimestre option:selected').val() != -1) {
+			$("#btnUpload").attr("disabled", false);
+
+		} else {
+			$("#btnUpload").attr("disabled", true);
+
+		}
+		if ($('#sopTrimestre option:selected').val() != -1) {
+			$("#lbsopTrimestre").removeClass('cs-isrequired-label');
+		} else {
+			$("#lbsopTrimestre").addClass('cs-isrequired-label');
+		}
+		$('#sopTrimestre').attr('title', $("#sopTrimestre  option:selected").text());
 
 	});
 }
@@ -177,6 +195,26 @@ function TipoMovimiento() {
 	}, "GET", true);
 }
 
+function Trimestre() {
+
+	CallAjax("/cargas/GetListaTrimestre", undefined, "json", function (data) {
+
+		if (data && data.Record) {
+			var s = '<option value="-1">-Seleccione-</option>';
+			for (var i = 0; i < data.Record.length; i++) {
+				s += '<option title="' + data.Record[i].Titulo + '" value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
+			}
+			$("#sopTrimestre").html(s);
+
+		}
+		else {
+			toastr.error(data.message);
+		}
+
+
+	}, "GET", true);
+}
+
 function resetData() {
 	$("#btnUpload").attr("disabled", true);
 	$('#postedFiles').val('');
@@ -196,8 +234,8 @@ function CargarDocumento() {
 	formData.append('user', currentUser);
 	formData.append('yearBudget', currentYearBudget);
 	formData.append('tipo_movimiento_id', $('#sopTipoMovimiento option:selected').val());
-	
-	 debugger
+	formData.append('trimestre_cuota', $('#sopTrimestre option:selected').val());
+
 	CallAjaxFiles(UriApi, formData, "json", function (data) {
 
 		if (data) {
@@ -513,6 +551,15 @@ function cargarPresupuestoDatatable() {
 						},
 						"width": "40%", className: "dt-custom-column-text text-center"
 					},
+					{
+						"data": "NOMBRE_UNIDAD_FISCALIZADORA",
+						"render": (item) => {
+							/*console.log(item)*/
+							return (
+								(item !== null ? item.length < 40 ? item : item.substr(0, 40) + '...' : null)
+							);
+						}, "width": "40%", className: "dt-custom-column-text text-justify"
+					},
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" },
 				],
 				"width": "100%"
@@ -643,6 +690,15 @@ function cargarCuotaDatatable() {
 							);
 						},
 						"width": "40%", className: "dt-custom-column-text text-center"
+					},
+					{
+						"data": "NOMBRE_UNIDAD_FISCALIZADORA",
+						"render": (item) => {
+							/*console.log(item)*/
+							return (
+								(item !== null ? item.length < 40 ? item : item.substr(0, 40) + '...' : null)
+							);
+						}, "width": "40%", className: "dt-custom-column-text text-justify"
 					},
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" },
 				],

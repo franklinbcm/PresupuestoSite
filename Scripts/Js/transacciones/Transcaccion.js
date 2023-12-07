@@ -153,6 +153,7 @@ function fillDataEdit(data) {
 
 	$('#inpSubpartidaDesc').val(`${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA.length > 50 ? data.NOMBRE_SUBPARTIDA.substr(0, 50) + '...' : data.NOMBRE_SUBPARTIDA}`).attr('title', `${data.CODIGO_SUBPARTIDA} - ${data.NOMBRE_SUBPARTIDA}`).attr('data-item', data.SUBPARTIDA_ID);
 	$('#inpUnidadFisc').val(data.UNIDAD_FISCALIZADORA);
+	$('#inpUnidadFiscDetalle').val(data.NOMBRE_UNIDAD_FISCALIZADORA);
 	
 	cargarTransUnidadesDatatable();
 
@@ -369,6 +370,15 @@ function cargarTransDatatable() {
 					{ "data": "COD_DE_CLASIFICACION", "width": "10%", className: "dt-custom-column-text text-center" },
 					{ "data": "FUENTE_FINANCIAMIENTO_FONDO", "width": "7%", className: "dt-custom-column-text text-center" },
 					{ "data": "PRESUPUESTO_ANUAL_DE", "width": "8%", className: "dt-custom-column-text text-center" },
+					{
+						"data": "NOMBRE_UNIDAD_FISCALIZADORA",
+						"render": (item) => {
+							return (
+
+								`<span title="${data.Record.find(x => x.NOMBRE_UNIDAD_FISCALIZADORA == item).NOMBRE_UNIDAD_FISCALIZADORA}" >${data.Record.find(x => x.NOMBRE_UNIDAD_FISCALIZADORA == item).NOMBRE_UNIDAD_FISCALIZADORA !== null ? data.Record.find(x => x.NOMBRE_UNIDAD_FISCALIZADORA == item).NOMBRE_UNIDAD_FISCALIZADORA.length < 40 ? data.Record.find(x => x.NOMBRE_UNIDAD_FISCALIZADORA == item).NOMBRE_UNIDAD_FISCALIZADORA : data.Record.find(x => x.NOMBRE_UNIDAD_FISCALIZADORA == item).NOMBRE_UNIDAD_FISCALIZADORA.substr(0, 40) + '...' : null}</span>`
+							);
+						}, "width": "40%", className: "dt-custom-column-text text-justify"
+					},
 					{ "data": "PRESUPUESTOS_CARGADOS_ID", "width": "5%", className: "dt-custom-column-text text-center", visible: false },
 				],
 				"width": "100%"
@@ -403,7 +413,7 @@ function FillDataToEdit(data) {
 	
 	$('#inpID').val(data.ID);
 	$('#inpCuotaID').val(data.CUOTA_ID);
-	
+	var mainDiv = $('#divUnidadFiscalizadora').parent();
 	CargarTipoMovimientoSelected(data.TIPO_MOVIMIENTO_NOMBRE, data.CUOTA_ID, data.DETALLES_CUOTA);
 	$('#inpCuotaTot').val(commaSeparateNumber($('#inpCuota').val()));
 	$('#inpCompromisoTot').val(commaSeparateNumber($('#inpCompromiso').val()));
@@ -412,11 +422,11 @@ function FillDataToEdit(data) {
 	$('#inpCodPedidosReserva').val(data.COD_PEDIDOS_RESERVAS);
 	$('#inpFecha').val(ConvertDateJsonToInputDate(data.FECHA));
 	$('#taDetalles').val(data.DETALLES);
-	$('#inpRegCrePor').val(data.CREADO_POR);
+	$(mainDiv.find('#inpRegCrePor')).val(data.CREADO_POR);
 	$('#sopLineaUnidad').val(data.LINEA_MOV_ID == null ? -1 : data.LINEA_MOV_ID).change();
-	$('#inpRegCreacionFecha').val(ConvertDateJsonToDate(data.CREADO_EN));
-	$('#inpRegModPor').val(data.MODIFICADO_POR);
-	$('#inpRegModifFecha').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
+	$(mainDiv.find('#inpRegCreacionFecha')).val(ConvertDateJsonToDate(data.CREADO_EN));
+	$(mainDiv.find('#inpRegModPor')).val(data.MODIFICADO_POR);
+	$(mainDiv.find('#inpRegModifFecha')).val(ConvertDateJsonToDate(data.MODIFICADO_EN));
 	$('#ckEstado').prop("checked", data.ESTATUS_REGISTRO === '1' ? true : false);
 	if (data.ES_PEDIDO == true) {
 		$('#inpRdoPedidos').prop("checked", true);

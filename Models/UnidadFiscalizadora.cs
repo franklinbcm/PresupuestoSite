@@ -26,6 +26,10 @@ namespace PresupuestoSite.Models
         public string LIN_CAB_CODIGO_PRESUPUESTARIO { get; set; }
         public string LIN_CAB_CONTRATO { get; set; }
         public string LIN_CAB_PROVEEDOR { get; set; }
+        public string TRIMESTRE_CODIGO_CAR { get; set; }
+        public string NOMBRE_TRIMESTRE_CAR { get; set; }
+        public string TRIMESTRE_CODIGO_CUO { get; set; }
+        public string NOMBRE_TRIMESTRE_CUO { get; set; }
 
 
     }

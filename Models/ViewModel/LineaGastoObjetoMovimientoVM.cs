@@ -35,5 +35,6 @@ namespace PresupuestoSite.Models.ViewModel
         public decimal DISPONIBLE_CUOTA_TOTAL { get; set; }
         public decimal DISPONIBLE_PRESUPUESTO_TOTAL { get; set; }
         public int PRESUPUESTO_ANUAL_DE { get; set; }
+        public string NOMBRE_UNIDAD_FISCALIZADORA { get; set; }
     }
 }

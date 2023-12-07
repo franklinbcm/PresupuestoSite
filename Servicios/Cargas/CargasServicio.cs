@@ -375,6 +375,43 @@ namespace PresupuestoSite.Servicios.Cargas
 
         }
 
+        public async Task<List<Trimestre>> GetTrimestreTodo()
+        {
+            List<Trimestre> presupuestos = new List<Trimestre>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/trimestre/TodoTrimestreAsync")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(jSon);
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<Trimestre[]>(resultData));
+                            }
+
+
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+
 
 
     }

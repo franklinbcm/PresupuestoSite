@@ -27,8 +27,9 @@ namespace PresupuestoSite.Models
         public int PRESUPUESTOS_CARGADOS_ID { get; set; }
         public decimal COMPROMISO_TOTAL { get; set; }
         public decimal DISPONIBILIDAD { get; set; }
-        public int TIPO_MOVIMIENTO_ID { get; set; }
-        public string CODIGO_TIPO_MOVIMIENTO { get; set; }
-        public string TIPO_MOVIMIENTO_NOMBRE { get; set; }
+        public int TIPO_PRESUPUESTO_ID { get; set; }
+        public string CODIGO_TIPO_PRESUPUESTO { get; set; }
+        public string TIPO_PRESUPUESTO_NOMBRE { get; set; }
+        public string NOMBRE_UNIDAD_FISCALIZADORA { get; set; }
     }
 }

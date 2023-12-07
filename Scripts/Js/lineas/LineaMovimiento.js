@@ -313,7 +313,19 @@ function cargarTransMovLineaObjDatatable() {
 							GenerarNuevoMovimiento();
 
 						}
-					}
+					}, {
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
+					{
+						extend: 'excelHtml5',
+						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
+						text: ' Excel',
+						title: 'Exportar_Moviento_Linea_' + presupuestoAnualDe,
+					},
 
 				],
 				"columns": [
@@ -407,6 +419,15 @@ function cargarTransMovLineaObjDatatable() {
 							);
 						},
 						"width": "40%", className: "dt-custom-column-text text-center"
+					},
+					{
+						"data": "NOMBRE_UNIDAD_FISCALIZADORA",
+						"render": (item) => {
+							/*console.log(item)*/
+							return (
+								(item !== null ? item.length < 50 ? item : item.substr(0, 50) + '...' : null)
+							);
+						}, "width": "50%", className: "dt-custom-column-text text-justify"
 					},
 					{ "data": "ID", "width": "5%", className: "dt-custom-column-text text-center" }
 				],

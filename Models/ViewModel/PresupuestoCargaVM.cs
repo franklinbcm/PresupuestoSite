@@ -21,6 +21,7 @@ namespace PresupuestoSite.Models.ViewModel
         public string MONEDA { get; set; }
         public string CODIGO_TIPO_MOVIMIENTO { get; set; }
         public string TIPO_MOVIMIENTO_NOMBRE { get; set; }
+        public string NOMBRE_UNIDAD_FISCALIZADORA { get; set; }
     }
 
 }

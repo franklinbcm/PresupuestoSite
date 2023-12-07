@@ -218,6 +218,7 @@
     <Compile Include="Models\Subpartida.cs" />
     <Compile Include="Models\SubpartidaPresupuestoCargado.cs" />
     <Compile Include="Models\TipoMovimiento.cs" />
+    <Compile Include="Models\Trimestre.cs" />
     <Compile Include="Models\UnidadFiscalizadora.cs" />
     <Compile Include="Models\ViewModel\LineaGastoObjetoMovimientoVM.cs" />
     <Compile Include="Models\ViewModel\PresupuestoCargaVM.cs" />
