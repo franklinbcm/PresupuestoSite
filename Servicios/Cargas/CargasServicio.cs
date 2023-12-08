@@ -188,7 +188,11 @@ namespace PresupuestoSite.Servicios.Cargas
                                 presupuestos.AddRange(JsonConvert.DeserializeObject<PresupuestoCarga[]>(resultData));
                             }
 
-                 
+
+                        }
+                        else
+                        {
+                            presupuestos.Add(new PresupuestoCarga { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -258,7 +262,10 @@ namespace PresupuestoSite.Servicios.Cargas
                                 presupuestosCuota.AddRange(JsonConvert.DeserializeObject<PresupuestoCuotaCarga[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            presupuestosCuota.Add(new PresupuestoCuotaCarga { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -301,7 +308,7 @@ namespace PresupuestoSite.Servicios.Cargas
 
         public async Task<List<TipoMovimiento>> GetTipoPresupuesto()
         {
-            List<TipoMovimiento> presupuestos = new List<TipoMovimiento>();
+            List<TipoMovimiento> tipoMov = new List<TipoMovimiento>();
 
             //string token = "";
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/TipoMovimiento/TodoTipoMovimientosAsync")))
@@ -323,16 +330,19 @@ namespace PresupuestoSite.Servicios.Cargas
                             if (resultData != null)
                             {
                                 resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
-                                presupuestos.AddRange(JsonConvert.DeserializeObject<TipoMovimiento[]>(resultData));
+                                tipoMov.AddRange(JsonConvert.DeserializeObject<TipoMovimiento[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            tipoMov.Add(new TipoMovimiento { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
             }
 
-            return presupuestos;
+            return tipoMov;
 
         }
         public async Task<List<PresupuestoCargaVM>> GetListadoPresupuestoPorAno(int presupuestoAnualDe)
@@ -362,7 +372,10 @@ namespace PresupuestoSite.Servicios.Cargas
                                 presupuestoCarga.AddRange(JsonConvert.DeserializeObject<PresupuestoCargaVM[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            presupuestoCarga.Add(new PresupuestoCargaVM { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -377,7 +390,7 @@ namespace PresupuestoSite.Servicios.Cargas
 
         public async Task<List<Trimestre>> GetTrimestreTodo()
         {
-            List<Trimestre> presupuestos = new List<Trimestre>();
+            List<Trimestre> trimestres = new List<Trimestre>();
 
             //string token = "";
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/trimestre/TodoTrimestreAsync")))
@@ -399,16 +412,19 @@ namespace PresupuestoSite.Servicios.Cargas
                             if (resultData != null)
                             {
                                 resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
-                                presupuestos.AddRange(JsonConvert.DeserializeObject<Trimestre[]>(resultData));
+                                trimestres.AddRange(JsonConvert.DeserializeObject<Trimestre[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            trimestres.Add(new Trimestre { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
             }
 
-            return presupuestos;
+            return trimestres;
 
         }
 

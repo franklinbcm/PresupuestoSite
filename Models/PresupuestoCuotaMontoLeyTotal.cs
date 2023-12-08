@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PresupuestoSite.Models
 {
-    public class PresupuestoCuotaMontoLeyTotal
+    public class PresupuestoCuotaMontoLeyTotal: BaseEntidad
     {
         public int PRESUPUESTOS_CARGADOS_ID { get; set; }
         public string COD_DE_CLASIFICACION { get; set; }

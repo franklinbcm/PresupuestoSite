@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PresupuestoSite.Models
 {
-    public class PresupCuotaUnidadFiscTotal
+    public class PresupCuotaUnidadFiscTotal: BaseEntidad
     {
         public string COD_DE_CLASIFICACION { get; set; }
         public string FUENTE_FINANCIAMIENTO_FONDO { get; set; }

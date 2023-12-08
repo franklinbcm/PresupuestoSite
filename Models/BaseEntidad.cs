@@ -14,6 +14,8 @@ namespace PresupuestoSite.Models
         public DateTime? MODIFICADO_EN { get; set; }
         public string ESTATUS_REGISTRO { get; set; }
 
+        public bool IsSuccessStatusCode { get; set; } = true;
+        public string StatusInfo { get; set; }
 
     }
     public class RequestMensajes

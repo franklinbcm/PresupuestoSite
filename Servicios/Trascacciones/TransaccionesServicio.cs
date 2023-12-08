@@ -56,6 +56,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            presupuestos.Add(new PresupuestoCuotaMontoLeyTotal { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -93,6 +97,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            presupuestos.Add(new Partidas { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -125,9 +133,14 @@ namespace PresupuestoSite.Servicios.Trascacciones
                             {
                                 resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
                                 grupos.AddRange(JsonConvert.DeserializeObject<Grupo[]>(resultData));
+                                grupos[0].IsSuccessStatusCode = true;
                             }
 
 
+                        }
+                        else
+                        {
+                            grupos.Add(new Grupo { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -165,6 +178,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
                             }
 
 
+                        }
+                        else
+                        {
+                            subpartidas.Add(new Subpartida { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -206,6 +223,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            presupuestos.Add(new PresupCuotaUnidadFiscTotal { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -243,7 +264,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
                                 presupuestos.AddRange(JsonConvert.DeserializeObject<UnidadFiscalizadora[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            presupuestos.Add(new UnidadFiscalizadora { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -284,6 +308,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            presupuestos.Add(new UnidadFiscalizadora { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -318,9 +346,14 @@ namespace PresupuestoSite.Servicios.Trascacciones
                             {
                                 resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
                                 presupuestos.AddRange(JsonConvert.DeserializeObject<UnidadFiscalizadora[]>(resultData));
+
                             }
 
 
+                        }
+                        else
+                        {
+                            presupuestos.Add(new UnidadFiscalizadora { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) }) ;
                         }
                     }
                 }
@@ -363,6 +396,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            presupuestoCargaVM.Add(new PresupuestoCuotaCargaVM { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -401,6 +438,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            presupuestos.Add(new LineaGastoObjeto { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -438,6 +479,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
                             }
 
 
+                        }
+                        else
+                        {
+                            presupuestos.Add(new LineaGastoObjetoMovimientoVM { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -479,6 +524,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            lineaGastoObjetoList.Add(new LineaGastoObjeto { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -517,6 +566,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
                             }
 
 
+                        }
+                        else
+                        {
+                            lineaGastoObjetoList.Add(new LineaGastoObjeto { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -558,6 +611,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
 
                         }
+                        else
+                        {
+                            lineaGastoObjetoList.Add(new LineaGastoObjetoMovimiento { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
                     }
                 }
             }
@@ -595,7 +652,10 @@ namespace PresupuestoSite.Servicios.Trascacciones
                                 lineaGastoObjetoList.AddRange(JsonConvert.DeserializeObject<LineaGastoObjetoMovimiento[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            lineaGastoObjetoList.Add(new LineaGastoObjetoMovimiento { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
