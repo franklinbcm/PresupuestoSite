@@ -151,17 +151,18 @@ function GuardarOActualizarLinea(e, esCrear = true) {
 		closeOnconfirm: true
 	}, function () {
 		CallAjax(`/Transacciones/${uriPatch}`, JSON.stringify(params), "json", function (data) {
-			debugger
+			
 			if (data && data.Record) {
 
-				if (data.Result == 'Ok') {
+				if (data.Record[0].IsSuccessStatusCode) {
 
 					notifyToastr(esCrear ? 'Registro Creado' : 'Registro Actualizado', 'success');
 					cargarTransLineaObjecDatatable();
 					$('#btnpasoBackUno').click();
 
 				} else {
-					toastr.error(data.Record[0].MENSAJE_REQUEST);
+					notifyToastr(JSON.parse(data.Record[0].StatusInfo).ReasonPhrase, 'error');
+					console.log(data.Record[0].StatusInfo);
 				}
 
 			}

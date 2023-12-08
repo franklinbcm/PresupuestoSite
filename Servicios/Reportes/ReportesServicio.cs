@@ -42,7 +42,10 @@ namespace PresupuestoSite.Servicios.Reportes
                                 subpartidas.AddRange(JsonConvert.DeserializeObject<SubpartidaPresupuestoCargado[]>(resultData));
                             }
 
-
+                        }
+                        else
+                        {
+                            subpartidas.Add(new SubpartidaPresupuestoCargado { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }
@@ -89,7 +92,10 @@ namespace PresupuestoSite.Servicios.Reportes
                                 };
                             }
 
-
+                        }
+                        else
+                        {
+                            subpartidas.Add(new SaldoPresupuesto { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
                         }
                     }
                 }

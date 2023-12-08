@@ -67,7 +67,7 @@ function clickBotones() {
 
 				if (data && data.Record) {
 
-					if (data.Result == 'Ok') {
+					if (data.Record[0].IsSuccessStatusCode) {
 
 						notifyToastr('Registro Creado', 'success');
 						ActualizarDatosMovimientos();
@@ -75,7 +75,8 @@ function clickBotones() {
 						cargarTransUnidadesDatatable();
 
 					} else {
-						toastr.error(data.Record[0].MENSAJE_REQUEST);
+						notifyToastr(JSON.parse(data.Record[0].StatusInfo).ReasonPhrase, 'error');
+						console.log(data.Record[0].StatusInfo);
 					}
 
 				}
@@ -124,7 +125,7 @@ function clickBotones() {
 
 				if (data && data.Record) {
 					
-					if (data.Result == 'Ok') {
+					if (data.Record[0].IsSuccessStatusCode) {
 						
 						
 						notifyToastr('Registro Actualizado', 'info');
@@ -134,7 +135,8 @@ function clickBotones() {
 
 
 					} else {
-						notifyToastr(JSON.stringify(data), 'error');
+						notifyToastr(JSON.parse(data.Record[0].StatusInfo).ReasonPhrase, 'error');
+						console.log(data.Record[0].StatusInfo);
 					}
 
 				}
@@ -156,7 +158,7 @@ function ActualizarDatosMovimientos() {
 
 		if (data && data.Record) {
 
-			if (data.Result == 'Ok') {
+			if (data.Record[0].IsSuccessStatusCode) {
 				if (data.Record.length > 0) {
 					
 					$('#inpCompromiso').val(commaSeparateNumber(data.Record[0].COMPROMISO_TOTAL));
@@ -165,7 +167,8 @@ function ActualizarDatosMovimientos() {
 				
 
 			} else {
-				notifyToastr(JSON.stringify(data), 'error');
+				notifyToastr(JSON.parse(data.Record[0].StatusInfo).ReasonPhrase, 'error');
+				console.log(data.Record[0].StatusInfo);
 			}
 
 		}

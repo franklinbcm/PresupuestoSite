@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PresupuestoSite.Models
 {
-    public class SubpartidaPresupuestoCargado
+    public class SubpartidaPresupuestoCargado :BaseEntidad
     {
         public string TITULO_PARTIDA { get; set; }
         public string TITULO_GRUPO { get; set; }

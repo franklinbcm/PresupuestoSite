@@ -5,7 +5,7 @@ using System.Web;
 
 namespace PresupuestoSite.Models
 {
-    public class SaldoPresupuesto 
+    public class SaldoPresupuesto :BaseEntidad
     {
         public int ID { get; set; }
         public string COD_DE_CLASIFICACION { get; set; }

@@ -369,6 +369,7 @@ function UpdateEditar() {
 						
 				} else {
 					notifyToastr(data.Record[0].MENSAJE_REQUEST, 'error');
+					console.log(data.Record[0].StatusInfo);
 				}
 
 			}
