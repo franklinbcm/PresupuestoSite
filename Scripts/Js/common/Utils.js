@@ -376,6 +376,7 @@ function GetReportInforme(data) {
             var partidaTitulo = partidaListado[i];
             var montoLey = 0;
             var comprometido = 0;
+            var devengado = 0;
             var modificaciones = 0;
 
             /*Grupo*/
@@ -392,6 +393,7 @@ function GetReportInforme(data) {
                     
                     montoLey = + parseFloat(partidaData.reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
                     comprometido = + parseFloat(partidaData.reduce((total, obj) => obj.COMPROMISO + total, 0));
+                    devengado = + parseFloat(partidaData.reduce((total, obj) => obj.DEVENGADO + total, 0));
                 }
             }
             partidaIndex = partidaIndex + 1;
@@ -409,8 +411,8 @@ function GetReportInforme(data) {
                     COMPROMISO: comprometido,
                     REC_MCIA: 0,
                     COMPROMISO_TOTAL: comprometido,
-                    DEVENGADO: 0,
-                    PORCENT_EJECUCION: 0,
+                    DEVENGADO: devengado,
+                    PORCENT_EJECUCION: (devengado == 0 ? 0 : (devengado / parseFloat(montoLey) - parseFloat(modificaciones)) * 100),
                     BGCOLOR: 'bg-orange',
                     TIPO: vPARTIDA,
                     PARTIDA_SEC: partidaIndex
@@ -424,11 +426,13 @@ function GetReportInforme(data) {
                 var grupoTitulo = grupoListado[g];
                 montoLey = 0;
                 comprometido = 0;
+                devengado = 0;
                 modificaciones = 0;
                 for (var itemGrupo = 0; itemGrupo < data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo).length; itemGrupo++) {
                     if (data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].TITULO_GRUPO == grupoTitulo) {
                         montoLey =  parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo && x.TITULO_GRUPO == grupoTitulo).reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
                         comprometido = parseFloat(comprometido) + parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].COMPROMISO);
+                        devengado = parseFloat(devengado) + parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].DEVENGADO);
 
                     }
                     
@@ -448,8 +452,8 @@ function GetReportInforme(data) {
                         COMPROMISO: comprometido,
                         REC_MCIA: 0,
                         COMPROMISO_TOTAL: comprometido,
-                        DEVENGADO: 0,
-                        PORCENT_EJECUCION: 0,
+                        DEVENGADO: devengado,
+                        PORCENT_EJECUCION: (devengado == 0 ? 0 : (devengado / parseFloat(montoLey) - parseFloat(modificaciones)) * 100),
                         BGCOLOR: 'bg-yellow',
                         TIPO: vGRUPO,
                         PARTIDA_SEC: partidaIndex
@@ -464,6 +468,7 @@ function GetReportInforme(data) {
                     
                     montoLey = 0;
                     comprometido = 0;
+                    devengado = 0;
                     modificaciones = 0;
                     for (var item = 0; item < data.Record.length; item++) {
                         
@@ -472,6 +477,7 @@ function GetReportInforme(data) {
                         if (SupartidaData != undefined) {
                             montoLey = parseFloat(SupartidaData.MONTO_DE_LEY);
                             comprometido = comprometido = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.COMPROMISO + total, 0));
+                            devengado = devengado = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.DEVENGADO + total, 0));
                         }
                         if (item == data.Record.length - 1) {
                             prevMontoGral = parseFloat(prevMontoGral) + parseFloat(montoLey);
@@ -500,8 +506,8 @@ function GetReportInforme(data) {
                                 COMPROMISO: comprometido,
                                 REC_MCIA: 0,
                                 COMPROMISO_TOTAL: comprometido,
-                                DEVENGADO: 0,
-                                PORCENT_EJECUCION: 0,
+                                DEVENGADO: devengado,
+                                PORCENT_EJECUCION: (devengado == 0 ? 0 : (devengado / parseFloat(montoLey) - parseFloat(modificaciones)) * 100),
                                 BGCOLOR: '',
                                 TIPO: vSUBPARTIDA,
                                 PARTIDA_SEC: partidaIndex
@@ -538,6 +544,7 @@ function GetReportInforme(data) {
         /*Total*/
         var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
         var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.COMPROMISO + total, 0));
+        var generalDevengado = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.DEVENGADO + total, 0));
         recordInforme.push(
             {
                 ID: 999996,
@@ -552,8 +559,8 @@ function GetReportInforme(data) {
                 COMPROMISO: generalComprometido,
                 REC_MCIA: 0,
                 COMPROMISO_TOTAL: generalComprometido,
-                DEVENGADO: 0,
-                PORCENT_EJECUCION: 0,
+                DEVENGADO: generalDevengado,
+                PORCENT_EJECUCION: (generalDevengado == 0 ? 0 : (generalDevengado / parseFloat(generalMontoLey) - parseFloat(0)) * 100),
                 BGCOLOR: 'bg-primary-title text-white',
                 TIPO: 'TOTAL',
                 PARTIDA_SEC: partidaIndex
@@ -643,5 +650,25 @@ function validarFieldSelectBlinkLabel(controlId) {
     return result;
 
     
+}
+
+function CargaSelectOpcions(url, control, opcional= null) {
+    CallAjax(url, undefined, "json", function (data) {
+
+        if (data && data.Record) {
+            var s = '<option value="-1">-Seleccione-</option>';
+            for (var i = 0; i < data.Record.length; i++) {
+                s += '<option title="' + data.Record[i].Titulo +'" value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
+            }
+            $(control).html(s).attr('title', '');
+
+
+        }
+        else {
+            toastr.error(data.message);
+        }
+
+
+    }, "GET", true);
 }
 

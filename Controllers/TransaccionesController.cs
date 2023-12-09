@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Util;
 
 namespace PresupuestoSite.Controllers
 {
@@ -49,10 +50,13 @@ namespace PresupuestoSite.Controllers
             var partidas = await _transacServicio.GetPartida();
             if (partidas.Any())
             {
-                var data = partidas.Select(i => new SelectListItem()
+
+                var data = partidas.Select(i => new ListadosVM()
                 {
                     Text = $"{i.CODIGO_PARTIDA} - {i.NOMBRE_PARTIDA}",
-                    Value = i.ID.ToString()
+                    Value = i.ID.ToString(),
+                    Titulo = $"{i.CODIGO_PARTIDA} - {i.NOMBRE_PARTIDA}",
+                    Opcional = i.ID.ToString(),
                 }
                 ).Distinct();
 
@@ -84,10 +88,12 @@ namespace PresupuestoSite.Controllers
             if (dataResult.Any())
             {
 
-                var data = dataResult.Select(i => new SelectListItem()
+                var data = dataResult.Select(i => new ListadosVM()
                 {
                     Text = $"{i.CODIGO_GRUPO} - {i.NOMBRE_GRUPO}",
-                    Value = i.ID.ToString()
+                    Value = i.ID.ToString(),
+                    Titulo = $"{i.CODIGO_GRUPO} - {i.NOMBRE_GRUPO}",
+                    Opcional = i.ID.ToString(),
                 }
                 ).Distinct();
 
@@ -120,10 +126,12 @@ namespace PresupuestoSite.Controllers
             if (dataResult.Any())
             {
 
-                var data = dataResult.Select(i => new SelectListItem()
+                var data = dataResult.Select(i => new ListadosVM()
                 {
                     Text = $"{i.CODIGO_SUBPARTIDA} - {i.NOMBRE_SUBPARTIDA ?? i.ABREV_NOMBRE}",
-                    Value = i.ID.ToString()
+                    Value = i.ID.ToString(),
+                    Titulo = $"{i.CODIGO_SUBPARTIDA} - {i.NOMBRE_SUBPARTIDA ?? i.ABREV_NOMBRE}",
+                    Opcional = i.ID.ToString(),
                 }
                 ).Distinct();
 
@@ -146,6 +154,33 @@ namespace PresupuestoSite.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<JsonResult> GetListaPresupuestoPorFiltros(int presupuestoAnualDe, int presupuestoID)
+        {
+            var presupuestoCargaVM =  await _cargaServicio.GetListadoPresupuestoPorAno(presupuestoAnualDe);
+            var dataResult = presupuestoCargaVM.Where(x => x.ID == presupuestoID).ToList();
+            if (dataResult.Any())
+            {
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = dataResult,
+                    Total = dataResult != null ? dataResult.Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new PresupuestoCargaVM(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
         [HttpGet]
         public async Task<JsonResult> GetLineasPartidasPorPresupuesto(int presupuestoAnualDe, int partidaID = 0, int grupoID=0, int subpartidaID = 0)
         {
@@ -153,19 +188,22 @@ namespace PresupuestoSite.Controllers
 
             if (partidasDetalles.Any())
             {
-                List<ListadoOpcionesModels> partidas = new List<ListadoOpcionesModels>();
-                List<ListadoOpcionesModels> grupos = new List<ListadoOpcionesModels>();
-                List<ListadoOpcionesModels> subpartidas = new List<ListadoOpcionesModels>();
-                List<ListadoOpcionesModels> unidadFisc = new List<ListadoOpcionesModels>();
+                List<ListadosVM> partidas = new List<ListadosVM>();
+                List<ListadosVM> grupos = new List<ListadosVM>();
+                List<ListadosVM> subpartidas = new List<ListadosVM>();
+                List<ListadosVM> unidadFisc = new List<ListadosVM>();
 
                 foreach (var item in partidasDetalles)
                 {
                     if (partidas.Where(x=> x.Value == item.PARTIDA_ID.ToString()).Count() == 0)
                     {
-                        partidas.Add(new ListadoOpcionesModels()
+                        partidas.Add(new ListadosVM()
                         {
                             Text = $"{item.NOMBRE_PARTIDA}",
                             Value = item.PARTIDA_ID.ToString(),
+                            Titulo = $"{item.NOMBRE_PARTIDA}",
+                            Opcional = item.PARTIDA_ID.ToString(),
+
                         });
                     }
                 }
@@ -173,10 +211,12 @@ namespace PresupuestoSite.Controllers
                 {
                     if (grupos.Where(x => x.Value == item.GRUPO_ID.ToString()).Count() == 0)
                     {
-                        grupos.Add(new ListadoOpcionesModels()
+                        grupos.Add(new ListadosVM()
                         {
                             Text = $"{item.CODIGO_GRUPO} - {item.NOMBRE_GRUPO}",
                             Value = item.GRUPO_ID.ToString(),
+                            Titulo = $"{item.CODIGO_GRUPO} - {item.NOMBRE_GRUPO}",
+                            Opcional = item.GRUPO_ID.ToString(),
                         });
                     }
                 }
@@ -184,10 +224,12 @@ namespace PresupuestoSite.Controllers
                 {
                     if (subpartidas.Where(x => x.Value == item.SUBPARTIDA_ID.ToString()).Count() == 0)
                     {
-                        subpartidas.Add(new ListadoOpcionesModels()
+                        subpartidas.Add(new ListadosVM()
                         {
                             Text = $"{item.CODIGO_SUBPARTIDA} - {item.NOMBRE_SUBPARTIDA ?? item.ABREV_NOMBRE}",
                             Value = item.SUBPARTIDA_ID.ToString(),
+                            Titulo = $"{item.CODIGO_SUBPARTIDA} - {item.NOMBRE_SUBPARTIDA ?? item.ABREV_NOMBRE}",
+                            Opcional = item.SUBPARTIDA_ID.ToString(),
                         });
                     }
                 }
@@ -196,11 +238,12 @@ namespace PresupuestoSite.Controllers
                 {
                     if (unidadFisc.Where(x => x.Value == item.SUBPARTIDA_ID.ToString()).Count() == 0)
                     {
-                        unidadFisc.Add(new ListadoOpcionesModels()
+                        unidadFisc.Add(new ListadosVM()
                         {
                             Text = $"{item.CODIGO_SUBPARTIDA} - {item.UNIDAD_FISCALIZADORA}",
                             Value = item.SUBPARTIDA_ID.ToString(),
-                            OpcionalData = JsonConvert.SerializeObject(item),
+                            Titulo = $"{item.CODIGO_SUBPARTIDA} - {item.NOMBRE_SUBPARTIDA ?? item.ABREV_NOMBRE}",
+                            Opcional = JsonConvert.SerializeObject(item),
                         });
                     }
                 }
@@ -224,10 +267,10 @@ namespace PresupuestoSite.Controllers
                 return Json(new
                 {
                     Result = "Ok",
-                    RecordPartida = new ListadoOpcionesModels(),
-                    RecordGrupo = new ListadoOpcionesModels(),
-                    RecordSubpartida = new ListadoOpcionesModels(),
-                    RecordUnidadFiscalizadora = new ListadoOpcionesModels(),
+                    RecordPartida = new ListadosVM(),
+                    RecordGrupo = new ListadosVM(),
+                    RecordSubpartida = new ListadosVM(),
+                    RecordUnidadFiscalizadora = new ListadosVM(),
                     Total = 0,
                 }, JsonRequestBehavior.AllowGet);
             }

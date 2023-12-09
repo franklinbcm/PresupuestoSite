@@ -1,5 +1,4 @@
 ﻿/// <reference path="../common/utils.js" />
-/// <reference path="LineaMovimiento.js" />
 $(document).ready(function () {
 	onInitPaginaLinea();
 
@@ -258,7 +257,7 @@ function GetParametrosPartidas() {
 	}
 }
 function CargarPartidaLinea() {
-	
+	CargaSelectOpcions("/Transacciones/GetListaPartidas/", "#sopPartida");
 	CallAjax("/Transacciones/GetLineasPartidasPorPresupuesto?presupuestoAnualDe=" + GetParametrosPartidas().presupuestoAnualDe + "&partidaID=0&grupoID=0&subpartidaID=0", undefined, "json", function (data) {
 		
 		if (data && data.RecordPartida
@@ -348,7 +347,7 @@ function CargarUnidadFiscalizadoraLinea() {
 		if (data && data.RecordUnidadFiscalizadora) {
 			var s = '<option value="-1">-Seleccione-</option>';
 			for (var i = 0; i < data.RecordUnidadFiscalizadora.length; i++) {
-				var items = JSON.parse(data.RecordUnidadFiscalizadora[i].OpcionalData);
+				var items = JSON.parse(data.RecordUnidadFiscalizadora[i].Opcional);
 				s += '<option data-id="' + items.ID + '" title="' + items.NOMBRE_SUBPARTIDA + ', ' + data.RecordUnidadFiscalizadora[i].Text + '" value="' + data.RecordUnidadFiscalizadora[i].Value + '">' + data.RecordUnidadFiscalizadora[i].Text + '</option>';
 			}
 			$("#sopUnidadFisLinea").html(s);

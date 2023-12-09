@@ -161,67 +161,19 @@ function fillDataEdit(data) {
 }
 
 function CargarPartida() {
-
-	CallAjax("/Transacciones/GetListaPartidas/", undefined, "json", function (data) {
-
-		if (data && data.Record) {
-			var s = '<option value="-1">-Seleccione-</option>';
-			for (var i = 0; i < data.Record.length; i++) {
-				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
-			}
-			$("#sopPartida").html(s);
-
-
-		}
-		else {
-			toastr.error(data.message);
-		}
-
-
-	}, "GET", true);
+	CargaSelectOpcions("/Transacciones/GetListaPartidas/", "#sopPartida");
 }
 
 function CargarGrupo(partidaID) {
-
-	CallAjax("/Transacciones/GetListaGrupo?partidaID=" + partidaID, undefined, "json", function (data) {
-
-		if (data && data.Record) {
-			var s = '<option value="-1">-Seleccione-</option>';
-			for (var i = 0; i < data.Record.length; i++) {
-				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
-			}
-			$("#sopGrupo").html(s);
-
-			CargarSubpartida(parseInt($('#sopGrupo option:selected').val()));
-
-
-		}
-		else {
-			toastr.error(data.message);
-		}
-
-
-	}, "GET", true);
+	CargaSelectOpcions("/Transacciones/GetListaGrupo?partidaID=" + partidaID, "#sopGrupo");
+	setTimeout(() => {
+		CargarSubpartida(parseInt($('#sopGrupo option:selected').val()));
+	},400)
+ 
 }
 function CargarSubpartida(grupoID) {
+	CargaSelectOpcions("/Transacciones/GetListaSubpartida?grupoID=" + grupoID, "#sopSubPartida");
 
-	CallAjax("/Transacciones/GetListaSubpartida?grupoID=" + grupoID, undefined, "json", function (data) {
-
-		if (data && data.Record) {
-			var s = '<option value="-1">-Seleccione-</option>';
-			for (var i = 0; i < data.Record.length; i++) {
-				s += '<option value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
-			}
-			$("#sopSubPartida").html(s);
-
-
-		}
-		else {
-			toastr.error(data.message);
-		}
-
-
-	}, "GET", true);
 }
 function CargarTipoMovimientoSelected(texto, valor, titulo) {
 	
@@ -231,24 +183,8 @@ function CargarTipoMovimientoSelected(texto, valor, titulo) {
 	$("#sopTipoMovimi").val(valor).change().prop('disabled', true);
 }
 function CargarTipoMovimiento(presupuestoAnualDe, presupuestoCargadoID, subpartidaID, unidadFiscalizadora) {
-
-	CallAjax("/Transacciones/GetListaTipoMovimientoPorFiltros?presupuestoAnualDe=" + presupuestoAnualDe + "&presupuestoCargadoID=" + presupuestoCargadoID + "&subpartidaID=" + subpartidaID + "&unidadFiscalizadora=" + unidadFiscalizadora, undefined, "json", function (data) {
-
-		if (data && data.Record) {
-			var s = '<option value="-1">-Seleccione-</option>';
-			for (var i = 0; i < data.Record.length; i++) {
-				s += '<option title="' + data.Record[i].Titulo  +'" value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
-			}
-			$("#sopTipoMovimi").html(s).attr('title', '');
-			$("#sopTipoMovimi").prop('disabled', false).change();
-
-		}
-		else {
-			toastr.error(data.message);
-		}
-
-
-	}, "GET", true);
+	CargaSelectOpcions("/Transacciones/GetListaTipoMovimientoPorFiltros?presupuestoAnualDe=" + presupuestoAnualDe + "&presupuestoCargadoID=" + presupuestoCargadoID + "&subpartidaID=" + subpartidaID + "&unidadFiscalizadora=" + unidadFiscalizadora, "#sopTipoMovimi");
+	$("#sopTipoMovimi").prop('disabled', false).change();
 }
 function LimpiarTablas() {
 	$('#tblTransacciones').DataTable().clear().draw();

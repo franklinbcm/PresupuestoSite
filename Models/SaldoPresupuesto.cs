@@ -25,6 +25,8 @@ namespace PresupuestoSite.Models
         public string MONEDA { get; set; }
         public decimal APROPIACION { get; set; }
         public decimal MONTO_DE_LEY { get; set; }
+        public decimal DEVENGADO { get; set; }
+        public decimal PORCENT_EJECUCION { get; set; }
         public decimal SALDO { get; set; } = 0;
         public decimal COMPROMISO { get; set; }
         public DateTime FECHA { get; set; }

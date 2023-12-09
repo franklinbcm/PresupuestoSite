@@ -74,9 +74,40 @@ function changeMovimiento() {
 	});
 	$("#sopSubPartidaLinea").change((e) => {
 		ValidadorMovimiento(validarFieldSelectBlinkLabel(e.currentTarget.id));
+		$("#sopUnidadFisLinea").change();
 	});
 	$("#sopUnidadFisLinea").change((e) => {
 		ValidadorMovimiento(validarFieldSelectBlinkLabel(e.currentTarget.id));
+		if ($("#sopUnidadFisLinea option:selected").val() != '-1') {
+			if ($('#inpPresupInicialLinea').val() == '') {
+				
+				var presupAn = $('#sopPresupAnLinea').val();
+				var presupuestoID = $("#sopUnidadFisLinea option:selected").attr('data-id');
+				CallAjax(`/Transacciones/GetListaPresupuestoPorFiltros?presupuestoAnualDe=${presupAn}&presupuestoID=${presupuestoID}`, undefined, "json", function (data) {
+
+					if (data && data.Record) {
+
+						if (data.Record[0].IsSuccessStatusCode) {
+							
+							$('#inpPresupInicialLinea').val(commaSeparateNumber(data.Record[0].MONTO_DE_LEY));
+
+						} else {
+							$('#inpPresupInicialLinea').val('');
+							console.log(data.Record[0].StatusInfo);
+						}
+
+					}
+					else {
+						toastr.error(data.message);
+					}
+
+
+				}, "GET", true);
+			}
+		} else {
+			$('#inpPresupInicialLinea').val(''); 
+		}
+
 	});
 	$("#inpContenidoEcoLinea").change((e) => {
 		ValidadorMovimiento(validarFieldTexto(e));
@@ -130,7 +161,7 @@ function CompletarMovimiento(data) {
 			$("#sopSubPartidaLinea").val(data.SUBPARTIDA_ID).change().attr('disabled', true);
 			setTimeout(() => {
 				$("#sopUnidadFisLinea").val(data.SUBPARTIDA_ID).change().attr('disabled', true);
-			}, 600)
+			}, 650)
 		}, 450)
 	}, 350)
 
@@ -165,7 +196,6 @@ function CompletarMovimiento(data) {
 		$('#inpRegModPorMov').val(data.MODIFICADO_POR);
 		$('#inpRegModifFechaMov').val(ConvertDateJsonToDate(data.MODIFICADO_EN));
 		$('#ckEstadoMovimiento').prop("checked", data.ESTATUS_REGISTRO === '1' ? true : false);
-	/*	$('#inpIDPasoDos').val(data.ID);*/
 	}, 200);
 
 	$(".is-new-record").attr('style', 'display: block !important');
@@ -174,9 +204,7 @@ function CompletarMovimiento(data) {
 	$("#btnEdit").attr('style', 'display: block !important');
 	$("#btnCrearMov").parent().attr('style', 'display: none !important');
 	$("#btnEditMov").parent().attr('style', 'display: block !important');
-	//$('#divLineaG .cs-line-gasto').each((idx) => {
-	//	$($('#divLineaG .cs-line-gasto')[idx]).removeClass("is-invalid").addClass("is-valid");
-	//});
+
 }
 
 function EditLineaMovimiento(linea) {
@@ -203,7 +231,6 @@ function GenerarNuevoMovimiento() {
 	$("#sopSubPartidaLinea").val('-1').change().attr('disabled', false);
 	$("#sopUnidadFisLinea").val('-1').change().attr('disabled', false);
 
- 
 	$("#inpContenidoEcoLinea").change();
 	$("#inpPedidoLinea").change();
 	$("#inpReservaLinea").change();
@@ -437,7 +464,7 @@ function cargarTransMovLineaObjDatatable() {
 
 
 		} else {
-			/*$("#tblMovimientoLiniaGastoObjeto").hide();*/
+
 			$("#tblMovimientoLiniaGastoObjeto").DataTable({
 				destroy: true,
 				searching: false,
@@ -463,8 +490,6 @@ function MovimientoNumerico() {
 			$(e.currentTarget).val($(e.currentTarget).val().replace('-', ''));
 		}
 
-		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
-		var currentValue = $(e.currentTarget).val().replace(',', '').trim() == '' ? 0 : parseFloat($(e.currentTarget).val());
 		if ($(e.currentTarget).val().includes('.')) {
 			if ($(e.currentTarget).val().split('.')[1].length > 2) {
 				$(e.currentTarget).val(commaSeparateNumber($(e.currentTarget).val().split('.')[0] + '.' + $(e.currentTarget).val().split('.')[1].substring(0, 2)))

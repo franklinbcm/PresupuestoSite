@@ -10,6 +10,8 @@ namespace PresupuestoSite.Models.Catalogos
     {
         public string Text { get; set; }
         public string Value { get; set; }
+        public int Titulo { get; set; }
         public string OpcionalData { get; set; }
+        
     }
 }
