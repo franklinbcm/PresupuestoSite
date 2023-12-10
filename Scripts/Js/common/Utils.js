@@ -377,6 +377,7 @@ function GetReportInforme(data) {
             var montoLey = 0;
             var comprometido = 0;
             var devengado = 0;
+            var solicitado = 0;
             var modificaciones = 0;
 
             /*Grupo*/
@@ -407,10 +408,10 @@ function GetReportInforme(data) {
                     PRESUPUESTO_INICIAL: montoLey,
                     MODIFICACIONES: modificaciones,
                     PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
-                    SOLICITADO: 0,
+                    SOLICITADO: solicitado,
                     COMPROMISO: comprometido,
                     REC_MCIA: 0,
-                    COMPROMISO_TOTAL: comprometido,
+                    COMPROMISO_TOTAL: parseFloat(solicitado) + parseFloat(comprometido),
                     DEVENGADO: devengado,
                     PORCENT_EJECUCION: (devengado == 0 ? 0 : (devengado / parseFloat(montoLey) - parseFloat(modificaciones)) * 100),
                     BGCOLOR: 'bg-orange',
@@ -451,7 +452,7 @@ function GetReportInforme(data) {
                         SOLICITADO: 0,
                         COMPROMISO: comprometido,
                         REC_MCIA: 0,
-                        COMPROMISO_TOTAL: comprometido,
+                        COMPROMISO_TOTAL: parseFloat(solicitado) + parseFloat(comprometido),
                         DEVENGADO: devengado,
                         PORCENT_EJECUCION: (devengado == 0 ? 0 : (devengado / parseFloat(montoLey) - parseFloat(modificaciones)) * 100),
                         BGCOLOR: 'bg-yellow',
@@ -505,7 +506,7 @@ function GetReportInforme(data) {
                                 SOLICITADO: 0,
                                 COMPROMISO: comprometido,
                                 REC_MCIA: 0,
-                                COMPROMISO_TOTAL: comprometido,
+                                COMPROMISO_TOTAL: parseFloat(solicitado) + parseFloat(comprometido),
                                 DEVENGADO: devengado,
                                 PORCENT_EJECUCION: (devengado == 0 ? 0 : (devengado / parseFloat(montoLey) - parseFloat(modificaciones)) * 100),
                                 BGCOLOR: '',
@@ -545,6 +546,8 @@ function GetReportInforme(data) {
         var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
         var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.COMPROMISO + total, 0));
         var generalDevengado = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.DEVENGADO + total, 0));
+        var generalSolicitado = 0
+
         recordInforme.push(
             {
                 ID: 999996,
@@ -558,7 +561,7 @@ function GetReportInforme(data) {
                 SOLICITADO: 0,
                 COMPROMISO: generalComprometido,
                 REC_MCIA: 0,
-                COMPROMISO_TOTAL: generalComprometido,
+                COMPROMISO_TOTAL: parseFloat(generalSolicitado) + parseFloat(generalComprometido),
                 DEVENGADO: generalDevengado,
                 PORCENT_EJECUCION: (generalDevengado == 0 ? 0 : (generalDevengado / parseFloat(generalMontoLey) - parseFloat(0)) * 100),
                 BGCOLOR: 'bg-primary-title text-white',
