@@ -304,7 +304,7 @@ function cargarInformeDatatable() {
 	CallAjax(`/Reportes/GetInformeEjecucion?presupuestoAnualDe=${presupuestoAnualDe}&subpartidaCodigo=${subpartidaCodigo}`, undefined, "json", function (data) {
 		
 		if (data && data.Record) {
-
+			
 			var recordInforme = GetReportInforme(data);
 			dataTable = $("#tblInformeEjecucion").DataTable({
 				scrollX: true,

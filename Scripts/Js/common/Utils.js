@@ -364,7 +364,7 @@ function GetReportInforme(data) {
     const vPARTIDA = 'PARTIDA', vGRUPO = 'GRUPO', vSUBPARTIDA = 'SUBPARTIDA';
     var recordInforme = [];
     var partidaIndex = 0;
-    
+    var gastoOpMontoLeyTotal = 0;
 
     if (data.Record.length != undefined) {
 
@@ -379,6 +379,8 @@ function GetReportInforme(data) {
             var devengado = 0;
             var solicitado = 0;
             var modificaciones = 0;
+            var gastoOperativoMontoLey = 0;
+            
 
             /*Grupo*/
             var grupoListado = data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo).map(item => item.TITULO_GRUPO)
@@ -397,6 +399,7 @@ function GetReportInforme(data) {
                     devengado = + parseFloat(partidaData.reduce((total, obj) => obj.DEVENGADO + total, 0));
                 }
             }
+            
             partidaIndex = partidaIndex + 1;
             recordInforme.push(
                 {
@@ -408,6 +411,7 @@ function GetReportInforme(data) {
                     PRESUPUESTO_INICIAL: montoLey,
                     MODIFICACIONES: modificaciones,
                     PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                    PRESUPUESTO_GASTO_OPERATIVO: 0,
                     SOLICITADO: solicitado,
                     COMPROMISO: comprometido,
                     REC_MCIA: 0,
@@ -429,6 +433,8 @@ function GetReportInforme(data) {
                 comprometido = 0;
                 devengado = 0;
                 modificaciones = 0;
+                gastoOperativoMontoLey = 0;
+
                 for (var itemGrupo = 0; itemGrupo < data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo).length; itemGrupo++) {
                     if (data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].TITULO_GRUPO == grupoTitulo) {
                         montoLey =  parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo && x.TITULO_GRUPO == grupoTitulo).reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
@@ -449,6 +455,7 @@ function GetReportInforme(data) {
                         PRESUPUESTO_INICIAL: montoLey,
                         MODIFICACIONES: modificaciones,
                         PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                        PRESUPUESTO_GASTO_OPERATIVO: 0,
                         SOLICITADO: 0,
                         COMPROMISO: comprometido,
                         REC_MCIA: 0,
@@ -471,12 +478,14 @@ function GetReportInforme(data) {
                     comprometido = 0;
                     devengado = 0;
                     modificaciones = 0;
+
                     for (var item = 0; item < data.Record.length; item++) {
                         
                         var SupartidaData = data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo && x.TITULO_SUBPARTIDA == subpartidaTitulo && x.TITULO_GRUPO == grupoTitulo);
                          
                         if (SupartidaData != undefined) {
                             montoLey = parseFloat(SupartidaData.MONTO_DE_LEY);
+                            gastoOperativoMontoLey = parseFloat(SupartidaData.PRESUPUESTO_GASTO_OPERATIVO);
                             comprometido = comprometido = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.COMPROMISO + total, 0));
                             devengado = devengado = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.DEVENGADO + total, 0));
                         }
@@ -493,6 +502,8 @@ function GetReportInforme(data) {
                     
                     if (SupartidaData != undefined) {
                         
+                        gastoOpMontoLeyTotal = parseFloat(gastoOpMontoLeyTotal) + parseFloat(gastoOperativoMontoLey);
+
                         recordInforme.push(
                             {
                                 ID: recordInforme.length,
@@ -503,6 +514,7 @@ function GetReportInforme(data) {
                                 PRESUPUESTO_INICIAL: montoLey,
                                 MODIFICACIONES: modificaciones,
                                 PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                                PRESUPUESTO_GASTO_OPERATIVO: gastoOperativoMontoLey,
                                 SOLICITADO: 0,
                                 COMPROMISO: comprometido,
                                 REC_MCIA: 0,
@@ -546,8 +558,9 @@ function GetReportInforme(data) {
         var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
         var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.COMPROMISO + total, 0));
         var generalDevengado = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.DEVENGADO + total, 0));
-        var generalSolicitado = 0
-
+        var generalSolicitado = 0;
+        
+                 
         recordInforme.push(
             {
                 ID: 999996,
@@ -558,6 +571,7 @@ function GetReportInforme(data) {
                 PRESUPUESTO_INICIAL: generalMontoLey,
                 MODIFICACIONES: 0,
                 PRESUPUESTO_TOTAL: generalMontoLey,
+                PRESUPUESTO_GASTO_OPERATIVO: 0,
                 SOLICITADO: 0,
                 COMPROMISO: generalComprometido,
                 REC_MCIA: 0,
@@ -580,6 +594,7 @@ function GetReportInforme(data) {
                 PRESUPUESTO_INICIAL: generalMontoLey,
                 MODIFICACIONES: 0,
                 PRESUPUESTO_TOTAL: generalMontoLey,
+                PRESUPUESTO_GASTO_OPERATIVO: 0,
                 SOLICITADO: 0,
                 COMPROMISO: generalComprometido,
                 REC_MCIA: 0,
@@ -592,7 +607,8 @@ function GetReportInforme(data) {
 
             }
         );
-        recordInforme.push(
+        /*GASTO OPERATIVO*/
+        recordInforme.push(             
             {
                 ID: 999999998,
                 CENTRO_GESTOR: '',
@@ -601,7 +617,8 @@ function GetReportInforme(data) {
                 FUENTE_FINANCIAMIENTO_FONDO: '',
                 PRESUPUESTO_INICIAL: null,
                 MODIFICACIONES: null,
-                PRESUPUESTO_TOTAL: generalMontoLey,
+                PRESUPUESTO_TOTAL: gastoOpMontoLeyTotal,
+                PRESUPUESTO_GASTO_OPERATIVO: gastoOpMontoLeyTotal,
                 SOLICITADO: 0,
                 COMPROMISO: generalComprometido,
                 REC_MCIA: 0,
