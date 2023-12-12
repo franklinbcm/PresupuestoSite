@@ -56,12 +56,12 @@ namespace PresupuestoSite.Servicios.Reportes
         }
 
 
-        public async Task<List<SaldoPresupuesto>> GetSubPartidasPresupuestosCargados(int presupuestoAnualDe, int partidaID = 0, int grupoID = 0, int subpartidaID=0)
+        public async Task<List<SaldoPresupuesto>> GetSubPartidasPresupuestosCargados(int presupuestoAnualDe, int partidaID = 0, int grupoID = 0, int subpartidaID=0, string unidadFiscalizadora = "")
         {
             List<SaldoPresupuesto> subpartidas = new List<SaldoPresupuesto>();
 
             //string token = "";
-            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/saldoPresupuesto/SaldoPresupuestoAsync/{presupuestoAnualDe}/{partidaID}/{grupoID}/{subpartidaID}/")))
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/saldoPresupuesto/SaldoPresupuestoAsync/{presupuestoAnualDe}/{partidaID}/{grupoID}/{subpartidaID}/{unidadFiscalizadora}/")))
             {
                 //Usando Token
                 //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);

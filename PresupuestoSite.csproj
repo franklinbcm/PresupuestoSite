@@ -220,6 +220,7 @@
     <Compile Include="Models\TipoMovimiento.cs" />
     <Compile Include="Models\Trimestre.cs" />
     <Compile Include="Models\UnidadFiscalizadora.cs" />
+    <Compile Include="Models\UnidadFiscalizadoraCatalogo.cs" />
     <Compile Include="Models\ViewModel\LineaGastoObjetoMovimientoVM.cs" />
     <Compile Include="Models\ViewModel\PresupuestoCargaVM.cs" />
     <Compile Include="Models\ViewModel\PresupuestoCuotaCargaVM.cs" />
@@ -297,9 +298,9 @@
     <Content Include="Views\Shared\_Transacciones.cshtml" />
     <Content Include="Views\Shared\_Transacciones_Unidades.cshtml" />
     <Content Include="Views\Shared\_UnidadFiscalizadoraPartial.cshtml" />
-    <Content Include="Views\Shared\_SaldoPresupuesto.cshtml" />
+    <Content Include="Views\Shared\_SaldoPresupuestoRPT.cshtml" />
     <Content Include="Views\Reportes\Index.cshtml" />
-    <Content Include="Views\Shared\_InformeEjecucion.cshtml" />
+    <Content Include="Views\Shared\_InformeEjecucionRPT.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoPartial.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoMovOtrasInfoPartial.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoMovCuotasPartial.cshtml" />
@@ -307,6 +308,7 @@
     <Content Include="Views\Shared\_TablaLineaGastoObjetoPartial.cshtml" />
     <Content Include="Views\Shared\_LineaGastoObjetoPasoUnoPartial.cshtml" />
     <Content Include="Views\Shared\_TablaLineaGastoObjetoMovPartial.cshtml" />
+    <Content Include="Views\Shared\_EjecucionPresupuestariaCentroTotalRPT.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

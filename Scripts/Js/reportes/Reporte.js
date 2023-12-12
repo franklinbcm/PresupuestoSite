@@ -10,13 +10,16 @@ function onInitPagina() {
 	});
 
 	CargarSubpartida();
+	CargarUnidadFiscalizadora();
 	Changes();
 	LimpiarCampos();
 	LimpiarTablas();
 	$("#sopSubPartida").prop('disabled', true);
+	$("#sopUnidadFiscRep").prop('disabled', true);
 	$(".divSubpartidaCriterio").hide();
+	$(".divCentroGestorCriterio").hide();
 	$("#btnBuscarCriterio").click(() => {
-		cargarInformeDatatable();
+		EjecucionBusqueda();
 	});
 	
 }
@@ -38,27 +41,57 @@ function Changes() {
 			switch (reporte) {
 				case 1:
 					$("#sopSubPartida").prop('disabled', false);
+					$("#sopUnidadFiscRep").prop('disabled', false);
 					$("#divInformeEjecucion").hide();
+					$("#divEjecucionPresupuestariaCentroTotal").hide();
 					$(".divSubpartidaCriterio").hide();
+					$(".divCentroGestorCriterio").hide();
 					$("#sopSubPartida").show();
+					/*$("#sopUnidadFiscRep").show();*/
 					$(".divsopSubPartida").show();
+					/*$(".divsopUnidadFiscRep").show();*/
 					
 					break;
 				case 2:
 					$("#sopSubPartida").prop('disabled', true);
+					$("#sopUnidadFiscRep").prop('disabled', false);
 					$('#sopSubPartida').val("-1").change();
+					$("#sopUnidadFiscRep").val("-1").change();
 					$("#sopSubPartida").hide();
+					/*$("#sopUnidadFiscRep").hide();*/
 					$("#divSaldoPresupuesto").hide();
 					$("#divInformeEjecucion").show();
+					$("#divEjecucionPresupuestariaCentroTotal").hide();
 					$(".divSubpartidaCriterio").show();
+					$(".divCentroGestorCriterio").show();
 					$(".divsopSubPartida").hide();
+					/*$(".divsopUnidadFiscRep").hide();*/
 					cargarInformeDatatable();
+					break;
+				case 3:
+					$("#sopSubPartida").prop('disabled', true);
+					$("#sopUnidadFiscRep").prop('disabled', false);
+					$('#sopSubPartida').val("-1").change();
+					$("#sopUnidadFiscRep").val("-1").change();
+					$("#sopSubPartida").hide();
+					/*$("#sopUnidadFiscRep").hide();*/
+					$("#divSaldoPresupuesto").hide();
+					$("#divInformeEjecucion").hide();
+					$("#divEjecucionPresupuestariaCentroTotal").show();
+					$(".divSubpartidaCriterio").show();
+					$(".divCentroGestorCriterio").show();
+					$(".divsopSubPartida").hide();
+					/*$(".divsopUnidadFiscRep").hide();*/
+					cargarEjecucionPresupCentroDatatable();
 					break;
 				default:
 					$("#sopSubPartida").prop('disabled', true);
+					$("#sopUnidadFiscRep").prop('disabled', true);
 					$("#sopSubPartida").show();
 					$(".divSubpartidaCriterio").hide();
+					$(".divCentroGestorCriterio").hide();
 					$(".divsopSubPartida").show();
+					/*$(".divsopUnidadFiscRep").show();*/
 					break;
             }
 			 
@@ -68,6 +101,8 @@ function Changes() {
 			$("#divInformeEjecucion").hide();
 			$("#sopSubPartida").prop('disabled', true);
 			$('#sopSubPartida').val("-1").change();
+			$("#sopUnidadFiscRep").prop('disabled', true);
+			$('#sopUnidadFiscRep').val("-1").change();
 		}
 	})
 	$("#sopSubPartida").change(() => {
@@ -75,9 +110,34 @@ function Changes() {
 		LimpiarTablas();
 		cargarSaldoPresupuestoDatatable();
 	})
+	$("#sopUnidadFiscRep").change(() => {
+
+		LimpiarCampos();
+		LimpiarTablas();
+		EjecucionBusqueda();
+
+		
+	})
 
 }
-
+function EjecucionBusqueda() {
+	var reporte = parseInt($('#sopReporte option:selected').val());
+	if (reporte != -1) {
+		switch (reporte) {
+			case 1:
+				cargarSaldoPresupuestoDatatable();
+				break;
+			case 2:
+				cargarInformeDatatable();
+				break;
+			case 3:
+				cargarEjecucionPresupCentroDatatable();
+				break;
+			default:
+				break;
+		}
+	}
+}
 function CargarSubpartida() {
 	var presupuestoAn = $('#sopPresupAn').val();
 	CallAjax(`/Reportes/GetSubPartidas?presupuestoAnualDe=${presupuestoAn}`, undefined, "json", function (data) {
@@ -98,8 +158,30 @@ function CargarSubpartida() {
 
 	}, "GET", true);
 }
+function CargarUnidadFiscalizadora() {
+
+	CallAjax(`/Reportes/UnidadFiscalizadoraListado`, undefined, "json", function (data) {
+
+		if (data && data.Record) {
+			var s = '<option value="-1">-Todas las Unidades-</option>';
+			for (var i = 0; i < data.Record.length; i++) {
+				s += '<option data-item="' + data.Record[i].Opcional +'" value="' + data.Record[i].Value + '">' + data.Record[i].Text + '</option>';
+			}
+			$("#sopUnidadFiscRep").html(s);
+
+
+		}
+		else {
+			toastr.error(data.message);
+		}
+
+
+	}, "GET", true);
+}
 function LimpiarTablas() {
 	$('#tblSaldoPresupuesto').DataTable().clear().draw();
+	$('#tblInformeEjecucion').DataTable().clear().draw();
+	$('#tblEjecucionPresupuestariaCentroTotal').DataTable().clear().draw();
 
 }
 function LimpiarCampos() {
@@ -108,23 +190,25 @@ function LimpiarCampos() {
 	$('#inpGrupo').val(clearData);
 	$('#inpPresupuestoAct').val(clearData);
 	$('#inpSaldoDisponibl').val(clearData);
+	$('#inpCentroGestorCriterio').val(clearData)
 }
 
 function cargarSaldoPresupuestoDatatable() {
 
 	var presupuestoAnualDe = $('#sopPresupAn').val();
-	var subpartidaID =  parseInt($('#sopSubPartida option:selected').val());
+	var subpartidaID = parseInt($('#sopSubPartida option:selected').val());
+	var unidadFisc = $('#sopUnidadFiscRep option:selected').attr('data-item') == null ? '' : $('#sopUnidadFiscRep option:selected').attr('data-item');
 	var fields = subpartidaID != -1 ? JSON.parse(atob($('#sopSubPartida option:selected').attr('data-item'))) : null;
 	$('#inpPartida').val(subpartidaID != -1 ? fields.TITULO_PARTIDA : '');
 	$('#inpGrupo').val(subpartidaID != -1 ? fields.TITULO_GRUPO : '');
 	$("#divSaldoPresupuesto").show();
-
-	CallAjax(`/Reportes/GetSubPartidasPresupuestosCargados?presupuestoAnualDe=${presupuestoAnualDe}&partidaID=0&grupoID=0&subpartidaID=${subpartidaID}`, undefined, "json", function (data) {
+	
+	CallAjax(`/Reportes/GetSubPartidasPresupuestosCargados?presupuestoAnualDe=${presupuestoAnualDe}&partidaID=0&grupoID=0&subpartidaID=${subpartidaID}&unidadFisc=${unidadFisc}`, undefined, "json", function (data) {
 
 		if (data && data.Record) {
 			
-			$('#inpPresupuestoAct').val(data.Record[0] == undefined ? '' : commaSeparateNumber(data.Record[0].GENERAL.montoLey));
-			$('#inpSaldoDisponibl').val(data.Record[0] == undefined ? '' : commaSeparateNumber(data.Record[0].GENERAL.saldoDisp));
+			$('#inpPresupuestoAct').val(data.Record[0] == undefined ? '' : commaSeparateNumber(data.Record[0].GENERAL == null ? 0 : data.Record[0].GENERAL.montoLey));
+			$('#inpSaldoDisponibl').val(data.Record[0] == undefined ? '' : commaSeparateNumber(data.Record[0].GENERAL == null ? 0 : data.Record[0].GENERAL.saldoDisp));
 			$('#hf_fuente').val(data.Record[0] == undefined ? '' : data.Record[0].FUENTE_FINANCIAMIENTO_FONDO);
 
 			fillTitulos(data.Record[0] == undefined ? '' : data.Record[0].GENERAL.montoLey, true, data.Record);
@@ -298,10 +382,11 @@ function cargarSaldoPresupuestoDatatable() {
 function cargarInformeDatatable() {
 
 	var presupuestoAnualDe = $('#sopPresupAn').val();
+	var unidadFisc = $('#sopUnidadFiscRep option:selected').attr('data-item') == null ? '' : $('#sopUnidadFiscRep option:selected').attr('data-item');
 	$("#tblInformeEjecucion").show();
 	var subpartidaCodigo = $('#inpSubpartidaCriterio').val().trim();
-	
-	CallAjax(`/Reportes/GetInformeEjecucion?presupuestoAnualDe=${presupuestoAnualDe}&subpartidaCodigo=${subpartidaCodigo}`, undefined, "json", function (data) {
+	var centroGestor = $('#inpCentroGestorCriterio').val().trim();
+	CallAjax(`/Reportes/GetInformeEjecucion?presupuestoAnualDe=${presupuestoAnualDe}&subpartidaCodigo=${subpartidaCodigo}&unidadFisc=${unidadFisc}&centroGestor=${centroGestor}`, undefined, "json", function (data) {
 		
 		if (data && data.Record) {
 			
@@ -526,6 +611,254 @@ function cargarInformeDatatable() {
 
 			$("#tblInformeEjecucion").hide();
 			$("#tblInformeEjecucion").DataTable({
+				destroy: true,
+				searching: false,
+				language: LangSpanish,
+				data: null,
+				"bLengthChange": false,
+				"bPaginate": false
+			});
+		}
+	}, "GET", true);
+}
+function cargarEjecucionPresupCentroDatatable() {
+
+	var presupuestoAnualDe = $('#sopPresupAn').val();
+	var unidadFisc = $('#sopUnidadFiscRep option:selected').attr('data-item') == null ? '' : $('#sopUnidadFiscRep option:selected').attr('data-item');
+	$("#tblEjecucionPresupuestariaCentroTotal").show();
+	var subpartidaCodigo = $('#inpSubpartidaCriterio').val().trim();
+	var centroGestor = $('#inpCentroGestorCriterio').val().trim();
+
+	CallAjax(`/Reportes/GetInformeEjecucion?presupuestoAnualDe=${presupuestoAnualDe}&subpartidaCodigo=${subpartidaCodigo}&unidadFisc=${unidadFisc}&centroGestor=${centroGestor}`, undefined, "json", function (data) {
+
+		if (data && data.Record) {
+
+			var recordInforme = GetReportInforme(data, false);
+			dataTable = $("#tblEjecucionPresupuestariaCentroTotal").DataTable({
+				scrollX: true,
+				data: recordInforme,
+				destroy: true,
+				searching: false,
+				language: LangSpanish,
+				colReorder: true,
+				responsive: true,
+				"paging": false,
+				"zeroRecords": " ",
+				"lengthChange": false,
+				"bInfo": false,
+				lengthMenu: [6, 10, 20, 40, 60, 80, 90, 100, 200, 500, 1000, 2000, 3000, 5000],
+				dom: '<"top"B>, lfrtip',
+				buttons: [
+					{
+						"extend": 'colvis',
+						className: "btn btn-info fa fa-sharp fa-regular text-white text-capitalize fa fa-solid fa-columns",
+						'text': ' Mostrar/Ocultar',
+						"columns": ':not(.noVis)',
+
+					},
+					{
+						extend: 'excelHtml5',
+						className: "btn btn-success fa fa-sharp fa-regular fa-file-excel text-white",
+						text: ' Excel',
+						title: 'JUNTA ADMINISTRATIVA DE LA DIRECCIÓN GENERAL DE MIGRACIÓN Y EXTRANJERÍA',
+						messageTop: `INFORME DE EJECUCIÓN ${fnFechaReporteUltimoDiaMes()}`,
+						exportOptions: { orthogonal: 'export' },
+						customize: function (xlsx) {
+							var sheet = xlsx.xl.worksheets['sheet1.xml'];
+							/*Titulo Linea 1*/
+							$('row:nth-child(1) c', sheet).attr('s', '51');
+							/*Titulo Linea 2*/
+							$('row:nth-child(2) c', sheet).attr('s', '51');
+							$('row:nth-child(3) c', sheet).attr('s', '22');
+							/*Primer row de la tabla*/
+							$('row b[r^="B"]', sheet).attr('s', '2');
+							$('row b[r^="C"]', sheet).attr('s', '2');
+							$('row b[r^="D"]', sheet).attr('s', '2');
+							/*Ultimo row de la tabla*/
+							/*$('row c[r*="10"]', sheet).attr('s', '42');*/
+							$('row:last c', sheet).attr('s', '2');
+							$('row:last c[r^="D"]', sheet).attr('s', '64');
+							$('row:last c[r^="E"]', sheet).attr('s', '64');
+							$('row:last c[r^="F"]', sheet).attr('s', '64');
+							$('row:last c[r^="G"]', sheet).attr('s', '64');
+							$('row:last c[r^="H"]', sheet).attr('s', '64');
+							$('row:last c[r^="I"]', sheet).attr('s', '64');
+							$('row:last c[r^="J"]', sheet).attr('s', '64');
+							$('row:last c[r^="K"]', sheet).attr('s', '64');
+							$('row:last c[r^="L"]', sheet).attr('s', '64');
+							$('sheets sheet', xlsx.xl['workbook.xml']).attr('name', 'INFORME_EJECUCION');
+						},
+
+					}
+					/*{ extend: 'edit', editor },*/
+				],
+				"columns": [
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).CENTRO_GESTOR}" >${recordInforme.find(x => x.ID == item).CENTRO_GESTOR}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text text-center"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).PARTIDA_SUBPARTIDA}" >${recordInforme.find(x => x.ID == item).PARTIDA_SUBPARTIDA}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text text-justify"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).PRESUPUESTO_INICIAL}" >${recordInforme.find(x => x.ID == item).PRESUPUESTO_INICIAL == null ? '' : NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).PRESUPUESTO_INICIAL)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).MODIFICACIONES}" >${recordInforme.find(x => x.ID == item).MODIFICACIONES == null && item == 999999998 ? 'GASTO OPERATIVO' : NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).MODIFICACIONES)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).PRESUPUESTO_TOTAL}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).PRESUPUESTO_TOTAL)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).SOLICITADO}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).SOLICITADO)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).COMPROMISO}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).COMPROMISO)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).REC_MCIA}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).REC_MCIA)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).COMPROMISO_TOTAL}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).COMPROMISO_TOTAL)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).DEVENGADO}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).DEVENGADO)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+					{
+						"data": "ID", render: (item) => {
+
+							return (
+
+								item != undefined ? `<span class="${recordInforme.find(x => x.ID == item).BGCOLOR}" title="${recordInforme.find(x => x.ID == item).PORCENT_EJECUCION}" >${NumberCommaSeparatedTwoDecimals(recordInforme.find(x => x.ID == item).PORCENT_EJECUCION)}</span>` : null
+							);
+						}
+						, "width": "10%"
+						, className: "dt-custom-column-text"
+
+					},
+
+
+
+				],
+				"width": "100%", ordering: false,
+			});
+
+			$($("#tblEjecucionPresupuestariaCentroTotal .bg-orange").parent()).addClass('bg-orange fw-bold');
+			$($("#tblEjecucionPresupuestariaCentroTotal .bg-yellow").parent()).addClass('bg-yellow fw-bold');
+			$($("#tblEjecucionPresupuestariaCentroTotal .bg-primary-title").parent()).addClass('bg-primary-title fw-bold text-white');
+			$($("#tblEjecucionPresupuestariaCentroTotal .bg-secondary").parent()).addClass('bg-secondary fw-bold text-end');
+
+			/*Colocar Color Verde en el pie de pagina para Presupuestos*/
+			var vPiePagina = $($("#tblEjecucionPresupuestariaCentroTotal span[title='TOTAL']").parent().parent()).find('.primer-grupo');
+			$($(vPiePagina).parent()).removeClass('bg-primary-title').addClass('cs-ejecucion-pie-pagina');
+			$(vPiePagina).removeClass('bg-primary-title primer-grupo').addClass('cs-ejecucion-pie-pagina');
+			$(vPiePagina).each((idx, item) => {
+				if (idx >= 2 && idx <= 4) {
+					$(item).removeClass('bg-primary-title').addClass('primer-grupo');
+					$($(item).parent()).removeClass('bg-primary-title').addClass('primer-grupo');
+
+				}
+				if (idx >= 5 && idx <= 7) {
+					$(item).removeClass('bg-primary-title').addClass('secundario-grupo');
+					$($(item).parent()).removeClass('bg-primary-title').addClass('secundario-grupo');
+
+				}
+			});
+			
+
+		} else {
+
+			$("#tblEjecucionPresupuestariaCentroTotal").hide();
+			$("#tblEjecucionPresupuestariaCentroTotal").DataTable({
 				destroy: true,
 				searching: false,
 				language: LangSpanish,

@@ -28,6 +28,20 @@ namespace PresupuestoSite.Models
         public decimal DEVENGADO { get; set; }
         public decimal PORCENT_EJECUCION { get; set; }
         public decimal PRESUPUESTO_GASTO_OPERATIVO { get; set; }
+        public decimal MODIFICACIONES_MONTO { get; set; }
+        public decimal MODIFICACIONES_AJUSTES_MONTO { get; set; }
+        public decimal CUOTA_TRIM_UNO { get; set; }
+        public decimal CUOTA_TRIM_UNO_AJUSTE { get; set; }
+        public decimal COMPROMISO_UNIDAD_FISC_TRIM_UNO { get; set; }
+        public decimal CUOTA_TRIM_DOS { get; set; }
+        public decimal CUOTA_TRIM_DOS_AJUSTE { get; set; }
+        public decimal COMPROMISO_UNIDAD_FISC_TRIM_DOS { get; set; }
+        public decimal CUOTA_TRIM_TRES { get; set; }
+        public decimal CUOTA_TRIM_TRES_AJUSTE { get; set; }
+        public decimal COMPROMISO_UNIDAD_FISC_TRIM_TRES { get; set; }
+        public decimal CUOTA_TRIM_CUATRO { get; set; }
+        public decimal CUOTA_TRIM_CUATRO_AJUSTE { get; set; }
+        public decimal COMPROMISO_UNIDAD_FISC_TRIM_CUATRO { get; set; }
         public decimal SALDO { get; set; } = 0;
         public decimal COMPROMISO { get; set; }
         public DateTime FECHA { get; set; }

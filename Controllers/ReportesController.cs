@@ -14,6 +14,7 @@ namespace PresupuestoSite.Controllers
     public class ReportesController : Controller
     {
         private readonly ReportesServicio _reportesServicio = new ReportesServicio();
+        private readonly TransaccionesServicio _transServicio = new TransaccionesServicio();
         // GET: Reportes
         public  ActionResult Index()
         {
@@ -26,7 +27,7 @@ namespace PresupuestoSite.Controllers
         public async Task<JsonResult> GetSubPartidas(int presupuestoAnualDe)
         {
             var dataResult = await _reportesServicio.GetSubPartidas(presupuestoAnualDe);
-            await this.GroupingWithCheckBox();
+            await this.GroupingWithCheckBox(presupuestoAnualDe);
             if (dataResult.Any())
             {
 
@@ -53,36 +54,49 @@ namespace PresupuestoSite.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetSubPartidasPresupuestosCargados(int presupuestoAnualDe, int partidaID, int grupoID, int subpartidaID)
+        public async Task<JsonResult> GetSubPartidasPresupuestosCargados(int presupuestoAnualDe, int partidaID, int grupoID, int subpartidaID, string unidadFisc = "")
         {
-            var dataResult = await _reportesServicio.GetSubPartidasPresupuestosCargados(presupuestoAnualDe, partidaID, grupoID, subpartidaID);
-            
-            if (dataResult.Any())
+            var dataResult = await _reportesServicio.GetSubPartidasPresupuestosCargados(presupuestoAnualDe, partidaID == -1 ? 0 : partidaID, grupoID == -1 ? 0 : grupoID, subpartidaID == -1? 0 : subpartidaID);
+            if(dataResult[0].IsSuccessStatusCode)
             {
-
-                return Json(new
+                var resultInfo = dataResult.Where(x => x.UNIDAD_FISCALIZADORA.Contains(unidadFisc)).ToList();
+                if (resultInfo.Any())
                 {
-                    Result = "Ok",
-                    Record = dataResult,
-                    Total = dataResult != null ? dataResult.Count() : 0,
-                }, JsonRequestBehavior.AllowGet);
 
+                    return Json(new
+                    {
+                        Result = "Ok",
+                        Record = resultInfo,
+                        Total = resultInfo != null ? resultInfo.Count() : 0,
+                    }, JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json(new
+                    {
+                        Result = "Ok",
+                        Record = new SaldoPresupuesto(),
+                        Total = 0,
+                    }, JsonRequestBehavior.AllowGet); ;
+                }
             }
             else
             {
-
                 return Json(new
                 {
                     Result = "Ok",
                     Record = new SaldoPresupuesto(),
                     Total = 0,
-                }, JsonRequestBehavior.AllowGet);;
+                }, JsonRequestBehavior.AllowGet); ;
             }
+
 
         }
 
         [HttpGet]
-        public async Task<JsonResult> GetInformeEjecucion(int presupuestoAnualDe, string subpartidaCodigo)
+        public async Task<JsonResult> GetInformeEjecucion(int presupuestoAnualDe, string subpartidaCodigo, string unidadFisc = "", string centroGestor = "")
         {
             var dataResult = await _reportesServicio.GetSubPartidasPresupuestosCargados(presupuestoAnualDe, 0, 0, 0);
             List<SaldoPresupuesto>  saldoPresupuestos = new List<SaldoPresupuesto>();
@@ -100,7 +114,7 @@ namespace PresupuestoSite.Controllers
             }
 
 
-            dataResult = saldoPresupuestos;
+            dataResult = saldoPresupuestos.Where(x => x.UNIDAD_FISCALIZADORA.Contains(unidadFisc) && x.CENTRO_GESTOR.Contains(centroGestor)).ToList();
 
 
             if (dataResult.Any())
@@ -127,9 +141,9 @@ namespace PresupuestoSite.Controllers
 
         }
 
-        public async Task<ActionResult> GroupingWithCheckBox()
+        public async Task<ActionResult> GroupingWithCheckBox(int presupuestoAnualDe)
         {
-            var dataResult = await _reportesServicio.GetSubPartidas(2023);
+            var dataResult = await _reportesServicio.GetSubPartidas(presupuestoAnualDe);
 
             var data = dataResult.Select(i => new SelectListItem()
             {
@@ -140,6 +154,43 @@ namespace PresupuestoSite.Controllers
             ViewBag.data = data;
             return View();
         }
+        public async Task<ActionResult> UnidadFiscalizadoraListado()
+        {
+            var dataResult = await _transServicio.GetUnidadeFiscalizadoraCatalogo();
+            if (dataResult.Any())
+            {
+                var data = dataResult.Select(i => new ListadosVM()
+                {
+                    Text = $"{i.CODIGO} - {i.NOMBRE_UNIDAD_FISCALIZADORA}",
+                    Value = i.ID.ToString(),
+                    Opcional = i.CODIGO,
+                }
+                ).Distinct();
+
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = data,
+                    Total = data != null ? data.ToList().Count() : 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new
+                {
+                    Result = "Ok",
+                    Record = new ListadosVM(),
+                    Total = 0,
+                }, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+
+
+        }
+
 
     }
 }

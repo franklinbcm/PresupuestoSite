@@ -67,6 +67,37 @@ div#tblInformeEjecucion_wrapper table.dataTable thead th, table.dataTable thead 
     -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
     box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
 }
+div#tblEjecucionPresupuestariaCentroTotal_wrapper table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background-color: #168c9c !important;
+    color: white;
+    margin: 10px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 4px 5px 2px rgba(0,0,0,0.75);
+}
+div#tblEjecucionPresupuestariaCentroTotal_wrapper table.dataTable thead th.primer-grupo, table.dataTable thead td.primer-grupo, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background-color: #7fcbad !important;
+
+}
+.cs-ejecucion-pie-pagina {
+    background-color: #168c9c !important;
+}
+.primer-grupo {
+    background-color: #7fcbad !important;
+}
+div#tblEjecucionPresupuestariaCentroTotal_wrapper table.dataTable thead th.secundario-grupo, table.dataTable thead td.secundario-grupo, table.dataTable tfoot th, table.dataTable tfoot td {
+    text-align: left;
+    background-color: #e35e00 !important;
+}
+.secundario-grupo {
+    background-color: #e35e00 !important;
+}
+/*.bg-primary-title > span.bg-primary-title.primer-grupo.text-white {
+    background-color: red !important;
+}*/
 div#tblLiniaGastoObjeto_wrapper table.dataTable thead th, table.dataTable thead td, table.dataTable tfoot th, table.dataTable tfoot td {
     text-align: left;
     background-color: mediumseagreen !important;
@@ -114,7 +145,7 @@ div#tblMovimientoLiniaGastoObjeto_wrapper table.dataTable thead th, table.dataTa
     -moz-box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
     box-shadow: 1px 0px 1px 1px rgba(235,235,235,1);
 }
-div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter, div#tblCuotaCargas_filter, div#tblPresupuestoCargas_filter, div#tblSaldoPresupuesto_filter, div#tblInformeEjecucion_filter, div#tblLiniaGastoObjeto_filter, div#tblMovimientoLiniaGastoObjeto_filter {
+div#tblTransacciones_filter, div#tblTransacciones_filter, div#tblTransaccionesUnidades_filter, div#tblCuotaCargas_filter, div#tblPresupuestoCargas_filter, div#tblSaldoPresupuesto_filter, div#tblInformeEjecucion_filter, div#tblLiniaGastoObjeto_filter, div#tblMovimientoLiniaGastoObjeto_filter, div#tblEjecucionPresupuestariaCentroTotal_filter {
     margin: 9px 0px;
 }
 

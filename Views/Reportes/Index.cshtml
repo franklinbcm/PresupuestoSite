@@ -10,7 +10,7 @@
     </div>
     <div class="row">
         <div class="row">
-            <div class="col-md-2 col-sm-12">
+            <div class="col-md-1 col-sm-12">
                 <label for="sopPresupAn" class="form-label fw-bold text-capitalize" title="Presupuesto - Año">Presupuesto</label>
                 <input type="number" min="2023" max="3000" value="2023" id="sopPresupAn" class="form-control" />
             </div>
@@ -19,20 +19,31 @@
                 <select id="sopReporte" class="form-select">
                     <option value="-1">-Seleccione-</option>
                     <option value="1">Saldo de Presupuesto</option>
-                    <option value="2">Informe Ejecución</option>
+                    <option value="2" title="Reporte Ejecución Consolidado por Unidad Fiscalizadora">Ejecución por Unidad Fiscalizadora</option>
+                    <option title="Ejecución Presupuestaria Total por Centro Gestor" value="3">Ejecución Presupuestaria Total Centro Gestor</option>
                 </select>
             </div>
-            <div class="col-md-6 col-sm-12 form-group divsopSubPartida">
+            <div class="col-md-4 col-sm-12 form-group divsopSubPartida">
                 <label for="sopSubPartida" class="form-label fw-bold text-capitalize" title="PosPre">Subpartida</label>
                 <select id="sopSubPartida" class="form-select">
                     <option value="-1">-Seleccione-</option>
                 </select>
             </div>
-            <div class="col-md-3 divSubpartidaCriterio">
-                <label for="inpSubpartidaCriterio" class="form-label" title="Para filtrar múltiples Subpartidas solo debe agregarlas separadas por coma, EJ: E-10101,E-50, ...etc.">Filtrar&nbsp;Subpartida</label>
+            <div class="col-md-2 divSubpartidaCriterio">
+                <label for="inpSubpartidaCriterio" class="form-label fw-bold text-capitalize" title="Para filtrar múltiples Subpartidas solo debe agregarlas separadas por coma, EJ: E-10101,E-50, ...etc.">Subpartida&nbsp;Múlt.</label>
                 <input type="text" class="form-control" title="Para filtrar múltiples Subpartidas solo debe agregarlas separadas por coma, EJ: E-10101,E-50, ...etc." id="inpSubpartidaCriterio" autocomplete="off">
             </div>
-            <div class="col-md-3 divSubpartidaCriterio mt-4">
+            <div class="col-md-2 col-sm-12 form-group divsopUnidadFiscRep">
+                <label for="sopUnidadFiscRep" class="form-label fw-bold text-capitalize" title="PosPre">Unidad Fiscalizadora</label>
+                <select id="sopUnidadFiscRep" class="form-select">
+                    <option value="-1">-Seleccione-</option>
+                </select>
+            </div>
+            <div class="col-md-2 divCentroGestorCriterio">
+                <label for="inpCentroGestorCriterio" class="form-label fw-bold text-capitalize" title="filtrar por Centro Gestor">Centro&nbsp;Gestor</label>
+                <input type="text" class="form-control" title="Para filtrar por Centro Gestor" id="inpCentroGestorCriterio" autocomplete="off">
+            </div>
+            <div class="col-md-2 divSubpartidaCriterio mt-4">
                 <button id="btnBuscarCriterio" class="btn btn-info mt-2">Buscar</button>
             </div>
             <div class="col-md-3 mb-2 mt-2 divSaldos" style="display:none">
@@ -68,10 +79,14 @@
 <div class="container-fluid col-11 mt-3">
     <div class="row" style="min-width:350px !important">
         <div id="divSaldoPresupuesto" style="display:none" class="row divOpciones divSaldos">
-            @Html.Partial("_SaldoPresupuesto")
+            @Html.Partial("_SaldoPresupuestoRPT")
         </div>
         <div id="divInformeEjecucion" style="display:none" class="row divOpciones divInforme">
-            @Html.Partial("_InformeEjecucion")
+            @Html.Partial("_InformeEjecucionRPT")
+            <div class="mt-5"></div>
+        </div>
+        <div id="divEjecucionPresupuestariaCentroTotal" style="display:none" class="row divOpciones divEjecucionPresup">
+            @Html.Partial("_EjecucionPresupuestariaCentroTotalRPT")
             <div class="mt-5"></div>
         </div>
     </div>

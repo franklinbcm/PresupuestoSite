@@ -277,6 +277,46 @@ namespace PresupuestoSite.Servicios.Trascacciones
 
         }
 
+        public async Task<List<UnidadFiscalizadoraCatalogo>> GetUnidadeFiscalizadoraCatalogo()
+        {
+            List<UnidadFiscalizadoraCatalogo> presupuestos = new List<UnidadFiscalizadoraCatalogo>();
+
+            //string token = "";
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, Utilidades.GetApiRutaUnida($"/unidadFiscalizadora/UnidadFiscalizadoraCatalogo")))
+            {
+                //Usando Token
+                //request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                using (HttpResponseMessage response = await client.SendAsync(request))
+                {
+                    using (HttpContent content = response.Content)
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string jSon = await content.ReadAsStringAsync();
+
+                            var resultData = (dynamic)JsonConvert.DeserializeObject(jSon);
+                            if (resultData != null)
+                            {
+                                resultData = JsonConvert.SerializeObject((dynamic)resultData.data);
+                                presupuestos.AddRange(JsonConvert.DeserializeObject<UnidadFiscalizadoraCatalogo[]>(resultData));
+                            }
+
+                        }
+                        else
+                        {
+                            presupuestos.Add(new UnidadFiscalizadoraCatalogo { IsSuccessStatusCode = false, StatusInfo = JsonConvert.SerializeObject(response) });
+                        }
+                    }
+                }
+            }
+
+            return presupuestos;
+
+        }
+
         public async Task<List<UnidadFiscalizadora>> AddUnidadFiscalizadora(UnidadFiscalizadoraDTO unidadFiscalizadora)
         {
             List<UnidadFiscalizadora> presupuestos = new List<UnidadFiscalizadora>();

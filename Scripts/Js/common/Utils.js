@@ -360,7 +360,7 @@ function fnFechaReporteUltimoDiaMes() {
     }
     return `AL ${lastDay} DE ` + monthStr + ' DE ' + year;
 }
-function GetReportInforme(data) {
+function GetReportInforme(data,esInforme = true) {
     const vPARTIDA = 'PARTIDA', vGRUPO = 'GRUPO', vSUBPARTIDA = 'SUBPARTIDA';
     var recordInforme = [];
     var partidaIndex = 0;
@@ -380,6 +380,7 @@ function GetReportInforme(data) {
             var solicitado = 0;
             var modificaciones = 0;
             var gastoOperativoMontoLey = 0;
+
             
 
             /*Grupo*/
@@ -393,10 +394,10 @@ function GetReportInforme(data) {
             for (var item = 0; item < data.Record.length; item++) {
                 var partidaData = data.Record.filter(item => item.TITULO_PARTIDA == partidaTitulo);
                 if (data.Record[item].TITULO_PARTIDA == partidaTitulo) {
-                    
                     montoLey = + parseFloat(partidaData.reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
                     comprometido = + parseFloat(partidaData.reduce((total, obj) => obj.COMPROMISO + total, 0));
                     devengado = + parseFloat(partidaData.reduce((total, obj) => obj.DEVENGADO + total, 0));
+                    modificaciones = + parseFloat(partidaData.reduce((total, obj) => obj.MODIFICACIONES_MONTO + total, 0));
                 }
             }
             
@@ -410,7 +411,7 @@ function GetReportInforme(data) {
                     FUENTE_FINANCIAMIENTO_FONDO: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).FUENTE_FINANCIAMIENTO_FONDO,
                     PRESUPUESTO_INICIAL: montoLey,
                     MODIFICACIONES: modificaciones,
-                    PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                    PRESUPUESTO_TOTAL: (parseFloat(montoLey) - parseFloat(modificaciones)),
                     PRESUPUESTO_GASTO_OPERATIVO: 0,
                     SOLICITADO: solicitado,
                     COMPROMISO: comprometido,
@@ -424,7 +425,7 @@ function GetReportInforme(data) {
 
                 }
             );
-
+            
 
             /*Grupo*/
             for (var g = 0; g < grupoListado.length; g++) {
@@ -440,7 +441,7 @@ function GetReportInforme(data) {
                         montoLey =  parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo && x.TITULO_GRUPO == grupoTitulo).reduce((total, obj) => obj.MONTO_DE_LEY + total, 0));
                         comprometido = parseFloat(comprometido) + parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].COMPROMISO);
                         devengado = parseFloat(devengado) + parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].DEVENGADO);
-
+                        modificaciones = parseFloat(modificaciones) + parseFloat(data.Record.filter(x => x.TITULO_PARTIDA == partidaTitulo)[itemGrupo].MODIFICACIONES_MONTO);
                     }
                     
                 }
@@ -454,7 +455,7 @@ function GetReportInforme(data) {
                         FUENTE_FINANCIAMIENTO_FONDO: data.Record.find(x => x.TITULO_PARTIDA == partidaTitulo).FUENTE_FINANCIAMIENTO_FONDO,
                         PRESUPUESTO_INICIAL: montoLey,
                         MODIFICACIONES: modificaciones,
-                        PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                        PRESUPUESTO_TOTAL: (parseFloat(montoLey) - parseFloat(modificaciones)),
                         PRESUPUESTO_GASTO_OPERATIVO: 0,
                         SOLICITADO: 0,
                         COMPROMISO: comprometido,
@@ -469,7 +470,7 @@ function GetReportInforme(data) {
                     }
                 );
   
-                var prevMontoGral = 0, prevCompromisoGral=0;
+                var prevMontoGral = 0, prevCompromisoGral = 0, prevModificacionesGral = 0;
                 /*Subpartida*/
                 for (var s = 0; s < subPartidaListado.length; s++) {
                     var subpartidaTitulo = subPartidaListado[s];
@@ -488,10 +489,13 @@ function GetReportInforme(data) {
                             gastoOperativoMontoLey = parseFloat(SupartidaData.PRESUPUESTO_GASTO_OPERATIVO);
                             comprometido = comprometido = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.COMPROMISO + total, 0));
                             devengado = devengado = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.DEVENGADO + total, 0));
+                            modificaciones = modificaciones = parseFloat(data.Record.filter(x => x.TITULO_SUBPARTIDA == subpartidaTitulo).reduce((total, obj) => obj.MODIFICACIONES_MONTO + total, 0));
                         }
                         if (item == data.Record.length - 1) {
                             prevMontoGral = parseFloat(prevMontoGral) + parseFloat(montoLey);
                             prevCompromisoGral = parseFloat(prevCompromisoGral) + parseFloat(comprometido);
+                            prevModificacionesGral = parseFloat(prevModificacionesGral) + parseFloat(modificaciones);
+                            
                         }
                         
                          
@@ -499,6 +503,7 @@ function GetReportInforme(data) {
                     recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_INICIAL = prevMontoGral;
                     recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).COMPROMISO = prevCompromisoGral;
                     recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).PRESUPUESTO_TOTAL = prevMontoGral;
+                    recordInforme.find(x => x.TIPO == vGRUPO && x.PARTIDA_SUBPARTIDA == grupoTitulo).MODIFICACIONES_MONTO = prevModificacionesGral;
                     
                     if (SupartidaData != undefined) {
                         
@@ -513,7 +518,7 @@ function GetReportInforme(data) {
                                 FUENTE_FINANCIAMIENTO_FONDO: SupartidaData.FUENTE_FINANCIAMIENTO_FONDO,
                                 PRESUPUESTO_INICIAL: montoLey,
                                 MODIFICACIONES: modificaciones,
-                                PRESUPUESTO_TOTAL: parseFloat(montoLey) - parseFloat(modificaciones),
+                                PRESUPUESTO_TOTAL: (parseFloat(montoLey) - parseFloat(modificaciones)),
                                 PRESUPUESTO_GASTO_OPERATIVO: gastoOperativoMontoLey,
                                 SOLICITADO: 0,
                                 COMPROMISO: comprometido,
@@ -549,7 +554,7 @@ function GetReportInforme(data) {
                 
                 recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_INICIAL = recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
                 recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].COMPROMISO = recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.COMPROMISO_TOTAL + total, 0);
-                recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_TOTAL = recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0);
+                recordInforme.filter(x => x.TIPO == vPARTIDA && x.PARTIDA_SEC == ipart)[0].PRESUPUESTO_TOTAL = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0)) - parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO && x.PARTIDA_SEC == ipart).reduce((total, obj) => obj.MODIFICACIONES_MONTO + total, 0));
             }
         }
 
@@ -558,6 +563,7 @@ function GetReportInforme(data) {
         var generalMontoLey = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.PRESUPUESTO_INICIAL + total, 0));
         var generalComprometido = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.COMPROMISO + total, 0));
         var generalDevengado = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.DEVENGADO + total, 0));
+        var generalModificaciones = parseFloat(recordInforme.filter(x => x.TIPO == vGRUPO).reduce((total, obj) => obj.MODIFICACIONES_MONTO + total, 0));
         var generalSolicitado = 0;
         
                  
@@ -569,8 +575,8 @@ function GetReportInforme(data) {
                 PARTIDA_PRINCIPAL: '',
                 FUENTE_FINANCIAMIENTO_FONDO: '&nbsp;',
                 PRESUPUESTO_INICIAL: generalMontoLey,
-                MODIFICACIONES: 0,
-                PRESUPUESTO_TOTAL: generalMontoLey,
+                MODIFICACIONES: generalModificaciones,
+                PRESUPUESTO_TOTAL: (parseFloat(generalMontoLey) - parseFloat(generalModificaciones)),
                 PRESUPUESTO_GASTO_OPERATIVO: 0,
                 SOLICITADO: 0,
                 COMPROMISO: generalComprometido,
@@ -578,59 +584,63 @@ function GetReportInforme(data) {
                 COMPROMISO_TOTAL: parseFloat(generalSolicitado) + parseFloat(generalComprometido),
                 DEVENGADO: generalDevengado,
                 PORCENT_EJECUCION: (generalDevengado == 0 ? 0 : (generalDevengado / parseFloat(generalMontoLey) - parseFloat(0)) * 100),
-                BGCOLOR: 'bg-primary-title text-white',
+                BGCOLOR: 'bg-primary-title primer-grupo text-white',
                 TIPO: 'TOTAL',
                 PARTIDA_SEC: partidaIndex
 
             }
         );
-        recordInforme.push(
-            {
-                ID: 999997,
-                CENTRO_GESTOR: '',
-                PARTIDA_SUBPARTIDA: '',
-                PARTIDA_PRINCIPAL: '',
-                FUENTE_FINANCIAMIENTO_FONDO: '',
-                PRESUPUESTO_INICIAL: generalMontoLey,
-                MODIFICACIONES: 0,
-                PRESUPUESTO_TOTAL: generalMontoLey,
-                PRESUPUESTO_GASTO_OPERATIVO: 0,
-                SOLICITADO: 0,
-                COMPROMISO: generalComprometido,
-                REC_MCIA: 0,
-                COMPROMISO_TOTAL: generalComprometido,
-                DEVENGADO: 0,
-                PORCENT_EJECUCION: 0,
-                BGCOLOR: 'bg-white text-white',
-                TIPO: '',
-                PARTIDA_SEC: partidaIndex
+        debugger
+        if (esInforme) {
+            recordInforme.push(
+                {
+                    ID: 999997,
+                    CENTRO_GESTOR: '',
+                    PARTIDA_SUBPARTIDA: '',
+                    PARTIDA_PRINCIPAL: '',
+                    FUENTE_FINANCIAMIENTO_FONDO: '',
+                    PRESUPUESTO_INICIAL: generalMontoLey,
+                    MODIFICACIONES: generalModificaciones,
+                    PRESUPUESTO_TOTAL: (parseFloat(generalMontoLey) - parseFloat(generalModificaciones)),
+                    PRESUPUESTO_GASTO_OPERATIVO: 0,
+                    SOLICITADO: 0,
+                    COMPROMISO: generalComprometido,
+                    REC_MCIA: 0,
+                    COMPROMISO_TOTAL: generalComprometido,
+                    DEVENGADO: 0,
+                    PORCENT_EJECUCION: 0,
+                    BGCOLOR: 'bg-white text-white',
+                    TIPO: '',
+                    PARTIDA_SEC: partidaIndex
 
-            }
-        );
-        /*GASTO OPERATIVO*/
-        recordInforme.push(             
-            {
-                ID: 999999998,
-                CENTRO_GESTOR: '',
-                PARTIDA_SUBPARTIDA: '',
-                PARTIDA_PRINCIPAL: '',
-                FUENTE_FINANCIAMIENTO_FONDO: '',
-                PRESUPUESTO_INICIAL: null,
-                MODIFICACIONES: null,
-                PRESUPUESTO_TOTAL: gastoOpMontoLeyTotal,
-                PRESUPUESTO_GASTO_OPERATIVO: gastoOpMontoLeyTotal,
-                SOLICITADO: 0,
-                COMPROMISO: generalComprometido,
-                REC_MCIA: 0,
-                COMPROMISO_TOTAL: generalComprometido,
-                DEVENGADO: 0,
-                PORCENT_EJECUCION: 0,
-                BGCOLOR: 'bg-secondary',
-                TIPO: '',
-                PARTIDA_SEC: partidaIndex
+                }
+            );
+            /*GASTO OPERATIVO*/
+            recordInforme.push(
+                {
+                    ID: 999999998,
+                    CENTRO_GESTOR: '',
+                    PARTIDA_SUBPARTIDA: '',
+                    PARTIDA_PRINCIPAL: '',
+                    FUENTE_FINANCIAMIENTO_FONDO: '',
+                    PRESUPUESTO_INICIAL: null,
+                    MODIFICACIONES: null,
+                    PRESUPUESTO_TOTAL: gastoOpMontoLeyTotal,
+                    PRESUPUESTO_GASTO_OPERATIVO: gastoOpMontoLeyTotal,
+                    SOLICITADO: 0,
+                    COMPROMISO: generalComprometido,
+                    REC_MCIA: 0,
+                    COMPROMISO_TOTAL: generalComprometido,
+                    DEVENGADO: 0,
+                    PORCENT_EJECUCION: 0,
+                    BGCOLOR: 'bg-secondary',
+                    TIPO: '',
+                    PARTIDA_SEC: partidaIndex
 
-            }
-        );
+                }
+            );
+        }
+        
 
 
     }
