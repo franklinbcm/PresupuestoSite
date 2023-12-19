@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace PresupuestoSite.Controllers
 {
+    [AuthFilter]
     public class ReportesController : Controller
     {
         private readonly ReportesServicio _reportesServicio = new ReportesServicio();

@@ -16,6 +16,7 @@ using System.Web.Mvc;
 
 namespace PresupuestoSite.Controllers
 {
+    [AuthFilter]
     public class CargasController : Controller
     {
         // GET: Cargas

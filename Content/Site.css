@@ -25,7 +25,15 @@ body {
     width: 70px;
     height: 40px;
 }
-
+.bg-logon-dgme {
+    background-image: url('../Images/DGME-HD-BG.jpg');
+    background-color: white !important;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat !important;
+    padding: 60px 0px;
+    /*background-size: cover;*/
+}
 .img-main {
     width: 650px;
     height: 450px;

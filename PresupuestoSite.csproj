@@ -185,7 +185,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Common\AuthFilterAttribute.cs" />
     <Compile Include="Common\Utilidades.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\CargasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
@@ -214,6 +216,7 @@
     <Compile Include="Models\PresupuestoCarga.cs" />
     <Compile Include="Models\PresupuestoCuotaCarga.cs" />
     <Compile Include="Models\PresupuestoCuotaMontoLeyTotal.cs" />
+    <Compile Include="Models\Rol.cs" />
     <Compile Include="Models\SaldoPresupuesto.cs" />
     <Compile Include="Models\Subpartida.cs" />
     <Compile Include="Models\SubpartidaPresupuestoCargado.cs" />
@@ -250,6 +253,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\box-arrow-right.svg" />
+    <Content Include="Images\DGME-HD-BG.jpg" />
     <Content Include="Images\DGME-HD.jpg" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -309,6 +313,7 @@
     <Content Include="Views\Shared\_LineaGastoObjetoPasoUnoPartial.cshtml" />
     <Content Include="Views\Shared\_TablaLineaGastoObjetoMovPartial.cshtml" />
     <Content Include="Views\Shared\_EjecucionPresupuestariaCentroTotalRPT.cshtml" />
+    <Content Include="Views\Auth\Autenticacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -19,6 +19,7 @@ using System.Web.Util;
 
 namespace PresupuestoSite.Controllers
 {
+    [AuthFilter]
     public class TransaccionesController : Controller
     {
         // GET: Transacciones
